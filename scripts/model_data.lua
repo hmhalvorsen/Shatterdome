@@ -1,5 +1,5 @@
 -- A ModelData object contains 3D appearance and SeriousProton physics collision details.
--- This file is loaded when EmptyEpsilon is launched.
+-- This file is loaded when Shatterdome is launched.
 -- For details, see the ModelData class in the scripting reference.
 local model = ModelData()
 model:setName("space_station_4")

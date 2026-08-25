@@ -391,7 +391,7 @@ void GameGlobalInfo::startScenario(string filename, std::unordered_map<string, s
         // Announce StdinLuaConsole() on headless mode.
         if (is_headless)
         {
-            LOG(Info, "\n=== EmptyEpsilon version ", string(VERSION_NUMBER), " - headless mode detected ===\nStandard input serves as the Lua console in headless mode.\nEnter Lua code in this running process to execute it. Enter !help for commands.\nFor line editing and history navigation on Linux, run EmptyEpsilon with rlwrap --remember EmptyEpsilon headless=...\n===\n\n");
+            LOG(Info, "\n=== Shatterdome version ", string(VERSION_NUMBER), " - headless mode detected ===\nStandard input serves as the Lua console in headless mode.\nEnter Lua code in this running process to execute it. Enter !help for commands.\nFor line editing and history navigation on Linux, run Shatterdome with rlwrap --remember Shatterdome headless=...\n===\n\n");
             printf("EE> ");
             fflush(stdout);
         }

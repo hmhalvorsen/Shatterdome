@@ -42,7 +42,7 @@ end
 --- Entities created from ShipTemplates include those made by CpuShip(), PlayerSpaceship(), and SpaceStation().
 --- ShipTemplates appear in ship and space station creation lists, such as the ship selection screen on scenarios that allow player ship creation, or the GM console's object creation tool.
 --- They also appear as default entries in the science database.
---- EmptyEpsilon loads scripts/shipTemplates.lua at launch, which requires files containing ShipTemplates located in scripts/shiptemplates/.
+--- Shatterdome loads scripts/shipTemplates.lua at launch, which requires files containing ShipTemplates located in scripts/shiptemplates/.
 --- New ShipTemplates can't be defined while a scenario is running.
 --- Use Lua variables to apply several ShipTemplate functions to the same template.
 --- Example:
@@ -66,7 +66,7 @@ end
 
 --- Sets this ShipTemplate's unique reference name.
 --- Use this value for referencing this ShipTemplate in scripts.
---- If this value begins with "Player ", including the trailing space, EmptyEpsilon uses only what follows as the name.
+--- If this value begins with "Player ", including the trailing space, Shatterdome uses only what follows as the name.
 --- If this ShipTemplate lacks a localized name (ShipTemplate:setLocaleName()), it defaults to this reference name.
 --- Example: template:setName("Phobos T3")
 function ShipTemplate:setName(name)
@@ -167,7 +167,7 @@ function ShipTemplate:setDefaultAI(default_ai)
     return self
 end
 --- Sets the 3D appearance, by ModelData name, of entities created from this ShipTemplate.
---- ModelData objects define a 3D mesh, textures, adjustments, and collision box, and are loaded from scripts/model_data.lua when EmptyEpsilon is launched.
+--- ModelData objects define a 3D mesh, textures, adjustments, and collision box, and are loaded from scripts/model_data.lua when Shatterdome is launched.
 --- Example: template:setModel("AtlasHeavyFighterYellow") -- uses the ModelData named "AtlasHeavyFighterYellow"
 function ShipTemplate:setModel(model_data_name)
     if not __model_data[model_data_name] then

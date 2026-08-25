@@ -10,9 +10,9 @@ __model_data = {}
 --- ModelData also defines the model's position offset and scale relative to its mesh coordinates.
 --- If the model is for an entity with weapon components or maneuvering thrusters, ModelData also defines the origin positions of its weapon effects, and particle emitters for thruster and engine effects.
 --- For physics, ModelData defines the model's radius for a circle collider, or optional box collider dimensions.
---- (ModelData defines 3D models, but EmptyEpsilon uses a 2D physics engine for collisions.)
+--- (ModelData defines 3D models, but Shatterdome uses a 2D physics engine for collisions.)
 --- 
---- EmptyEpsilon loads ModelData from scripts/model_data.lua when launched, and loads meshes and textures when an entity using this ModelData is first viewed.
+--- Shatterdome loads ModelData from scripts/model_data.lua when launched, and loads meshes and textures when an entity using this ModelData is first viewed.
 --- 
 --- For complete examples, see scripts/model_data.lua.
 ModelData = createClass()
@@ -108,7 +108,7 @@ function ModelData:setScale(scale)
     return self
 end
 --- Sets this ModelData's base radius.
---- By default, EmptyEpsilon uses this to create a circular collider around objects that use this ModelData.
+--- By default, Shatterdome uses this to create a circular collider around objects that use this ModelData.
 --- setRadius() can override this for colliders.
 --- Setting a box collider with ModelData:setCollisionBox() also overrides this.
 --- Defaults to 1.0.

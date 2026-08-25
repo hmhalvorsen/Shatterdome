@@ -69,7 +69,7 @@ bool PhilipsHueDevice::configure(std::unordered_map<string, string> settings)
         sp::io::http::Request http(ip_address,port);
 
         LOG(INFO) << "No philips hue V1 username. Going to request one. Be sure to press the button on the hue bridge.";
-        auto response = http.post("/api", "{\"devicetype\":\"EmptyEpsilon#EmptyEpsilon\"}");
+        auto response = http.post("/api", "{\"devicetype\":\"Shatterdome#Shatterdome\"}");
         if (response.status == 200) // OK
         {
             const auto& body = response.body;

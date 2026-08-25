@@ -1,4 +1,4 @@
-In this directory you will find the setup files to setup a network boot environment for EmptyEpsilon.
+In this directory you will find the setup files to setup a network boot environment for Shatterdome.
 
 READ FIRST
 ==========
@@ -19,7 +19,7 @@ What is this?
 
 It's a setup script for a network boot environment. Just about any computer build after the year 2000 has the feature to boot from the network. This means these computers do not need any actual harddisk to run.
 
-Why is this useful for EmptyEpsilon? Well, it ensures that every computer runs the exact same version of EmptyEpsilon.
+Why is this useful for Shatterdome? Well, it ensures that every computer runs the exact same version of Shatterdome.
 You only have to update a single machine and restart all others to get the latest version running wiht minimal fuzz.
 It also reduces the amount of hardware dependencies, as only a single machine needs a working harddrive.
 As harddrives are usually the first thing to break in a computer, this makes it easier to get donor computers for a setup.
@@ -39,7 +39,7 @@ Start of by doing a fresh OS install of Linux Debian, Jessie. Use the "Netinstal
 
 Copy the "build_netboot_system.sh" script to the freshly installed machine. And make sure it has internet.
 
-Run the "build_netboot_system.sh" script as root. This will take a long time as it will install extra tools, will download a whole extra Linux install for the network boot environment and compile EmptyEpsilon in this environment from source.
+Run the "build_netboot_system.sh" script as root. This will take a long time as it will install extra tools, will download a whole extra Linux install for the network boot environment and compile Shatterdome in this environment from source.
 
 This "build_netboot_system.sh" script will setup your machine to have the network card serve DHCP. After running this it is not yet active, but on next reboot it will hand out IP addresses and mess up your local network. You have been warned!
 
@@ -48,7 +48,7 @@ So, before rebooting, disconnect the network cable, and then reboot. After reboo
 For each client, you need to enable network booting in the BIOS. Every machine I've seen so far can do this, but it depends on the BIOS where and how this needs to be enabled.
 If it is an option, and you are in the BIOS settings anyhow, check if you can boot up the machine on power connection. This saves you pressing the power button. Note: While this feature is present in a lot of computers, it does not always function. So do not depend on it.
 
-Boot the client machines from the network with the new BIOS setup. And enjoy your easy EmptyEpsilon setup.
+Boot the client machines from the network with the new BIOS setup. And enjoy your easy Shatterdome setup.
 
 Configuration
 =============
@@ -69,9 +69,9 @@ If you run "dhcp_client.sh", the network port in the machine will switch to clie
 
 If you run "dhcp_server.sh", the network port is put back in dhcp mode, undoing the "dhcp_client.sh" script. Combined these scripts can be used to switch between serving EE, and having internet.
 
-If you run "update.sh", it will try to update your local EmptyEpsilon installation. This requires internet, so you need "dhcp_client.sh" first.
+If you run "update.sh", it will try to update your local Shatterdome installation. This requires internet, so you need "dhcp_client.sh" first.
 
 distcc
 ======
-The clients are setup for distributed compiling of EmptyEpsilon. Which means every on computer can assist in the build of EmptyEpsilon.
+The clients are setup for distributed compiling of Shatterdome. Which means every on computer can assist in the build of Shatterdome.
 This reduced the compile time from 20 minutes to 3 minutes in my case. However, I haven't setup scripts to do this yet. As this wasn't 100% reliable yet.

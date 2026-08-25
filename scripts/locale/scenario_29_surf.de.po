@@ -109,7 +109,7 @@ msgstr "Prototyp"
 msgctxt "setting"
 msgid "Use alternative player ship or not"
 msgstr ""
-"Soll mit einem Prototypen (spielbares Schiff aus alten EmptyEpsilon-"
+"Soll mit einem Prototypen (spielbares Schiff aus alten Shatterdome-"
 "Versionen) gespielt werden?"
 
 msgctxt "Prototype"

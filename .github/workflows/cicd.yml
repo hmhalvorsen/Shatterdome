@@ -15,7 +15,7 @@ jobs:
       run: sudo apt-get update -qq
     - name: Install SDL2
       run: sudo apt-get install libsdl2-dev
-    - name: Checkout EmptyEpsilon
+    - name: Checkout Shatterdome
       uses: actions/checkout@v2
     - name: Build and test
       run: docker/build.sh
@@ -33,15 +33,15 @@ jobs:
           repository: daid/SeriousProton
           path: SeriousProton
           ref: master
-      - name: EmptyEpsilon Checkout
+      - name: Shatterdome Checkout
         uses: actions/checkout@v2
         with:
-          path: EmptyEpsilon
+          path: Shatterdome
       - name: Build
         run: |
           mkdir -p _build_win32
           cd _build_win32
-          cmake ../EmptyEpsilon -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../EmptyEpsilon/cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../SeriousProton -DWARNING_IS_ERROR=1
+          cmake ../Shatterdome -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../Shatterdome/cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../SeriousProton -DWARNING_IS_ERROR=1
           ninja package
   macos:
     if: true
@@ -57,30 +57,30 @@ jobs:
           repository: daid/SeriousProton
           path: SeriousProton
           ref: master
-      - name: EmptyEpsilon Checkout
+      - name: Shatterdome Checkout
         uses: actions/checkout@v4
         with:
-          path: EmptyEpsilon
+          path: Shatterdome
       - name: Build
         run: |
           mkdir -p _build_macos
           cd _build_macos
-          cmake ../EmptyEpsilon -G Ninja -DSERIOUS_PROTON_DIR=../SeriousProton -DCMAKE_INSTALL_PREFIX=. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_PREFIX_PATH=$(brew --prefix sdl2) -DWARNING_IS_ERROR=1
+          cmake ../Shatterdome -G Ninja -DSERIOUS_PROTON_DIR=../SeriousProton -DCMAKE_INSTALL_PREFIX=. -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_PREFIX_PATH=$(brew --prefix sdl2) -DWARNING_IS_ERROR=1
           ninja
           ninja install
-          APP_PATH="./EmptyEpsilon.app"
+          APP_PATH="./Shatterdome.app"
           mkdir -p "$APP_PATH/Contents/Frameworks"
           cp $(brew --prefix sdl2)/lib/libSDL2-2.0.0.dylib "$APP_PATH/Contents/Frameworks/"
           cp $(brew --prefix freetype)/lib/libfreetype.6.dylib "$APP_PATH/Contents/Frameworks/"
           cp $(brew --prefix libpng)/lib/libpng16.16.dylib "$APP_PATH/Contents/Frameworks/" || true
-          install_name_tool -add_rpath @executable_path/../Frameworks "$APP_PATH/Contents/MacOS/EmptyEpsilon"
-          install_name_tool -change $(brew --prefix sdl2)/lib/libSDL2-2.0.0.dylib @rpath/libSDL2-2.0.0.dylib "$APP_PATH/Contents/MacOS/EmptyEpsilon"
-          install_name_tool -change $(brew --prefix freetype)/lib/libfreetype.6.dylib @rpath/libfreetype.6.dylib "$APP_PATH/Contents/MacOS/EmptyEpsilon"
+          install_name_tool -add_rpath @executable_path/../Frameworks "$APP_PATH/Contents/MacOS/Shatterdome"
+          install_name_tool -change $(brew --prefix sdl2)/lib/libSDL2-2.0.0.dylib @rpath/libSDL2-2.0.0.dylib "$APP_PATH/Contents/MacOS/Shatterdome"
+          install_name_tool -change $(brew --prefix freetype)/lib/libfreetype.6.dylib @rpath/libfreetype.6.dylib "$APP_PATH/Contents/MacOS/Shatterdome"
           install_name_tool -change $(brew --prefix libpng)/lib/libpng16.16.dylib @rpath/libpng16.16.dylib "$APP_PATH/Contents/Frameworks/libfreetype.6.dylib" || true
           codesign --remove-signature "$APP_PATH/Contents/Frameworks/libSDL2-2.0.0.dylib"
           codesign --remove-signature "$APP_PATH/Contents/Frameworks/libfreetype.6.dylib"
           codesign --remove-signature "$APP_PATH/Contents/Frameworks/libpng16.16.dylib" || true
-          codesign --remove-signature "$APP_PATH/Contents/MacOS/EmptyEpsilon"
+          codesign --remove-signature "$APP_PATH/Contents/MacOS/Shatterdome"
           codesign --force --deep --timestamp --sign - "$APP_PATH"
           VERSION=$(date +%Y.%m.%d)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
@@ -88,7 +88,7 @@ jobs:
           cp -R "$APP_PATH" dmg_contents/
           ln -s /Applications dmg_contents/Applications
           i=0
-          until hdiutil create -volname EmptyEpsilon -srcfolder dmg_contents -ov -format UDZO "MacOS_EmptyEpsilon_EE-${VERSION}-arm64.dmg"
+          until hdiutil create -volname Shatterdome -srcfolder dmg_contents -ov -format UDZO "MacOS_Shatterdome_EE-${VERSION}-arm64.dmg"
           do
             if [ $i -eq 10 ]; then exit 1; fi
             i=$((i+1))
@@ -98,8 +98,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EmptyEpsilon-EE-${{ env.VERSION }}-macOS-arm64
-          path: _build_macos/MacOS_EmptyEpsilon_EE-*-arm64.dmg
+          name: Shatterdome-EE-${{ env.VERSION }}-macOS-arm64
+          path: _build_macos/MacOS_Shatterdome_EE-*-arm64.dmg
           retention-days: 30
   windows:
     if: false
@@ -139,10 +139,10 @@ jobs:
           "@
           Set-Content -Path "$env:GITHUB_WORKSPACE/externals/sdl2-config.cmake" -Value $sdl_config
           Get-Content "$env:GITHUB_WORKSPACE/externals/sdl2-config.cmake"
-      - name: EmptyEpsilon Checkout
+      - name: Shatterdome Checkout
         uses: actions/checkout@v2
         with:
-          path: EmptyEpsilon
+          path: Shatterdome
       - name: SeriousProton Checkout
         uses: actions/checkout@v2
         with:
@@ -154,7 +154,7 @@ jobs:
       - name: Configure CMake
         working-directory: ${{github.workspace}}/build
         run: >
-          cmake ../EmptyEpsilon
+          cmake ../Shatterdome
           -G "Visual Studio 17 2022" -A Win32
           -DSDL2_DIR:PATH="$env:GITHUB_WORKSPACE/externals"
           -DSERIOUS_PROTON_DIR="../SeriousProton"
@@ -169,7 +169,7 @@ jobs:
       run: sudo apt-get update -qq
     - name: Install dependencies
       run: sudo apt-get install lua5.3
-    - name: Checkout EmptyEpsilon
+    - name: Checkout Shatterdome
       uses: actions/checkout@v2
     - name: Test if lua scripts parse
       run: find scripts/ -iname "*.lua" | xargs -P 4 -n 1 luac -p

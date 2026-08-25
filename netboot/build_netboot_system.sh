@@ -146,15 +146,15 @@ chroot ${TARGET_NFS_DIR} apt-get -y install xserver-xorg-core \
     xserver-xorg-input-all xserver-xorg-video-all xinit alsa-utils mesa-utils
 
 # Download&install EE,SP (This takes a while)
-chroot ${TARGET_NFS_DIR} git clone https://github.com/daid/EmptyEpsilon.git /root/EmptyEpsilon
+chroot ${TARGET_NFS_DIR} git clone https://github.com/hmhalvorsen/Shatterdome.git /root/Shatterdome
 chroot ${TARGET_NFS_DIR} git clone https://github.com/daid/SeriousProton.git /root/SeriousProton
-mkdir -p ${TARGET_NFS_DIR}/root/EmptyEpsilon/_build
-chroot ${TARGET_NFS_DIR} sh -c 'cd /root/EmptyEpsilon/_build && cmake .. -DSERIOUS_PROTON_DIR=$HOME/SeriousProton/ && make -j 3'
+mkdir -p ${TARGET_NFS_DIR}/root/Shatterdome/_build
+chroot ${TARGET_NFS_DIR} sh -c 'cd /root/Shatterdome/_build && cmake .. -DSERIOUS_PROTON_DIR=$HOME/SeriousProton/ && make -j 3'
 # Create a symlink for the final executable.
-chroot ${TARGET_NFS_DIR} ln -s _build/EmptyEpsilon /root/EmptyEpsilon/EmptyEpsilon
+chroot ${TARGET_NFS_DIR} ln -s _build/Shatterdome /root/Shatterdome/Shatterdome
 # Create a symlink to store the options.ini file in /tmp/, this so the client
 #   can load a custom file.
-chroot ${TARGET_NFS_DIR} ln -s /tmp/options.ini /root/EmptyEpsilon/options.ini
+chroot ${TARGET_NFS_DIR} ln -s /tmp/options.ini /root/Shatterdome/options.ini
 
 cat > ${TARGET_NFS_DIR}/root/setup_option_file.sh <<-EOT
 #!/bin/sh
@@ -170,24 +170,24 @@ chmod +x ${TARGET_NFS_DIR}/root/setup_option_file.sh
 mkdir -p ${TARGET_NFS_DIR}/root/configs
 # Create a link to our client configuration tool, which helps in setting up
 #   option files per client.
-ln -s ${TARGET_NFS_DIR}/root/EmptyEpsilon/netboot/config_manager.py ~/config_manager.py
+ln -s ${TARGET_NFS_DIR}/root/Shatterdome/netboot/config_manager.py ~/config_manager.py
 
 # Create an install a systemd unit that runs EE.
-cat > ${TARGET_NFS_DIR}/etc/systemd/system/emptyepsilon.service <<-EOT
+cat > ${TARGET_NFS_DIR}/etc/systemd/system/shatterdome.service <<-EOT
 [Unit]
-Description=EmptyEpsilon
+Description=Shatterdome
 
 [Service]
 Environment=XAUTHORITY=/tmp/.xauthority
 TimeoutStartSec=0
-WorkingDirectory=/root/EmptyEpsilon
+WorkingDirectory=/root/Shatterdome
 ExecStartPre=/root/setup_option_file.sh
-ExecStart=/usr/bin/startx /root/EmptyEpsilon/EmptyEpsilon -- -logfile /tmp/x.log
+ExecStart=/usr/bin/startx /root/Shatterdome/Shatterdome -- -logfile /tmp/x.log
 
 [Install]
 WantedBy=multi-user.target
 EOT
-chroot ${TARGET_NFS_DIR} systemctl enable emptyepsilon.service
+chroot ${TARGET_NFS_DIR} systemctl enable shatterdome.service
 
 # Disable screen standby/blanking
 mkdir -p ${TARGET_NFS_DIR}/etc/X11/xorg.conf.d
@@ -243,9 +243,9 @@ cat > ${TARGET_NFS_DIR}/etc/avahi/services/ee.service <<-EOT
 <?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
-  <name replace-wildcards="yes">EmptyEpsilon on %h</name>
+  <name replace-wildcards="yes">Shatterdome on %h</name>
   <service>
-    <type>_emptyepsilon._tcp</type>
+    <type>_shatterdome._tcp</type>
     <port>22</port>
   </service>
 </service-group>
@@ -307,7 +307,7 @@ mount -t tmpfs none ${TARGET_NFS_DIR}/tmp
 
 cp /etc/resolv.conf ${TARGET_NFS_DIR}/etc/resolv.conf
 chroot ${TARGET_NFS_DIR} sh -c 'cd /root/SeriousProton/ && git pull'
-chroot ${TARGET_NFS_DIR} sh -c 'cd /root/EmptyEpsilon/ && git pull'
-chroot ${TARGET_NFS_DIR} sh -c 'cd /root/EmptyEpsilon/_build && cmake .. -DSERIOUS_PROTON_DIR=/root/SeriousProton/ && make -j 3'
+chroot ${TARGET_NFS_DIR} sh -c 'cd /root/Shatterdome/ && git pull'
+chroot ${TARGET_NFS_DIR} sh -c 'cd /root/Shatterdome/_build && cmake .. -DSERIOUS_PROTON_DIR=/root/SeriousProton/ && make -j 3'
 EOT
 chmod +x /root/update.sh

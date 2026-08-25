@@ -10,8 +10,8 @@ void initResourcePaths()
         string mod = PreferencesManager::get("mod");
         if (getenv("HOME"))
         {
-            new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod);
-            PackResourceProvider::addPackResourcesForDirectory(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod);
+            new DirectoryResourceProvider(string(getenv("HOME")) + "/.shatterdome/resources/mods/" + mod);
+            PackResourceProvider::addPackResourcesForDirectory(string(getenv("HOME")) + "/.shatterdome/resources/mods/" + mod);
         }
         new DirectoryResourceProvider("resources/mods/" + mod);
         PackResourceProvider::addPackResourcesForDirectory("resources/mods/" + mod);
@@ -22,9 +22,9 @@ void initResourcePaths()
     PackResourceProvider::addPackResourcesForDirectory("packs/");
     if (getenv("HOME"))
     {
-        new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/");
-        new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/scripts/");
-        PackResourceProvider::addPackResourcesForDirectory(string(getenv("HOME")) + "/.emptyepsilon/packs/");
+        new DirectoryResourceProvider(string(getenv("HOME")) + "/.shatterdome/resources/");
+        new DirectoryResourceProvider(string(getenv("HOME")) + "/.shatterdome/scripts/");
+        PackResourceProvider::addPackResourcesForDirectory(string(getenv("HOME")) + "/.shatterdome/packs/");
     }
 #ifdef RESOURCE_BASE_DIR
     new DirectoryResourceProvider(RESOURCE_BASE_DIR "resources/");

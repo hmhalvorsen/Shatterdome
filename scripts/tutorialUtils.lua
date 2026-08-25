@@ -4,7 +4,7 @@ function startTutorial()
     player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Phobos M3P")
     tutorial_setPlayerShip(player)
 
-    tutorial_showMessage(_([[Welcome to the EmptyEpsilon tutorial.
+    tutorial_showMessage(_([[Welcome to the Shatterdome tutorial.
 Note that this tutorial is designed to give you a quick overview of the basic options for the game, but does not cover every single aspect.
 
 Press next to continue...]]), true)

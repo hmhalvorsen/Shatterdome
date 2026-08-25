@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Empty Epsilon\n"
+"Project-Id-Version: Shatterdome\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2022-02-26 00:15+0100\n"
 "Last-Translator: muerteFR\n"

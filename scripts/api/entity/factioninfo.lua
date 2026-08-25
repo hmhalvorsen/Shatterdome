@@ -2,7 +2,7 @@ local Entity = getLuaEntityFunctionTable()
 ----- FactionInfo API -----
 
 --- A FactionInfo object contains presentation details and faction relationships for member entities.
---- EmptyEpsilon has a hardcoded limit of 32 factions.
+--- Shatterdome has a hardcoded limit of 32 factions.
 ---
 --- Entities belong to a faction that determines which objects are friendly, neutral, or hostile toward them.
 --- For example, these relationships determine whether an entity can be targeted by weapons, docked with, or receive comms from another entity.

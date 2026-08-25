@@ -6,8 +6,8 @@ local Entity = getLuaEntityFunctionTable()
 --- Each ScienceDatabase without a parent is a top-level entry in the player-viewed database interface.
 --- Each child ScienceDatabase entry is displayed only when its parent entry is selected.
 ---
---- By default, EmptyEpsilon creates parentless entries for Factions, "Natural" (terrain), Ships, and Weapons.
---- Their child entries are populated by EmptyEpsilon upon launching a scenario, either with hardcoded details, entries loaded from scripts/science_db.lua, or the contents of script-defined objects such as ShipTemplates and FactionInfo.
+--- By default, Shatterdome creates parentless entries for Factions, "Natural" (terrain), Ships, and Weapons.
+--- Their child entries are populated by Shatterdome upon launching a scenario, either with hardcoded details, entries loaded from scripts/science_db.lua, or the contents of script-defined objects such as ShipTemplates and FactionInfo.
 --- Entries for ShipTemplates are also linked to from Science radar info of scanned ships of that template.
 ---
 --- Each ScienceDatabase entry has a unique identifier regardless of its displayed order, and multiple entries can have the same name.
@@ -232,7 +232,7 @@ function Entity:getImage()
     return ""
 end
 --- Sets the 3D appearance, by ModelData name, used for this ScienceDatabase entry.
---- ModelData objects define a 3D mesh, textures, adjustments, and collision box, and are loaded from scripts/model_data.lua when EmptyEpsilon is launched.
+--- ModelData objects define a 3D mesh, textures, adjustments, and collision box, and are loaded from scripts/model_data.lua when Shatterdome is launched.
 --- Example: entry:setModelDataName("AtlasHeavyFighterYellow") -- uses the ModelData named "AtlasHeavyFighterYellow"
 function Entity:setModelDataName(model_data_name)
     if __model_data[model_data_name] then

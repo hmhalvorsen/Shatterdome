@@ -5,7 +5,7 @@ msgstr ""
 # Scenario description
 msgid ""
 "The Beacon of Light scenario, based on the tutorial from https://daid.github."
-"io/EmptyEpsilon/#tabs=4.\n"
+"io/Shatterdome/#tabs=4.\n"
 "\n"
 "Near the far outpost of Orion-5, Exuari attacks are increasing. A diplomat "
 "went missing, and your first mission is to recover him.\n"

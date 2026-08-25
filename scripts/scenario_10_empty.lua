@@ -15,7 +15,7 @@ function init()
     --[[
     Several example entities follow. Remove the comments from these examples, or copy and paste them onto new lines, to add them to the scenario.
 
-    For more a detailed scripting reference, see the script_reference.html file included with your EmptyEpsilon install. For a tutorial, see https://daid.github.io/EmptyEpsilon/#tabs=4.
+    For more a detailed scripting reference, see the script_reference.html file included with your Shatterdome install. For a tutorial, see https://daid.github.io/Shatterdome/#tabs=4.
     ]]--
 
     -- Example entities:
@@ -75,7 +75,7 @@ function init()
     --Artifact():setPosition(9000, 2000):setModel("small_frigate_1"):setDescription(_("scienceDescription-artifact", "A wrecked ship."))
     --Artifact():setPosition(3000, 4000):setModel("small_frigate_1"):setDescription(_("scienceDescription-artifact", "Tons of rotting plasteel."))
 
-    --[[ Create a planet at coordinates 5000, 5000 with a 3U radius positioned 2U below the movement plane. Set its surface, cloud, and atmosphere textures from images in EmptyEpsilon's resources/planets directory. Set the atmosphere color to a shade of blue (red 20%, green 20%, blue 100%). Assign it to the local variable planet1.
+    --[[ Create a planet at coordinates 5000, 5000 with a 3U radius positioned 2U below the movement plane. Set its surface, cloud, and atmosphere textures from images in Shatterdome's resources/planets directory. Set the atmosphere color to a shade of blue (red 20%, green 20%, blue 100%). Assign it to the local variable planet1.
 
     local planet1 = Planet()
         :setPosition(5000, 5000)

@@ -99,7 +99,7 @@ OptionsMenu::OptionsMenu(OptionsMenu::ReturnTo return_to)
         if (getenv("EE_CONF_DIR"))
             PreferencesManager::save(string(getenv("EE_CONF_DIR")) + "/options.ini");
         else if (getenv("HOME"))
-            PreferencesManager::save(string(getenv("HOME")) + "/.emptyepsilon/options.ini");
+            PreferencesManager::save(string(getenv("HOME")) + "/.shatterdome/options.ini");
         else
             PreferencesManager::save("options.ini");
     }))->setPosition(200, -50, sp::Alignment::BottomLeft)->setSize(150, 50);
@@ -360,7 +360,7 @@ void OptionsMenu::setupGraphicsOptions()
         ->setSelectionIndex(fsaa_index)
         ->setSize(GuiElement::GuiSizeMax, 50.0f);
 
-    (new GuiLabel(graphics_page, "THEME_APPLICATION_LABEL", tr("Restart EmptyEpsilon to apply FSAA change"), 20.0f))
+    (new GuiLabel(graphics_page, "THEME_APPLICATION_LABEL", tr("Restart Shatterdome to apply FSAA change"), 20.0f))
         ->setSize(GuiElement::GuiSizeMax, 30.0f);
 
     // FoV slider.

@@ -96,7 +96,7 @@ int main(int argc, char** argv)
 // Log to STDOUT unless on non-debug Windows builds, which won't have
 // terminals for log output.
 #if defined(_WIN32) && !defined(DEBUG)
-    Logging::setLogFile("EmptyEpsilon.log");
+    Logging::setLogFile("Shatterdome.log");
 #else
     Logging::setLogStdout();
 #endif
@@ -123,7 +123,7 @@ int main(int argc, char** argv)
         // If so, we're invoked as an app bundle. Write the log to file.
         size_t pos = launch_path.find(".app/Contents/MacOS/");
         if (pos != std::string::npos)
-            Logging::setLogFile(configuration_path + "/EmptyEpsilon.log");
+            Logging::setLogFile(configuration_path + "/Shatterdome.log");
         // If not, we might be invoked as a binary and can log to STDOUT.
         else Logging::setLogStdout();
 #endif // __APPLE__

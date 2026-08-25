@@ -10,7 +10,7 @@ static void initScriptStorage()
 {
     if (getenv("HOME"))
     {
-        scriptstorage_path = string(getenv("HOME")) + "/.emptyepsilon/" + scriptstorage_path;
+        scriptstorage_path = string(getenv("HOME")) + "/.shatterdome/" + scriptstorage_path;
     }
 
     FILE* f = fopen(scriptstorage_path.c_str(), "rt");
@@ -180,7 +180,7 @@ static int luaGetScriptStorage(lua_State* L)
 
 /// The ScriptStorage persistently saves key/value pairs to a file.
 /// These key/value pairs are permanently stored and survive server restarts.
-/// Its default file path is $HOME/.emptyepsilon/scriptstorage.json.
+/// Its default file path is $HOME/.shatterdome/scriptstorage.json.
 /// See getScriptStorage().
 //REGISTER_SCRIPT_CLASS(ScriptStorage)
     /// Returns the value for the given key from the persistent ScriptStorage as a JSON string.

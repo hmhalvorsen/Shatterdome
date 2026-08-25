@@ -227,7 +227,7 @@ class ConfigCmd(cmd.Cmd):
 
     def do_restart(self, args):
         for client in self._getClients(args):
-            client.runOnClient("systemctl restart emptyepsilon.service")
+            client.runOnClient("systemctl restart shatterdome.service")
 
     def complete_restart(self, text, line, begidx, endidx):
         return self.complete_edit(text, line, begidx, endidx)

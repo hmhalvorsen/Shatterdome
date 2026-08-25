@@ -2119,7 +2119,7 @@ function FinishMissionDroneNest ()
     if stn:isValid() then
       if stn == Drone_control_station then
         stn:onDestroyed(function ()
-          print(Player) --https://github.com/daid/EmptyEpsilon/issues/690
+          print(Player) --https://github.com/hmhalvorsen/Shatterdome/issues/690
         end)
       end
       stn:destroy()

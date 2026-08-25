@@ -15,7 +15,7 @@ The following files only need to exist on the server.
 
 ## Useful to `require` in scenarios
 
-- `ee.lua` with EmptyEpsilon constants
+- `ee.lua` with Shatterdome constants
 - `luax.lua` with additional Lua functions
 - `utils.lua`
   - `perlin_noise.lua`

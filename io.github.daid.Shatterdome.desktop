@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=EmptyEpsilon
-GenericName=EmptyEpsilon
+Name=Shatterdome
+GenericName=Shatterdome
 Comment=Spaceship bridge simulator game
-Exec=EmptyEpsilon
-Icon=io.github.daid.EmptyEpsilon
+Exec=Shatterdome
+Icon=io.github.daid.Shatterdome
 Terminal=false
 Type=Application
 Categories=Game;Simulation;

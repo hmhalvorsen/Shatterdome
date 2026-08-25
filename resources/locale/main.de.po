@@ -462,7 +462,7 @@ msgid "Fullscreen toggle"
 msgstr "Vollbild umschalten"
 
 #: src/menus/optionsMenu.cpp:364
-msgid "Restart EmptyEpsilon to apply FSAA change"
+msgid "Restart Shatterdome to apply FSAA change"
 msgstr "Neustart erforderlich, um FSAA-Änderungen zu übernehmen"
 
 #: src/menus/optionsMenu.cpp:373 src/menus/optionsMenu.cpp:378

@@ -28,7 +28,7 @@
 
 - ShipTemplate:setHull() and ShipTemplateBasedObject:setHull() respect limits #1811
 - ShipTemplate:copy() respects tube count limit for tubes, instead of beam count limit #1810
-- URL for EmptyEpsilon website in scripting reference fixed #1791
+- URL for Shatterdome website in scripting reference fixed #1791
 - Relay can once again select alert level buttons #1786
 - Main screen comms info no longer persists after it should be closed
 - Banner text now cleared on scenario reset #1775
@@ -132,7 +132,7 @@
 ### Changed
 
 - Glitch, warp shaders converted
-- Netboot script uses newer EmptyEpsilon and Debian versions
+- Netboot script uses newer Shatterdome and Debian versions
 - Toggle buttons can now include icons
 - Cinematic view readded
 - HVLI damage buffed
@@ -249,7 +249,7 @@ This release replaced core engine components, and it and future releases require
 
 ### Added
 
-- Scenario settings can now have default values [2dfb7c](https://github.com/daid/EmptyEpsilon/commit/2dfb7cc889a7ff55ceb00d76cc829400bc05aeb4)
+- Scenario settings can now have default values [2dfb7c](https://github.com/hmhalvorsen/Shatterdome/commit/2dfb7cc889a7ff55ceb00d76cc829400bc05aeb4)
 - New master server registration screen with connection status #1567
 - Multi-line text entry fields #1567
 - New debug-build hotkey for FPS (<kbd>F10</kbd>) #1567
@@ -263,7 +263,7 @@ This release replaced core engine components, and it and future releases require
   - `getScenarioSetting()` returns scenario-specific settings #1567
   - `SpaceShip:setBeamWeaponArcColor()` and `setBeamWeaponDamageType()`
 - New scenarios
-  - New _Basic_ scenario combines former _Basic_ and _Quick Basic_ scenarios with new settings [cb9e158](https://github.com/daid/EmptyEpsilon/commit/cb9e1586fcbc07da6558cca95db415fc88d0b928)
+  - New _Basic_ scenario combines former _Basic_ and _Quick Basic_ scenarios with new settings [cb9e158](https://github.com/hmhalvorsen/Shatterdome/commit/cb9e1586fcbc07da6558cca95db415fc88d0b928)
 - New translations
   - French scenario translations
     - _Defender Hunter_ #1604, #1614
@@ -819,7 +819,7 @@ This release replaced core engine components, and it and future releases require
 - Push-to-talk voice chat using opus.
   - Server chat is mapped to the Backspace key.
   - Same-ship crew chat is mapped to the Tilde (~) key.
-- `proxy` and `serverproxy` preferences to run an EmptyEpsilon instance as a
+- `proxy` and `serverproxy` preferences to run an Shatterdome instance as a
   proxy or reverse proxy server.
 - `getScriptStorage()` scripting function to access persistent data storage,
   and `:get()` and `:set()` functions to retrieve and add or modify it.
@@ -1474,7 +1474,7 @@ This release replaced core engine components, and it and future releases require
 
 ### Fixed
 
-- Window title is "EmptyEpsilon" on all platforms
+- Window title is "Shatterdome" on all platforms
 - Communications button usable on Single Pilot screen
 - Game state logging (`/logs/`)
     - Log information on stations
@@ -1733,22 +1733,22 @@ This release replaced core engine components, and it and future releases require
 - create button visible through the cancel button on game master screen
 - clicking outside the radar circle but inside its reactangle caused callbacks
 
-[Unreleased]: https://github.com/daid/EmptyEpsilon/compare/EE-2018.02.15...HEAD
-[2018-02-15]: https://github.com/daid/EmptyEpsilon/compare/EE-2018.01.05...EE-2018.02.15
-[2018-01-05]: https://github.com/daid/EmptyEpsilon/compare/EE-2017.12.25...EE-2018.01.05
-[2017-12-25]: https://github.com/daid/EmptyEpsilon/compare/EE-2017.12.22...EE-2017.12.25
-[2017-12-22]: https://github.com/daid/EmptyEpsilon/compare/EE-2017.11.03...EE-2017.12.22
-[2017-11-03]: https://github.com/daid/EmptyEpsilon/compare/EE-2017.05.06...EE-2017.11.03
-[2017-05-06]: https://github.com/daid/EmptyEpsilon/compare/EE-2017.02.23...EE-2017.05.06
-[2017-02-23]: https://github.com/daid/EmptyEpsilon/compare/EE-2017.01.19...EE-2017.02.23
-[2017-01-19]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.09.02...EE-2017.01.19
-[2016-09-02]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.06.24...EE-2016.09.02
-[2016-06-24]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.06.23...EE-2016.06.24
-[2016-06-23]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.06.02...EE-2016.06.23
-[2016-06-02]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.05.22...EE-2016.06.02
-[2016-05-22]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.05.07...EE-2016.05.22
-[2016-05-07]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.04.30...EE-2016.05.07
-[2016-04-30]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.04.28...EE-2016.04.30
-[2016-04-28]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.04.12...EE-2016.04.28
-[2016-04-12]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.04.07...EE-2016.04.12
-[2016-04-07]: https://github.com/daid/EmptyEpsilon/compare/EE-2016.02.29...EE-2016.04.07
+[Unreleased]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2018.02.15...HEAD
+[2018-02-15]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2018.01.05...EE-2018.02.15
+[2018-01-05]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2017.12.25...EE-2018.01.05
+[2017-12-25]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2017.12.22...EE-2017.12.25
+[2017-12-22]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2017.11.03...EE-2017.12.22
+[2017-11-03]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2017.05.06...EE-2017.11.03
+[2017-05-06]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2017.02.23...EE-2017.05.06
+[2017-02-23]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2017.01.19...EE-2017.02.23
+[2017-01-19]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.09.02...EE-2017.01.19
+[2016-09-02]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.06.24...EE-2016.09.02
+[2016-06-24]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.06.23...EE-2016.06.24
+[2016-06-23]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.06.02...EE-2016.06.23
+[2016-06-02]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.05.22...EE-2016.06.02
+[2016-05-22]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.05.07...EE-2016.05.22
+[2016-05-07]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.04.30...EE-2016.05.07
+[2016-04-30]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.04.28...EE-2016.04.30
+[2016-04-28]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.04.12...EE-2016.04.28
+[2016-04-12]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.04.07...EE-2016.04.12
+[2016-04-07]: https://github.com/hmhalvorsen/Shatterdome/compare/EE-2016.02.29...EE-2016.04.07

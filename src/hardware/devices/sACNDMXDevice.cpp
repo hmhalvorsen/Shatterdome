@@ -17,7 +17,7 @@ StreamingAcnDMXDevice::StreamingAcnDMXDevice()
     for(int n=0; n<16; n++)
         uuid[n] = uint8_t(irandom(0, 255));
     memset(source_name, 0, sizeof(source_name));
-    strcpy((char*)source_name, "EmptyEpsilon");
+    strcpy((char*)source_name, "Shatterdome");
     run_thread = false;
     socket.bind(acn_port - 1);
 }

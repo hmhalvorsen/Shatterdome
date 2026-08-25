@@ -177,7 +177,7 @@ function Entity:setCommsFunction(callback)
     return self
 end
 --- Sets this entity's callsign.
---- EmptyEpsilon generates random callsigns for entities upon creation, and this function overrides that default.
+--- Shatterdome generates random callsigns for entities upon creation, and this function overrides that default.
 --- Example: entity:setCallSign("Epsilon")
 function Entity:setCallSign(callsign)
     self.components.callsign = {callsign=callsign}

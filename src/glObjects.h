@@ -1,5 +1,5 @@
-#ifndef EMPTYEPSILON_GLOBJECTS_H
-#define EMPTYEPSILON_GLOBJECTS_H
+#ifndef SHATTERDOME_GLOBJECTS_H
+#define SHATTERDOME_GLOBJECTS_H
 
 #include <array>
 #include <cstddef>
@@ -201,4 +201,4 @@ namespace gl
     bool isAvailable();
 }
 
-#endif // EMPTYEPSILON_GLOBJECTS_H
+#endif // SHATTERDOME_GLOBJECTS_H

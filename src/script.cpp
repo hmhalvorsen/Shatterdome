@@ -1226,7 +1226,7 @@ bool setupScriptEnvironment(sp::script::Environment& env)
 {
     // Load core global functions
     /// void print(..)
-    /// Print values to the Lua console. Also writes them to EmptyEpsilon.log or STDOUT, depending on your configuration.
+    /// Print values to the Lua console. Also writes them to Shatterdome.log or STDOUT, depending on your configuration.
     /// Accepts one or more values of any parseable type, such as strings, numbers, tables, entities, etc.
     /// The log lines are severity INFO, and the log text is prefixed with "LUA:"
     /// This is the same as log(...) and also prints the value on the Lua console.
@@ -1237,7 +1237,7 @@ bool setupScriptEnvironment(sp::script::Environment& env)
     /// print(getGMSelection()) -- prints all selected entities as "{1=entity: 00000000000002ED,2=entity: 00000000000002EE, ...}"
     env.setGlobal("print", &luaPrint);
     /// void log(...)
-    /// Log values to EmptyEpsilon.log or STDOUT, depending on your configuration.
+    /// Log values to Shatterdome.log or STDOUT, depending on your configuration.
     /// This is the same as print(...) but doesn't print the value on the Lua console.
     /// Examples:
     /// log("This is a log line") -- logs "[INFO    ]: LUA:This is a log line"
@@ -1857,9 +1857,9 @@ bool setupScriptEnvironment(sp::script::Environment& env)
     env.setGlobal("fromJSON", &luaFromJSON);
 
     /// integer getEEVersion()
-    /// Returns the running EmptyEpsilon build version as an integer.
+    /// Returns the running Shatterdome build version as an integer.
     /// Example:
-    /// local ver = getEEVersion() -- returns 20241208 if the EmptyEpsilon version is 2024.12.08
+    /// local ver = getEEVersion() -- returns 20241208 if the Shatterdome version is 2024.12.08
     env.setGlobal("getEEVersion", &luaGetEEVersion);
     registerScriptDataStorageFunctions(env);
     registerScriptGMFunctions(env);

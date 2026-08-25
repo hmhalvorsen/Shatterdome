@@ -19,13 +19,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # Set a default version.
 # For historical reason, we first honor CPack variables if they are set.
 if(DEFINED CPACK_PACKAGE_VERSION_MAJOR)
-    message(DEPRECATION "Prefer setting the version through CMAKE_PROJECT_EmptyEpsilon_INCLUDE file override")
+    message(DEPRECATION "Prefer setting the version through CMAKE_PROJECT_Shatterdome_INCLUDE file override")
     set(MAJOR "${CPACK_PACKAGE_VERSION_MAJOR}")
     set(MINOR "${CPACK_PACKAGE_VERSION_MINOR}")
     set(PATCH "${CPACK_PACKAGE_VERSION_PATCH}")
 else()
     # Following [CMake docs](https://cmake.org/cmake/help/v3.7/command/project.html) 
-    # You can override these by setting CMAKE_PROJECT_EmptyEpsilon_INCLUDE=<a_file>
+    # You can override these by setting CMAKE_PROJECT_Shatterdome_INCLUDE=<a_file>
     # In which you'd define the following variables:
     # - PROJECT_VERSION
     # - PROJECT_VERSION_MAJOR
@@ -36,7 +36,7 @@ else()
     string(TIMESTAMP PATCH "%d")
 endif()
 
-project(EmptyEpsilon LANGUAGES CXX C  VERSION ${MAJOR}.${MINOR}.${PATCH})
+project(Shatterdome LANGUAGES CXX C  VERSION ${MAJOR}.${MINOR}.${PATCH})
 
 include(GNUInstallDirs)
 
@@ -55,7 +55,7 @@ else()
     option(APK_WITH_PACKS "Build APK with pack files (3D assets)" ON)
 endif()
 
-message(STATUS "EmptyEpsilon Version = ${PROJECT_VERSION}")
+message(STATUS "Shatterdome Version = ${PROJECT_VERSION}")
 
 # Enable colored output with Ninja
 if((CMAKE_GENERATOR MATCHES "Ninja") AND (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
@@ -663,7 +663,7 @@ if (STEAMSDK)
 endif()
 
 if (WIN32)
-  list(APPEND MAIN_SOURCES EmptyEpsilon.rc)
+  list(APPEND MAIN_SOURCES Shatterdome.rc)
 endif()
 
 # Config header.
@@ -688,7 +688,7 @@ endif()
 target_compile_definitions(${PROJECT_NAME}
     PUBLIC
         # Set RESOURCE_BASE_DIR on Unix so the built binary is able to find resources
-        $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${STEAMSDK}>>>:RESOURCE_BASE_DIR="${CMAKE_INSTALL_FULL_DATADIR}/emptyepsilon/">
+        $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${STEAMSDK}>>>:RESOURCE_BASE_DIR="${CMAKE_INSTALL_FULL_DATADIR}/shatterdome/">
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -735,10 +735,10 @@ elseif(APPLE)
   install(FILES logo.icns DESTINATION "$<TARGET_BUNDLE_CONTENT_DIR:${PROJECT_NAME}>/Resources" RENAME "${PROJECT_NAME}.icns")
   install(DIRECTORY ${EE_RESOURCES} DESTINATION "$<TARGET_BUNDLE_CONTENT_DIR:${PROJECT_NAME}>/Resources")
 elseif(ANDROID)
-  android_apk(EmptyEpsilon ${APK_WITH_PACKS})
+  android_apk(Shatterdome ${APK_WITH_PACKS})
 else()
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-    install(DIRECTORY ${EE_RESOURCES} DESTINATION "${CMAKE_INSTALL_DATADIR}/emptyepsilon")
+    install(DIRECTORY ${EE_RESOURCES} DESTINATION "${CMAKE_INSTALL_DATADIR}/shatterdome")
 endif()
 
 if(WITH_DISCORD)
@@ -748,7 +748,7 @@ if(WITH_DISCORD)
     elseif(APPLE)
         set(discord_install_prefix "${PROJECT_NAME}.app/Contents/Resources")
     else()
-        set(discord_install_prefix "${CMAKE_INSTALL_DATADIR}/emptyepsilon")
+        set(discord_install_prefix "${CMAKE_INSTALL_DATADIR}/shatterdome")
     endif()
 
     install(PROGRAMS "$<TARGET_PROPERTY:discord,IMPORTED_LOCATION>" DESTINATION "${discord_install_prefix}/plugins")
@@ -777,7 +777,7 @@ if(Python3_Interpreter_FOUND)
   elseif(APPLE)
     install(FILES "${SCRIPT_REFERENCE_HTML}" DESTINATION "$<TARGET_BUNDLE_CONTENT_DIR:${PROJECT_NAME}>/Resources" OPTIONAL)
   elseif(NOT ANDROID)
-    # DOCDIR already has PROJECT_NAME (EmptyEpsilon) appended (from CMake docs)
+    # DOCDIR already has PROJECT_NAME (Shatterdome) appended (from CMake docs)
     install(FILES "${SCRIPT_REFERENCE_HTML}" DESTINATION "${CMAKE_INSTALL_DOCDIR}" OPTIONAL)
   endif()
 endif()
@@ -795,7 +795,7 @@ if(APPLE)
 endif()
 
 # Generic settings
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};Empty Epsilon (${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};Shatterdome (${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})")
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "https://github.com/daid/")
 
@@ -806,15 +806,15 @@ set(CPACK_PACKAGE_CHECKSUM SHA256)
 # Setup the upgrade GUID to have one per version.
 # https://tools.ietf.org/html/rfc4122#appendix-C
 set(GUID_NAMESPACE_URL 6ba7b810-9dad-11d1-80b4-00c04fd430c8) # "Name string is URL" - in the appendix linked above.
-string(UUID EMPTYEPSILON_GUID NAMESPACE ${GUID_NAMESPACE_URL} NAME "https://github.com/daid/EmptyEpsilon" TYPE SHA1)
+string(UUID SHATTERDOME_GUID NAMESPACE ${GUID_NAMESPACE_URL} NAME "https://github.com/hmhalvorsen/Shatterdome" TYPE SHA1)
 
-string(UUID CPACK_WIX_UPGRADE_GUID NAMESPACE ${EMPTYEPSILON_GUID} NAME "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" TYPE SHA1)
+string(UUID CPACK_WIX_UPGRADE_GUID NAMESPACE ${SHATTERDOME_GUID} NAME "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" TYPE SHA1)
 set(CPACK_WIX_UI_BANNER "${CMAKE_CURRENT_SOURCE_DIR}/resources/logo_full.png")
 set(CPACK_WIX_UI_DIALOG "${CMAKE_CURRENT_SOURCE_DIR}/resources/logo_white.png")
 # Add/Remove programs info.
-set(CPACK_WIX_PROPERTY_ARPHELPLINK "https://daid.github.io/EmptyEpsilon/#tabs=6")
-set(CPACK_WIX_PROPERTY_APPURLINFOABOUT "https://daid.github.io/EmptyEpsilon/#tabs=0")
-set(CPACK_WIX_PROPERTY_ARPURLUPDATEINFO "https://daid.github.io/EmptyEpsilon/#tabs=5")
+set(CPACK_WIX_PROPERTY_ARPHELPLINK "https://github.com/hmhalvorsen/Shatterdome/#tabs=6")
+set(CPACK_WIX_PROPERTY_APPURLINFOABOUT "https://github.com/hmhalvorsen/Shatterdome/#tabs=0")
+set(CPACK_WIX_PROPERTY_ARPURLUPDATEINFO "https://github.com/hmhalvorsen/Shatterdome/#tabs=5")
 set(CPACK_WIX_PRODUCT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/logo.ico")
 
 if(NOT DEFINED CPACK_GENERATOR)
@@ -839,7 +839,7 @@ if(APPLE)
       # Same idea - need the path to it for the dependency manager to pick it up.
       install(CODE "
         include(BundleUtilities)
-        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/EmptyEpsilon.app\" \"\" \"${SDL2_LIBRARIES}/..;${SDL2_LIBRARIES}/Versions/Current/Frameworks\")
+        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/Shatterdome.app\" \"\" \"${SDL2_LIBRARIES}/..;${SDL2_LIBRARIES}/Versions/Current/Frameworks\")
       ")
     else()
       message(WARNING "macOS DMG packaging: ${SDL2_LIBRARIES} does not appear to be a framework. The bundle will not be fixed up properly.")
@@ -850,13 +850,13 @@ endif()
 set(sp_runtime_root "/")
 
 if ("WIX" IN_LIST CPACK_GENERATOR)
-    if (EmptyEpsilon_VERSION_MAJOR GREATER 100)
+    if (Shatterdome_VERSION_MAJOR GREATER 100)
 	    # WIX does not like major version number > 256.
 	    # So if we're above 100, assume it's a year-like format and strip out century/millenium.
-	    math(EXPR wix_major "${EmptyEpsilon_VERSION_MAJOR} % 100")
+	    math(EXPR wix_major "${Shatterdome_VERSION_MAJOR} % 100")
 
         # WIX only care for the bundled PACKAGE_VERSION - fix only this one.
-        set(CPACK_PACKAGE_VERSION "${wix_major}.${EmptyEpsilon_VERSION_MINOR}.${EmptyEpsilon_VERSION_PATCH}")
+        set(CPACK_PACKAGE_VERSION "${wix_major}.${Shatterdome_VERSION_MINOR}.${Shatterdome_VERSION_PATCH}")
     endif()
     
     # WIX is... weird.
@@ -888,10 +888,10 @@ set(CPACK_INSTALL_CMAKE_PROJECTS
 
 include(CPack)
 
-configure_file(io.github.daid.EmptyEpsilon.metainfo.xml.in io.github.daid.EmptyEpsilon.metainfo.xml)
+configure_file(io.github.daid.Shatterdome.metainfo.xml.in io.github.daid.Shatterdome.metainfo.xml)
 
 if(UNIX AND NOT APPLE AND NOT STEAMSDK)
-  install(FILES io.github.daid.EmptyEpsilon.desktop DESTINATION "share/applications")
-  install(FILES resources/logo_icon.png DESTINATION "share/icons/hicolor/512x512/apps" RENAME "io.github.daid.EmptyEpsilon.png")
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/io.github.daid.EmptyEpsilon.metainfo.xml DESTINATION "share/metainfo")
+  install(FILES io.github.daid.Shatterdome.desktop DESTINATION "share/applications")
+  install(FILES resources/logo_icon.png DESTINATION "share/icons/hicolor/512x512/apps" RENAME "io.github.daid.Shatterdome.png")
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/io.github.daid.Shatterdome.metainfo.xml DESTINATION "share/metainfo")
 endif()

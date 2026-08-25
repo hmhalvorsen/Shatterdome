@@ -18,7 +18,7 @@ def start(scenario, variation):
     global _process
     if _process is not None:
         return False
-    command = ["./EmptyEpsilon"]
+    command = ["./Shatterdome"]
     command += ["httpserver=8080"]
     command += ["headless=%s" % (scenario), "variation=%s" % (variation)]
     if config.server_password is not None:

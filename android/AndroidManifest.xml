@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="eu.daid.emptyepsilon"
+    package="eu.daid.shatterdome"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -22,7 +22,7 @@
               android:configChanges="keyboardHidden|orientation|screenSize">
 
         <meta-data android:name="android.app.lib_name" android:value="sfml-activity" />
-        <meta-data android:name="sfml.app.lib_name" android:value="emptyepsilon" />
+        <meta-data android:name="sfml.app.lib_name" android:value="shatterdome" />
 
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

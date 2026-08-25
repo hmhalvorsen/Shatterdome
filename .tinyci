@@ -7,7 +7,7 @@ commands =
     rm -rf script_reference.html
     cmake .. -G Ninja -DSERIOUS_PROTON_DIR=../../SeriousProton -DCMAKE_BUILD_TYPE=RelWithDebInfo
     ninja -j 10 package
-artifacts = EmptyEpsilon.deb
+artifacts = Shatterdome.deb
 
 [build-win32]
 directory = _build_win32
@@ -15,7 +15,7 @@ commands =
     rm -rf script_reference.html
     cmake .. -G Ninja -DSERIOUS_PROTON_DIR=../../SeriousProton -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw.toolchain -DCMAKE_BUILD_TYPE=RelWithDebInfo
     ninja -j 10 package
-artifacts = EmptyEpsilon.zip
+artifacts = Shatterdome.zip
 
 [build-linux-steam]
 directory = _build_native_steam
@@ -36,14 +36,14 @@ directory = _build_android
 commands =
     cmake .. -G Ninja -DSERIOUS_PROTON_DIR=../../SeriousProton -DCMAKE_TOOLCHAIN_FILE=../cmake/android.toolchain -DCMAKE_BUILD_TYPE=Release
     ninja -j 10
-artifacts = EmptyEpsilon-armeabi-v7a.apk
+artifacts = Shatterdome-armeabi-v7a.apk
 
 [build-android64]
 directory = _build_android64
 commands =
     cmake .. -G Ninja -DSERIOUS_PROTON_DIR=../../SeriousProton -DCMAKE_TOOLCHAIN_FILE=../cmake/android.toolchain -DCMAKE_BUILD_TYPE=Release -DANDROID_ABI=arm64-v8a
     ninja -j 10
-artifacts = EmptyEpsilon-arm64-v8a.apk
+artifacts = Shatterdome-arm64-v8a.apk
 
 [repos-daid/SeriousProton]
 required = True

@@ -2,7 +2,7 @@ local Entity = getLuaEntityFunctionTable()
 
 -- Functions that have multiple implementations as a result of the old object code are here and interact with multiple components.
 
---- Sets this faction's internal string name, used to reference this faction regardless of EmptyEpsilon's language setting.
+--- Sets this faction's internal string name, used to reference this faction regardless of Shatterdome's language setting.
 --- If no locale name is defined, this sets the locale name to the same value.
 --- Example: faction:setName("USN")
 --- Sets this ScienceDatabase entry's displayed name.

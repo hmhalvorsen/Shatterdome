@@ -17,7 +17,7 @@ string initConfiguration(int argc, char** argv)
     if (getenv("EE_CONF_DIR"))
         configuration_path = string(getenv("EE_CONF_DIR"));
     else if (getenv("HOME"))
-        configuration_path = string(getenv("HOME")) + "/.emptyepsilon";
+        configuration_path = string(getenv("HOME")) + "/.shatterdome";
 #ifdef STEAMSDK
     {
         char path_buffer[1024];

@@ -1,5 +1,5 @@
-#ifndef EMPTYEPSILON_SHADER_REGISTRY_H
-#define EMPTYEPSILON_SHADER_REGISTRY_H
+#ifndef SHATTERDOME_SHADER_REGISTRY_H
+#define SHATTERDOME_SHADER_REGISTRY_H
 #include "featureDefs.h"
 
 #include <array>
@@ -137,4 +137,4 @@ namespace ShaderRegistry
 	};
 }
 
-#endif // EMPTYEPSILON_SHADER_REGISTRY_H
+#endif // SHATTERDOME_SHADER_REGISTRY_H

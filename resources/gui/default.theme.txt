@@ -1,7 +1,7 @@
 [base] {
     # Full-game interface properties:
 
-    # Font used across EmptyEpsilon.
+    # Font used across Shatterdome.
     font: gui/fonts/BigShouldersDisplay-SemiBold.ttf
     # Positive offset moves the font down, negative moves it up.
     font_offset: 0.0

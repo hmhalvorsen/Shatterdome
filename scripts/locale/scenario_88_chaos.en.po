@@ -1114,7 +1114,7 @@ msgid ""
 "putting the ship on the +In button in the custom list of ships to be used.\n"
 "\n"
 "Notice that some of the ships that can be swapped in to the custom list are "
-"not stock Empty Epsilon ships, but are specialized versions of stock Empty "
+"not stock Shatterdome ships, but are specialized versions of stock Empty "
 "Epsilon ships."
 msgstr ""
 
