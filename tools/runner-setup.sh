@@ -16,7 +16,7 @@ ARCH="$(uname -m)"
 TARBALL="actions-runner-osx-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz"
 curl -fsSL -o "$TARBALL" "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/${TARBALL}"
 tar xzf "$TARBALL" && rm -f "$TARBALL"
-REG_TOKEN="$(gh api "repos/${REPO}/actions/runners/registration-token" --jq '.token')"
+REG_TOKEN="$(gh api --method POST "repos/${REPO}/actions/runners/registration-token" --jq '.token')"
 ./config.sh --url "https://github.com/${REPO}" --token "$REG_TOKEN" --name "$RUNNER_NAME" --labels "$RUNNER_LABELS" --unattended --replace
 printf '#!/usr/bin/env bash\nset -euo pipefail\ncd "$(dirname "$0")"\n./run.sh\n' > "$RUNNER_DIR/start-runner.sh"
 chmod +x "$RUNNER_DIR/start-runner.sh"
