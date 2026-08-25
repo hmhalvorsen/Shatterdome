@@ -1,6 +1,6 @@
 ![Shatterdome logo](https://raw.githubusercontent.com/hmhalvorsen/Shatterdome/master/resources/logo_full.png)
 
-Started as a cross-platform, open-source "clone" of [Artemis Spaceship Bridge Simulator](https://www.artemisspaceshipbridge.com/), **Shatterdome** has already deviated from Artemis with new features and gameplay, including a Game Master mode and multiple AI factions. We strive to get Shatterdome working on several platforms, and Windows, Linux, and Android are fully supported.
+**Shatterdome** is a fork of [EmptyEpsilon](https://github.com/daid/EmptyEpsilon), an open-source bridge simulator that began as a cross-platform "clone" of [Artemis Spaceship Bridge Simulator](https://www.artemisspaceshipbridge.com/). EmptyEpsilon has long since diverged from Artemis with new features and gameplay, including a Game Master mode and multiple AI factions; this fork carries that lineage forward under the Shatterdome name. We strive to get Shatterdome working on several platforms, and Windows, Linux, and Android are fully supported.
 
 The game is written in C++ with the [SeriousProton](https://github.com/daid/SeriousProton) engine and uses [SDL2](http://www.libsdl.org/) for most of the heavy lifting.
 
