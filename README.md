@@ -88,3 +88,18 @@ cmake --build build
 cmake --install build --prefix dist
 cmake --build build --target package
 ```
+
+## Self-hosted CI (optional, free)
+
+To run compile checks on **your own machine** (no GitHub-hosted runner minutes):
+
+```bash
+./tools/runner-setup.sh
+~/.local/share/shatterdome-actions-runner/start-runner.sh   # leave running
+```
+
+Push to `master` triggers `.github/workflows/build-selfhosted.yml`. When finished:
+
+```bash
+./tools/runner-teardown.sh
+```

@@ -615,6 +615,10 @@ target_link_libraries(${PROJECT_NAME}
         seriousproton meshoptimizer EE_GuiLIB
 )
 
+if(APPLE)
+    target_link_libraries(${PROJECT_NAME} PUBLIC "-framework Foundation")
+endif()
+
 if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_link_libraries(${PROJECT_NAME} PUBLIC "-mconsole")
 endif()

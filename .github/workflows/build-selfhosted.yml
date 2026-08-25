@@ -15,19 +15,12 @@ jobs:
   compile-check:
     runs-on: [self-hosted, shatterdome]
     steps:
-      - name: Checkout Shatterdome
-        uses: actions/checkout@v4
-        with:
-          path: Shatterdome
+      - uses: actions/checkout@v4
 
-      - name: Checkout SeriousProton
-        uses: actions/checkout@v4
-        with:
-          repository: daid/SeriousProton
-          path: SeriousProton
+      - name: Clone SeriousProton
+        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
 
       - name: Compile smoke test
         run: ./tools/build-compile-check.sh
-        working-directory: Shatterdome
         env:
           PATH: /opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin
