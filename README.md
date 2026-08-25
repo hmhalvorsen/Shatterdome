@@ -1,4 +1,4 @@
-![Shatterdome logo](https://raw.githubusercontent.com/hmhalvorsen/Shatterdome/master/resources/logo_full.png)
+# **SHATTERDOME**
 
 **Shatterdome** is a fork of [EmptyEpsilon](https://github.com/daid/EmptyEpsilon), an open-source bridge simulator that began as a cross-platform "clone" of [Artemis Spaceship Bridge Simulator](https://www.artemisspaceshipbridge.com/). EmptyEpsilon has long since diverged from Artemis with new features and gameplay, including a Game Master mode and multiple AI factions; this fork carries that lineage forward under the Shatterdome name. We strive to get Shatterdome working on several platforms, and Windows, Linux, and Android are fully supported.
 
