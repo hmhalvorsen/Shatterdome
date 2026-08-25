@@ -1,75 +1,90 @@
 # **SHATTERDOME**
 
-**Shatterdome** is a fork of [EmptyEpsilon](https://github.com/daid/EmptyEpsilon), an open-source bridge simulator that began as a cross-platform "clone" of [Artemis Spaceship Bridge Simulator](https://www.artemisspaceshipbridge.com/). EmptyEpsilon has long since diverged from Artemis with new features and gameplay, including a Game Master mode and multiple AI factions; this fork carries that lineage forward under the Shatterdome name. We strive to get Shatterdome working on several platforms, and Windows, Linux, and Android are fully supported.
+**Shatterdome** is a fork of [EmptyEpsilon](https://github.com/daid/EmptyEpsilon), which started as an open-source bridge simulator inspired by [Artemis Spaceship Bridge Simulator](https://www.artemisspaceshipbridge.com/).
 
-The game is written in C++ with the [SeriousProton](https://github.com/daid/SeriousProton) engine and uses [SDL2](http://www.libsdl.org/) for most of the heavy lifting.
+This fork is trimmed down for two targets only:
 
-## Download and install
+- **Windows** — portable folder or ZIP
+- **Raspberry Pi** — Linux ARM install or TGZ package
 
-Official releases for Windows, Linux (as a .deb package), and Android (beta quality) are available from the [Shatterdome website](https://github.com/hmhalvorsen/Shatterdome/#tabs=5) or [GitHub releases](https://github.com/hmhalvorsen/Shatterdome/releases). Make sure the host and all players run the same version number of Shatterdome; otherwise, players won't be able to connect.
+Removed from upstream: Discord, Steam, Android, macOS packaging, website tooling, netboot images, and other platform extras.
 
--   Windows releases are distributed as self-contained ZIP archives that don't need installation. You can expand the ZIP archive and launch Shatterdome directly from the expanded folder.
--   The .deb package requires freetype and SDL2 packages to be installed on your Linux distribution.
--   The Android APK is built for the `armeabi-v7a` ABI and should launch on most Android phones and tablets with ARM processors. (For ARM v8, see [the wiki](https://github.com/hmhalvorsen/Shatterdome/wiki/Build%5CAndroid#build-for-64-bit-arm-v8).) The official ARM APK won't install on Intel x86 or x86_64 devices running Android, but is compatible with [Android Emulator system images that support ARM ABIs](https://android-developers.googleblog.com/2020/03/run-arm-apps-on-android-emulator.html). To build a 32- or 64-bit x86 APK, see [the wiki](https://github.com/hmhalvorsen/Shatterdome/wiki/Build%5CAndroid#build-for-x86).
+## Requirements
 
-### Configuration files
+Clone **SeriousProton** next to this repo (same parent folder):
 
-Shatterdome settings are stored in an `options.ini` file located in either the `.shatterdome` directory of your user home or the same directory as the Shatterdome launcher. For details, see [this repository's wiki](https://github.com/hmhalvorsen/Shatterdome/wiki/Preferences-file).
+```bash
+git clone https://github.com/daid/SeriousProton.git ../SeriousProton
+```
 
-### Build from source
+### Windows
 
-See this repository's wiki for guidance on [building Shatterdome from source](https://github.com/hmhalvorsen/Shatterdome/wiki/Build). Several Build subpages on the wiki provide steps for building on specific operating systems, distributions, or hardware.
+- CMake
+- A C++ toolchain (Visual Studio Build Tools, or MinGW)
+- Ninja (recommended)
 
-## Community
+### Raspberry Pi
 
-For information on Shatterdome's Discord and forums communities, and regularly planned hosted game sessions, see the [Shatterdome website](https://github.com/hmhalvorsen/Shatterdome/#tabs=6). If you run public Shatterdome games or use it in your gaming projects, [file an issue](https://github.com/hmhalvorsen/Shatterdome/issues) to request to be added to that page.
+- `build-essential`, `cmake`, `ninja-build`, `libsdl2-dev`, `libfreetype6-dev`
 
-## Contribute
+## Build
 
-If you want to contribute, we're mostly looking for awesome models, sound effects, and music. The game is tested regulary by some of our trusty colleagues.
+### Windows
 
-Some general contribution rules:
+From a Developer Command Prompt or shell with `cmake` on PATH:
 
-1.  This project is a dictatorship. Yes, it's open source, but we'd much rather spend time on building what we like than arguing with people.
+```bat
+tools\build-windows.bat
+```
 
-2.  Be precise when filing issues. Explain why you posted the issue, what you expect, what is happening, why is your feature worth the time to develop it, what operating system is affected, etc. Unclear issues are subject to rule 1 with extreme prejudice.
+Output:
 
-3.  Despite the above two, we very much value input, feedback, and suggestions from people playing Shatterdome. If you have ideas or want to donate beer, drop us a line.
+- `dist\` — runnable game folder (`Shatterdome.exe`, resources, scripts, packs)
+- `build\Shatterdome-*.zip` — packaged archive from CPack
 
-### Donate
+Debug build:
 
-If you don't have the skills to help code or create models but want to give something back, you can always donate a bit. All donations go directly toward buying better assets for the game (in this case, more and better 3D models). You can find the instructions on the [Shatterdome website](http://github.com/hmhalvorsen/Shatterdome/).
+```bat
+tools\build-windows.bat debug
+```
 
-### Write code
+### Raspberry Pi
 
-If you are a coder and want to contribute, there are a few things to take into account.
+On the Pi itself:
 
-1.  The code is a undocumented mess at this point. We're working on fixing that.
+```bash
+./tools/build-raspberrypi.sh
+```
 
-2.  We use the following conventions:
+Install without apt dependency step:
 
-    -   Member values use underscores to separate words (`zoom_level`).
-    -   Classes use HighCamelCase (`GuiSlider`).
-    -   Functions use lowCamelCase (`getZoomLevel`).
+```bash
+INSTALL_DEPS=0 ./tools/build-raspberrypi.sh
+```
 
-3.  Use a single pull request to change a single thing. Want to change multiple things? File multiple requests.
+Custom install location:
 
-### Provide art
+```bash
+INSTALL_PREFIX=/opt/shatterdome ./tools/build-raspberrypi.sh
+```
 
-There is no clear goal where this game is going. This means that there is no formal game, art, or asset design. If you have something that you would like to see in this game (or want to make something), drop us a line. We'd love to see what you can do and how you can help improve the game.
+Output:
 
-For details on how Shatterdome uses 3D models, see [this repository's wiki](https://github.com/hmhalvorsen/Shatterdome/wiki/Adding-3D-models).
+- `dist/bin/Shatterdome`
+- `dist/share/shatterdome/` — game data
+- `build/Shatterdome-*.tar.gz`
 
-### Translate and localize
+## Configuration
 
-For a guide to translating Shatterdome and its scenarios, see [this repository's wiki](https://github.com/hmhalvorsen/Shatterdome/wiki/Translation-and-Localization).
+Settings live in `~/.shatterdome/options.ini` on Linux, or next to the executable / in `%USERPROFILE%\.shatterdome` on Windows.
 
-## Documentation
+Run the built-in tutorial from the main menu to learn the stations.
 
-Basic documentation for setting up and running games is available on the [Shatterdome website](https://github.com/hmhalvorsen/Shatterdome/#tabs=2).
+## Manual CMake (optional)
 
-To learn Shatterdome gameplay fundamentals, read the [website's stations profiles](https://github.com/hmhalvorsen/Shatterdome/#tabs=3) and play through the game's built-in tutorial mode available from the main menu, which covers each crew member's interface and responsibilities.
-
-For guidance in scripting scenarios, see the [website's mission scripting guide](https://github.com/hmhalvorsen/Shatterdome/#tabs=4). For a scripting API reference, open the `script_reference.html` file included in your version's downloaded archive, which is specific to that version of Shatterdome.
-
-For documentation on the game's preferences file and command-line options, hardware and DMX support, more complex internet play configurations like headless and proxy servers, enabling and using Shatterdome's HTTP API server, or adding ship templates and models, see [this repository's wiki](https://github.com/hmhalvorsen/Shatterdome/wiki).
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSERIOUS_PROTON_DIR=../SeriousProton
+cmake --build build
+cmake --install build --prefix dist
+cmake --build build --target package
+```

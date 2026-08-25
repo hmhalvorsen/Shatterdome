@@ -5,11 +5,6 @@
 #include "gui/hotkeyConfig.h"
 #include <cstring>
 
-#if STEAMSDK
-#include "steam/steam_api.h"
-#include "steamrichpresence.h"
-#endif
-
 
 string initConfiguration(int argc, char** argv)
 {
@@ -18,13 +13,6 @@ string initConfiguration(int argc, char** argv)
         configuration_path = string(getenv("EE_CONF_DIR"));
     else if (getenv("HOME"))
         configuration_path = string(getenv("HOME")) + "/.shatterdome";
-#ifdef STEAMSDK
-    {
-        char path_buffer[1024];
-        if (SteamUser()->GetUserDataFolder(path_buffer, sizeof(path_buffer)))
-            configuration_path = path_buffer;
-    }
-#endif
     LOG(Info, "Using ", configuration_path, " as configuration path");
     PreferencesManager::load(configuration_path + "/options.ini");
 
@@ -38,14 +26,10 @@ string initConfiguration(int argc, char** argv)
 
     if (PreferencesManager::get("username", "") == "")
     {
-#ifdef STEAMSDK
-        PreferencesManager::setTemporary("username", SteamFriends()->GetPersonaName());
-#else
         if (getenv("USERNAME"))
             PreferencesManager::setTemporary("username", getenv("USERNAME"));
         else if (getenv("USER"))
             PreferencesManager::setTemporary("username", getenv("USER"));
-#endif
     }
 
     sp::io::Keybinding::loadKeybindings(configuration_path + "/keybindings.json");

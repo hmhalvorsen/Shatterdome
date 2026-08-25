@@ -33,13 +33,6 @@
 #include "graphics/opengl.h"
 
 #include "hardware/hardwareController.h"
-#if WITH_DISCORD
-#include "discord.h"
-#endif
-#if STEAMSDK
-#include "steam/steam_api.h"
-#include "steamrichpresence.h"
-#endif
 
 #include "shaderRegistry.h"
 #include "glObjects.h"
@@ -113,21 +106,6 @@ int main(int argc, char** argv)
         mkdir(configuration_path.c_str());
 #else
         mkdir(configuration_path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-// On macOS non-debug builds, redirect the log to the configuration directory if
-// invoked as an app bundle.
-#ifdef __APPLE__
-        const char* argv0 = *argv;
-        std::string launch_path(argv0);
-
-        // Check if the path ends with .app/Contents/MacOS/
-        // If so, we're invoked as an app bundle. Write the log to file.
-        size_t pos = launch_path.find(".app/Contents/MacOS/");
-        if (pos != std::string::npos)
-            Logging::setLogFile(configuration_path + "/Shatterdome.log");
-        // If not, we might be invoked as a binary and can log to STDOUT.
-        else Logging::setLogStdout();
-#endif // __APPLE__
-
 #endif // _WIN32
     }
 
@@ -200,10 +178,6 @@ int main(int argc, char** argv)
     main_font->setBaselineOffset(active_theme->getStyle("base")->get(GuiElement::State::Normal).font_offset);
     bold_font->setBaselineOffset(active_theme->getStyle("bold")->get(GuiElement::State::Normal).font_offset);
 
-    // On Android, this requires the 'record audio' permissions,
-    // which is always a scary thing for users.
-    // Since there is no way to access it (yet) via a touchscreen, compile out.
-#if !defined(ANDROID)
     // Set up voice chat and key bindings.
     if (PreferencesManager::get("voice_chat_enabled", "0") == "1")
     {
@@ -211,25 +185,9 @@ int main(int argc, char** argv)
         nar->addKeyActivation(&keys.voice_all, 0);
         nar->addKeyActivation(&keys.voice_ship, 1);
     }
-#endif
 
     P<HardwareController> hardware_controller = new HardwareController();
     hardware_controller->loadConfiguration(configuration_path + "/hardware.ini");
-
-#if WITH_DISCORD
-    {
-        std::filesystem::path discord_sdk{
-#ifdef RESOURCE_BASE_DIR
-        RESOURCE_BASE_DIR
-#endif
-        };
-        discord_sdk /= std::filesystem::path{ "plugins" } / DynamicLibrary::add_native_suffix("discord_game_sdk");
-        new DiscordRichPresence(discord_sdk);
-    }
-#endif // WITH_DISCORD
-#if STEAMSDK
-    new SteamRichPresence();
-#endif //STEAMSDK
 
     string tutorial = PreferencesManager::get("tutorial");   // use "00_all.lua" for all tutorials
     string server_scenario = PreferencesManager::get("server_scenario");
