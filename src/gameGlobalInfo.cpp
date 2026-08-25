@@ -347,9 +347,6 @@ void GameGlobalInfo::startScenario(string filename, std::unordered_map<string, s
 {
     reset();
 
-    if (mvpModeEnabled())
-        hacking_games = HG_Mine;
-
     i18n::reset();
     i18n::load("locale/main." + PreferencesManager::get("language", "en") + ".po");
     i18n::load("locale/comms_ship." + PreferencesManager::get("language", "en") + ".po");

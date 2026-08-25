@@ -1,0 +1,17 @@
+[Unit]
+Description=ShatterdomeOS game server
+Documentation=https://github.com/hmhalvorsen/Shatterdome
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/shatterdome
+ExecStartPre=/opt/shatterdome/bin/setup-server.sh
+ExecStart=/opt/shatterdome/bin/Shatterdome
+Restart=always
+RestartSec=5
+Environment=HOME=/root
+
+[Install]
+WantedBy=multi-user.target

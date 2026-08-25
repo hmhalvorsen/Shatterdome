@@ -25,8 +25,8 @@ hardware_console_mode=1
 | Auto-repair system | Auto-repair enabled when you board a ship with internal rooms |
 | Weapons: no beam subsystem picker / lock | Beam target selector and missile lock button hidden; beams default to hull |
 | Science: optional remove Database | Database tab/mode hidden on Science; Database station tab removed |
-| Hacking: mine minigame | Scenario default uses mine sweeper only (`HG_Mine`) |
-| Relay hacking as science scan | Not implemented yet — needs more game testing per meeting notes |
+| Hacking: signal-lock minigame | Same sinus slider minigame as science scanning |
+| Relay hacking | Uses science-style signal lock minigame |
 | Hide on-screen buttons on hardware consoles | Map controls in `hardware.ini`; `hardware_console_mode=1` |
 
 ## Hardware (from notes)
@@ -40,3 +40,5 @@ hardware_console_mode=1
 - Physical console layouts (power presets, helm wheel, weapon buttons, trackpads)
 - Relay hacking using the science scan UI
 - Per-station `hardware.ini` profiles
+
+See [ROADMAP.md](ROADMAP.md) for stretch goals (console client, map table, LARP repair, EPSICON) and crew/recruitment planning.

@@ -243,6 +243,7 @@ set(MAIN_SOURCES
     src/screenComponents/commsOverlay.cpp
     src/screenComponents/jumpIndicator.cpp
     src/screenComponents/scanningDialog.cpp
+    src/screenComponents/signalLockMinigame.cpp
     src/screenComponents/signalQualityIndicator.cpp
     src/screenComponents/mainScreenControls.cpp
     src/screenComponents/databaseView.cpp
@@ -251,9 +252,6 @@ set(MAIN_SOURCES
     src/screenComponents/hackingDialog.cpp
     src/screenComponents/customShipFunctions.cpp
     src/screenComponents/scrollingBanner.cpp
-    src/screenComponents/lightsOut.cpp
-    src/screenComponents/miniGame.cpp
-    src/screenComponents/mineSweeper.cpp
     src/screenComponents/impulseSound.cpp
     src/components/faction.h
     src/components/faction.cpp
@@ -449,6 +447,7 @@ set(MAIN_SOURCES
     src/hardware/devices/uDMXDevice.cpp
     src/hardware/devices/virtualOutputDevice.cpp
     src/hardware/devices/philipsHueDevice.cpp
+    src/hardware/devices/sevenSegmentSerialDevice.cpp
     src/script/components.cpp
     src/script/dataStorage.h
     src/script/dataStorage.cpp
@@ -473,6 +472,7 @@ set(MAIN_SOURCES
     src/hardware/devices/sACNDMXDevice.h
     src/hardware/devices/uDMXDevice.h
     src/hardware/devices/virtualOutputDevice.h
+    src/hardware/devices/sevenSegmentSerialDevice.h
     src/hardware/hardwareController.h
     src/hardware/hardwareMappingEffects.h
     src/hardware/hardwareOutputDevice.h
@@ -519,10 +519,7 @@ set(MAIN_SOURCES
     src/screenComponents/indicatorOverlays.h
     src/screenComponents/jumpControls.h
     src/screenComponents/jumpIndicator.h
-    src/screenComponents/lightsOut.h
     src/screenComponents/mainScreenControls.h
-    src/screenComponents/mineSweeper.h
-    src/screenComponents/miniGame.h
     src/screenComponents/missileTubeControls.h
     src/screenComponents/noiseOverlay.h
     src/screenComponents/onScreenKeyboard.h
@@ -533,6 +530,7 @@ set(MAIN_SOURCES
     src/screenComponents/rawScannerDataRadarOverlay.h
     src/screenComponents/rotatingModelView.h
     src/screenComponents/scanningDialog.h
+    src/screenComponents/signalLockMinigame.h
     src/screenComponents/scanTargetButton.h
     src/screenComponents/scrollingBanner.h
     src/screenComponents/selfDestructButton.h

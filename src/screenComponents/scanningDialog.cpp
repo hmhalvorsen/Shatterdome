@@ -1,202 +1,60 @@
 #include "scanningDialog.h"
+#include "signalLockMinigame.h"
 #include "i18n.h"
 #include "playerInfo.h"
-#include "random.h"
 #include "components/scanning.h"
-#include "engine.h"
-#include "gui/gui2_panel.h"
-#include "gui/gui2_label.h"
-#include "gui/gui2_slider.h"
 #include "gui/gui2_button.h"
+#include "gui/hotkeyConfig.h"
 
 GuiScanningDialog::GuiScanningDialog(GuiContainer* owner, string id)
 : GuiElement(owner, id)
 {
-    locked = false;
-    lock_start_time = 0;
-    scan_depth = 0;
-
     setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    box = new GuiPanel(this, id + "_BOX");
-    box
-        ->setSize(500.0f, 545.0f)
-        ->setPosition(0.0f, 0.0f, sp::Alignment::Center)
-        ->hide();
+    signal_game = new GuiSignalLockMinigame(this, "SIGNAL");
+    signal_game->hide();
 
-    signal_label = new GuiLabel(box, id + "_LABEL", tr("scanning", "Electric signature"), 30);
-    signal_label->addBackground()->setPosition(0, 20, sp::Alignment::TopCenter)->setSize(450, 50);
-
-    signal_quality = new GuiSignalQualityIndicator(box, id + "_SIGNAL");
-    signal_quality->setPosition(0, 80, sp::Alignment::TopCenter)->setSize(450, 100);
-
-    locked_label = new GuiLabel(signal_quality, id + "_LOCK_LABEL", tr("scanning", "LOCKED"), 50);
-    locked_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-
-    for(int n=0; n<max_sliders; n++)
-    {
-        sliders[n] = new GuiSlider(box, id + "_SLIDER_" + string(n), 0.0, 1.0, 0.0, nullptr);
-        sliders[n]->setPosition(0, 200 + n * 70, sp::Alignment::TopCenter)->setSize(450, 50);
-    }
-    cancel_button = new GuiButton(box, id + "_CANCEL", tr("button", "Cancel"), []() {
+    cancel_button = new GuiButton(this, id + "_CANCEL", tr("button", "Cancel"), []() {
         if (my_spaceship)
             my_player_info->commandScanCancel();
     });
-    cancel_button->setPosition(0, -20, sp::Alignment::BottomCenter)->setSize(300, 50);
-
-    setupParameters();
+    cancel_button->setPosition(0, 280, sp::Alignment::Center)->setSize(300, 50)->hide();
 }
 
 void GuiScanningDialog::onDraw(sp::RenderTarget& target)
 {
-    updateSignal();
-
     auto [complexity, depth] = getScanComplexityDepth();
     if (complexity > 0 && depth > 0)
     {
-        if (!box->isVisible())
+        if (!signal_game->isVisible())
         {
-            box->show();
-            scan_depth = 0;
-            setupParameters();
+            signal_game->show();
+            cancel_button->show();
+            signal_game->setComplexityDepth(complexity, depth);
+            signal_game->beginSession();
         }
 
-        if (locked && engine->getElapsedTime() - lock_start_time > lock_delay)
+        if (signal_game->isSessionComplete())
         {
-            scan_depth += 1;
-            if (scan_depth >= depth)
-            {
-                my_player_info->commandScanDone();
-                lock_start_time = engine->getElapsedTime() - 1.0f;
-            }else{
-                setupParameters();
-            }
-        }
-
-        if (locked && engine->getElapsedTime() - lock_start_time > lock_delay / 2.0f)
-        {
-            locked_label->show();
-        }else{
-            locked_label->hide();
+            my_player_info->commandScanDone();
+            signal_game->clearSessionComplete();
+            signal_game->hide();
+            cancel_button->hide();
         }
     }else{
-        box->hide();
+        signal_game->hide();
+        cancel_button->hide();
     }
 }
 
 void GuiScanningDialog::onUpdate()
 {
-    if(my_spaceship && isVisible())
+    if (my_spaceship && signal_game->isVisible())
     {
-        for(int n=0; n<max_sliders; n++)
-        {
-            float adjust = (keys.science_scan_param_increase[n].getValue() - keys.science_scan_param_decrease[n].getValue()) * 0.01f;
-            if (adjust != 0.0f)
-            {
-                sliders[n]->setValue(sliders[n]->getValue() + adjust);
-                updateSignal();
-            }
-
-            float set_value = keys.science_scan_param_set[n].getValue();
-            if (set_value != sliders[n]->getValue() && (set_value != 0.0f || set_active[n]))
-            {
-                sliders[n]->setValue(set_value);
-                updateSignal();
-                set_active[n] = set_value != 0.0f; //Make sure the next update is send, even if it is back to zero.
-            }
-        }
+        signal_game->handleScienceKeys();
         if (keys.science_scan_abort.getDown())
             my_player_info->commandScanCancel();
     }
-}
-
-void GuiScanningDialog::setupParameters()
-{
-    auto [complexity, depth] = getScanComplexityDepth();
-
-    // Reset lock state when setting up new scan parameters
-    locked = false;
-    lock_start_time = 0.0f;
-
-    for(int n=0; n<max_sliders; n++)
-    {
-        if (n < complexity)
-            sliders[n]->show();
-        else
-            sliders[n]->hide();
-    }
-    box->setSize(500, 265 + 70 * complexity);
-
-    for (int n = 0; n < max_sliders; n++)
-    {
-        target[n] = random(0.0f, 1.0f);
-        float slider_value = random(0.0f, 1.0f);
-        while(fabsf(target[n] - slider_value) < 0.2f)
-            slider_value = random(0.0f, 1.0f);
-        sliders[n]->setValue(slider_value);
-    }
-    updateSignal();
-
-    string label = "[" + string(scan_depth + 1) + "/" + string(depth) + "] ";
-    switch(irandom(0, 10))
-    {
-    default:
-    case 0: label += tr("scanning", "Electric signature"); break;
-    case 1: label += tr("scanning", "Biomass frequency"); break;
-    case 2: label += tr("scanning", "Gravity well signature"); break;
-    case 3: label += tr("scanning", "Radiation halftime"); break;
-    case 4: label += tr("scanning", "Radio profile"); break;
-    case 5: label += tr("scanning", "Ionic phase shift"); break;
-    case 6: label += tr("scanning", "Infra-red color shift"); break;
-    case 7: label += tr("scanning", "Doppler stability"); break;
-    case 8: label += tr("scanning", "Raspberry jam prevention"); break;
-    case 9: label += tr("scanning", "Infinity impropability"); break;
-    case 10: label += tr("scanning", "Zerospace audio frequency"); break;
-    }
-    signal_label->setText(label);
-}
-
-void GuiScanningDialog::updateSignal()
-{
-    float noise = 0.0;
-    float period = 0.0;
-    float phase = 0.0;
-    int visible_slider_count = 0;
-
-    for(int n=0; n<max_sliders; n++)
-    {
-        if (sliders[n]->isVisible())
-        {
-            noise += fabsf(target[n] - sliders[n]->getValue());
-            period += fabsf(target[n] - sliders[n]->getValue());
-            phase += fabsf(target[n] - sliders[n]->getValue());
-            visible_slider_count++;
-        }
-    }
-    // Only check for lock if there are visible sliders (i.e., scan is active)
-    if (visible_slider_count > 0 && noise < 0.05f && period < 0.05f && phase < 0.05f)
-    {
-        if (!locked)
-        {
-            lock_start_time = engine->getElapsedTime();
-            locked = true;
-        }
-        if (engine->getElapsedTime() - lock_start_time > lock_delay / 2.0f)
-        {
-            noise = period = phase = 0.0f;
-        }else{
-            float f = 1.0f - (engine->getElapsedTime() - lock_start_time) / (lock_delay / 2.0f);
-            noise *= f;
-            period *= f;
-            phase *= f;
-        }
-    }else{
-        locked = false;
-    }
-
-    signal_quality->setNoiseError(noise);
-    signal_quality->setPeriodError(period);
-    signal_quality->setPhaseError(phase);
 }
 
 std::pair<int, int> GuiScanningDialog::getScanComplexityDepth()

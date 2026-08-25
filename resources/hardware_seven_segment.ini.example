@@ -1,0 +1,28 @@
+# Example ~/.shatterdome/hardware.ini for 7-segment displays
+#
+# Wire a USB-serial adapter to your display controller (Arduino, Pico, etc.)
+# and parse lines like: D0:042
+
+[hardware]
+device=SevenSegmentSerialDevice
+name=displays
+port=virtual
+# port=/dev/ttyUSB0
+# baud=115200
+resend_delay=1000
+
+[seven_segment]
+device=displays
+display=0
+digits=3
+variable=Hull
+min_input=0
+max_input=100
+
+[seven_segment]
+device=displays
+display=1
+digits=3
+variable=Energy
+min_input=0
+max_input=100

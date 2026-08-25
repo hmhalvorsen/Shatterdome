@@ -357,14 +357,6 @@ ShipSelectionScreen::ShipSelectionScreen()
             gameGlobalInfo->hacking_difficulty = index;
         }))->setOptions({tr("hacking", "Simple"), tr("hacking", "Normal"), tr("hacking", "Difficult"), tr("hacking", "Fiendish")})->setSelectionIndex(gameGlobalInfo->hacking_difficulty)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-        // Hacking games selector.
-        row = new GuiElement(extra_settings, "");
-        row->setSize(GuiElement::GuiSizeMax, 50)->setAttribute("layout", "horizontal");
-        (new GuiLabel(row, "GAME_HACKING_GAMES_LABEL", tr("Hacking type: "), 30))->setAlignment(sp::Alignment::CenterRight)->setSize(250, GuiElement::GuiSizeMax);
-        (new GuiSelector(row, "GAME_HACKING_GAME", [](int index, string value) {
-            gameGlobalInfo->hacking_games = EHackingGames(index);
-        }))->setOptions({tr("hacking", "Mine"), tr("hacking", "Lights"), tr("hacking", "All")})->setSelectionIndex((int)gameGlobalInfo->hacking_games)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-
         // Frequency and system damage row.
         row = new GuiElement(extra_settings, "");
         row->setSize(GuiElement::GuiSizeMax, 50)->setAttribute("layout", "horizontal");

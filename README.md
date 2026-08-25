@@ -93,6 +93,17 @@ cmake --build build --target package
 
 See [docs/MVP.md](docs/MVP.md). Enable with `mvp_mode=1` in `~/.shatterdome/options.ini` — hides Jump, repair minigame UI, database, beam targeting/lock, and enables auto-repair for crew-based ships.
 
+Stretch goals, crew planning, and EPSICON notes: [docs/ROADMAP.md](docs/ROADMAP.md).
+
+## ShatterdomeOS (boot to game)
+
+**ShatterdomeOS** is Ubuntu-based Linux that boots straight into Shatterdome — no desktop. See [os/shatterdomeos/README.md](os/shatterdomeos/README.md).
+
+```bash
+sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./os/shatterdomeos/install-console.sh   # bridge station
+sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./os/shatterdomeos/install-server.sh  # game server
+```
+
 ## Self-hosted CI (optional, free)
 
 To run compile checks on **your own machine** (no GitHub-hosted runner minutes):

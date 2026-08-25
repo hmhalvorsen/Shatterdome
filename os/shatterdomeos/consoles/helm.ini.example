@@ -1,0 +1,7 @@
+# /etc/shatterdome/consoles/<machine-id>.ini
+
+instance_name=Helms
+mvp_mode=1
+language=en
+autoconnect=Helms
+autoconnect_address=192.168.1.100

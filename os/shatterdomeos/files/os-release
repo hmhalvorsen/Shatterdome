@@ -1,0 +1,9 @@
+PRETTY_NAME="ShatterdomeOS 1.0"
+NAME="ShatterdomeOS"
+ID=shatterdomeos
+ID_LIKE=ubuntu
+VERSION_ID="1.0"
+VERSION_CODENAME=bridge
+HOME_URL="https://github.com/hmhalvorsen/Shatterdome"
+SUPPORT_URL="https://github.com/hmhalvorsen/Shatterdome"
+BUG_REPORT_URL="https://github.com/hmhalvorsen/Shatterdome/issues"

@@ -8,6 +8,7 @@
 
 
 class HardwareOutputDevice;
+class SevenSegmentSerialDevice;
 class HardwareMappingEffect;
 class HardwareMappingState
 {
@@ -48,6 +49,16 @@ public:
 
     HardwareMappingEffect* effect;
 };
+class SevenSegmentMapping
+{
+public:
+    string device_name;
+    int display = 0;
+    int digits = 3;
+    string variable;
+    float min_input = 0.0f;
+    float max_input = 100.0f;
+};
 class HardwareController : public Updatable
 {
 private:
@@ -56,6 +67,8 @@ private:
     std::vector<HardwareMappingState> states;
     std::vector<HardwareMappingEvent> events;
     std::vector<float> channels;
+    std::unordered_map<string, SevenSegmentSerialDevice*> seven_segment_devices;
+    std::vector<SevenSegmentMapping> seven_segment_mappings;
 public:
     HardwareController() = default;
     ~HardwareController();

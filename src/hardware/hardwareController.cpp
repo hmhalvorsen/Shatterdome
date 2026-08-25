@@ -26,8 +26,10 @@
 #include "devices/sACNDMXDevice.h"
 #include "devices/uDMXDevice.h"
 #include "devices/philipsHueDevice.h"
+#include "devices/sevenSegmentSerialDevice.h"
 
 #include "hardwareMappingEffects.h"
+#include "tween.h"
 
 HardwareController::~HardwareController()
 {
@@ -37,6 +39,8 @@ HardwareController::~HardwareController()
         delete state.effect;
     for(HardwareMappingEvent& event : events)
         delete event.effect;
+    for(auto& entry : seven_segment_devices)
+        delete entry.second;
 }
 
 void HardwareController::loadConfiguration(string filename)
@@ -113,6 +117,22 @@ void HardwareController::handleConfig(string section, std::unordered_map<string,
             device = new UDMXDevice();
         else if (settings["device"] == "PhilipsHueDevice")
             device = new PhilipsHueDevice();
+        else if (settings["device"] == "SevenSegmentSerialDevice")
+        {
+            SevenSegmentSerialDevice* segment_device = new SevenSegmentSerialDevice();
+            if (!segment_device->configure(settings))
+            {
+                LOG(ERROR) << "Failed to configure device: SevenSegmentSerialDevice";
+                delete segment_device;
+            }else{
+                string name = settings["name"];
+                if (name == "")
+                    name = "default";
+                seven_segment_devices[name] = segment_device;
+                LOG(INFO) << "New 7-segment device: " << name;
+            }
+            return;
+        }
         else
             LOG(ERROR) << "Unknown device definition in [hardware] section: " << settings["device"];
         if (device)
@@ -184,6 +204,33 @@ void HardwareController::handleConfig(string section, std::unordered_map<string,
                 }
                 createNewHardwareMappingEvent(channel_numbers[idx], per_channel_settings);
             }
+        }
+    }else if(section == "[seven_segment]")
+    {
+        SevenSegmentMapping mapping;
+        mapping.device_name = settings["device"];
+        if (mapping.device_name == "")
+            mapping.device_name = "default";
+        if (settings.find("display") != settings.end())
+            mapping.display = settings["display"].toInt();
+        if (settings.find("digits") != settings.end())
+            mapping.digits = std::max(1, std::min(8, settings["digits"].toInt()));
+        if (settings.find("variable") != settings.end())
+            mapping.variable = settings["variable"];
+        if (settings.find("min_input") != settings.end())
+            mapping.min_input = settings["min_input"].toFloat();
+        if (settings.find("max_input") != settings.end())
+            mapping.max_input = settings["max_input"].toFloat();
+
+        if (mapping.variable == "")
+        {
+            LOG(ERROR) << "[seven_segment] section missing variable";
+        }else if (seven_segment_devices.find(mapping.device_name) == seven_segment_devices.end())
+        {
+            LOG(ERROR) << "Unknown 7-segment device in hardware.ini: " << mapping.device_name;
+        }else{
+            LOG(INFO) << "7-segment display " << mapping.display << ": " << mapping.variable << " (" << mapping.digits << " digits)";
+            seven_segment_mappings.push_back(mapping);
         }
     }else{
         LOG(ERROR) << "Unknown section in hardware.ini: " << section;
@@ -266,6 +313,28 @@ void HardwareController::update(float delta)
         for(int n=0; n<device->getChannelCount(); n++)
             device->setChannelData(n, channels[idx++]);
     }
+
+    for(const SevenSegmentMapping& mapping : seven_segment_mappings)
+    {
+        auto device_it = seven_segment_devices.find(mapping.device_name);
+        if (device_it == seven_segment_devices.end())
+            continue;
+
+        float input = 0.0f;
+        if (!getVariableValue(mapping.variable, input))
+            continue;
+
+        input = std::min(mapping.max_input, std::max(mapping.min_input, input));
+        int max_value = 1;
+        for (int n = 0; n < mapping.digits; n++)
+            max_value *= 10;
+        max_value -= 1;
+        int value = int(std::lround(Tween<float>::linear(input, mapping.min_input, mapping.max_input, 0.0f, float(max_value))));
+        value = std::max(0, std::min(max_value, value));
+        device_it->second->setDisplay(mapping.display, value, mapping.digits);
+    }
+    for(auto& entry : seven_segment_devices)
+        entry.second->update(delta);
 }
 
 void HardwareController::createNewHardwareMappingState(int channel_number, std::unordered_map<string, string>& settings)

@@ -1,0 +1,19 @@
+[Unit]
+Description=ShatterdomeOS bridge console
+Documentation=https://github.com/hmhalvorsen/Shatterdome
+After=network-online.target sound.target
+Wants=network-online.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+User=__SHATTERDOME_USER__
+Environment=HOME=/home/__SHATTERDOME_USER__
+WorkingDirectory=/opt/shatterdome
+ExecStartPre=/opt/shatterdome/bin/setup-options.sh
+ExecStart=/usr/bin/startx /opt/shatterdome/bin/start-console.sh -- vt1 -nolisten tcp
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

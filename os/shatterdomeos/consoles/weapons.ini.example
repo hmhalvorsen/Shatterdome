@@ -1,0 +1,7 @@
+# /etc/shatterdome/consoles/<machine-id>.ini
+
+instance_name=Weapons
+mvp_mode=1
+language=en
+autoconnect=Weapons
+autoconnect_address=192.168.1.100
