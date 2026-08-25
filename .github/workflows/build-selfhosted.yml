@@ -18,7 +18,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Clone SeriousProton
-        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
+        run: |
+          rm -rf ../SeriousProton
+          git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
 
       - name: Compile smoke test
         run: ./tools/build-compile-check.sh
