@@ -3,6 +3,7 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "preferenceManager.h"
+#include "mvpConfig.h"
 
 #include "components/reactor.h"
 #include "components/shields.h"
@@ -65,6 +66,8 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
 
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim);
     lock_aim->setPosition(250, 20, sp::Alignment::TopCenter)->setSize(130, 50);
+    if (mvpModeEnabled())
+        lock_aim->hide();
 
     beam_info_box = new GuiElement(this, "BEAM_INFO_BOX");
     beam_info_box
@@ -78,7 +81,8 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
         (new GuiLabel(beam_info_box, "BEAM_INFO_LABEL", tr("Beam info"), 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
         (new GuiPowerDamageIndicator(beam_info_box, "", ShipSystem::Type::BeamWeapons, sp::Alignment::CenterLeft))->setSize(GuiElement::GuiSizeMax, 50);
         (new GuiBeamFrequencySelector(beam_info_box, "BEAM_FREQUENCY_SELECTOR"))->setPosition(0, 0, sp::Alignment::BottomRight)->setSize(GuiElement::GuiSizeMax, 50);
-        (new GuiBeamTargetSelector(beam_info_box, "BEAM_TARGET_SELECTOR"))->setPosition(0, -50, sp::Alignment::BottomRight)->setSize(GuiElement::GuiSizeMax, 50);
+        if (!mvpModeEnabled())
+            (new GuiBeamTargetSelector(beam_info_box, "BEAM_TARGET_SELECTOR"))->setPosition(0, -50, sp::Alignment::BottomRight)->setSize(GuiElement::GuiSizeMax, 50);
 
         // If system damage is enabled but shield frequencies are not, the
         // shield button partially overlaps this control. So move the beam

@@ -3,6 +3,7 @@
 #include "playerInfo.h"
 #include "preferenceManager.h"
 #include "featureDefs.h"
+#include "mvpConfig.h"
 
 #include "components/reactor.h"
 #include "components/warpdrive.h"
@@ -115,7 +116,8 @@ HelmsScreen::HelmsScreen(GuiContainer* owner)
     engine_layout->setPosition(20, -100, sp::Alignment::BottomLeft)->setSize(GuiElement::GuiSizeMax, 300)->setAttribute("layout", "horizontal");
     (new GuiImpulseControls(engine_layout, "IMPULSE"))->setSize(100, GuiElement::GuiSizeMax);
     (new GuiWarpControls(engine_layout, "WARP"))->setSize(100, GuiElement::GuiSizeMax);
-    (new GuiJumpControls(engine_layout, "JUMP"))->setSize(100, GuiElement::GuiSizeMax);
+    if (!mvpModeEnabled())
+        (new GuiJumpControls(engine_layout, "JUMP"))->setSize(100, GuiElement::GuiSizeMax);
 
     docking_button = new GuiDockingButton(this, "DOCKING");
     docking_button->setPosition(20, -20, sp::Alignment::BottomLeft)->setSize(280, 50)->setVisible(my_spaceship.hasComponent<DockingPort>());

@@ -28,6 +28,7 @@
 #include "screenComponents/selfDestructEntry.h"
 
 #include "components/internalrooms.h"
+#include "mvpConfig.h"
 
 #include "components/collision.h"
 #include "components/impulse.h"
@@ -1102,11 +1103,11 @@ void PlayerInfo::spawnUI(int monitor_index, RenderLayer* render_layer)
             screen->addStationTab(new SinglePilotScreen(container), CrewPosition::singlePilot, getCrewPositionName(CrewPosition::singlePilot), getCrewPositionIcon(CrewPosition::singlePilot));
 
         //Extra
-        if (cps.has(CrewPosition::damageControl))
+        if (cps.has(CrewPosition::damageControl) && !mvpModeEnabled())
             screen->addStationTab(new DamageControlScreen(container), CrewPosition::damageControl, getCrewPositionName(CrewPosition::damageControl), getCrewPositionIcon(CrewPosition::damageControl));
         if (cps.has(CrewPosition::powerManagement))
             screen->addStationTab(new PowerManagementScreen(container), CrewPosition::powerManagement, getCrewPositionName(CrewPosition::powerManagement), getCrewPositionIcon(CrewPosition::powerManagement));
-        if (cps.has(CrewPosition::databaseView))
+        if (cps.has(CrewPosition::databaseView) && !mvpModeEnabled())
             screen->addStationTab(new DatabaseScreen(container), CrewPosition::databaseView, getCrewPositionName(CrewPosition::databaseView), getCrewPositionIcon(CrewPosition::databaseView));
         if (cps.has(CrewPosition::altRelay))
             screen->addStationTab(new RelayScreen(container, false), CrewPosition::altRelay, getCrewPositionName(CrewPosition::altRelay), getCrewPositionIcon(CrewPosition::altRelay));

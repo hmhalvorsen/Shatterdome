@@ -2,6 +2,7 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "preferenceManager.h"
+#include "mvpConfig.h"
 #include "multiplayer_client.h"
 #include "i18n.h"
 #include "featureDefs.h"
@@ -248,6 +249,11 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, CrewPosition crew_position)
         database_view->setVisible(index == 1);
     });
     view_mode_selection->setOptions({tr("scienceButton", "Radar"), tr("scienceButton", "Database")})->setSelectionIndex(0)->setPosition(20, -20, sp::Alignment::BottomLeft)->setSize(200, 100);
+    if (mvpModeEnabled())
+    {
+        view_mode_selection->hide();
+        database_view->hide();
+    }
 
     // Scanning dialog.
     new GuiScanningDialog(this, "SCANNING_DIALOG");

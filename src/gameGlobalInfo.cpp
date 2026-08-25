@@ -7,7 +7,10 @@
 #include "soundManager.h"
 #include "random.h"
 #include "config.h"
+#include "mvpConfig.h"
 #include "components/collision.h"
+#include "components/internalrooms.h"
+#include "components/beamweapon.h"
 #include "systems/collision.h"
 #include "ecs/query.h"
 #include "menus/luaConsole.h"
@@ -111,7 +114,16 @@ void GameGlobalInfo::update(float delta)
     {
         //Set the my_spaceship variable based on the my_player_info->ship_id
         if (my_spaceship != my_player_info->ship)
+        {
             my_spaceship = my_player_info->ship;
+            if (mvpModeEnabled() && my_spaceship)
+            {
+                if (my_spaceship.hasComponent<InternalRooms>())
+                    my_player_info->commandSetAutoRepair(true);
+                if (my_spaceship.hasComponent<BeamWeaponSys>())
+                    my_player_info->commandSetBeamSystemTarget(ShipSystem::Type::None);
+            }
+        }
     }
     elapsed_time += delta;
 
@@ -334,6 +346,9 @@ void GameGlobalInfo::setScenarioSettings(const string filename, std::unordered_m
 void GameGlobalInfo::startScenario(string filename, std::unordered_map<string, string> new_settings)
 {
     reset();
+
+    if (mvpModeEnabled())
+        hacking_games = HG_Mine;
 
     i18n::reset();
     i18n::load("locale/main." + PreferencesManager::get("language", "en") + ".po");

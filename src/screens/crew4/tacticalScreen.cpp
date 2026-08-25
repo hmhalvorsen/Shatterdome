@@ -4,6 +4,7 @@
 #include "featureDefs.h"
 #include "gameGlobalInfo.h"
 #include "preferenceManager.h"
+#include "mvpConfig.h"
 
 #include "components/reactor.h"
 #include "components/warpdrive.h"
@@ -109,7 +110,8 @@ TacticalScreen::TacticalScreen(GuiContainer* owner)
         (new GuiLabel(beam_info_box, "BEAM_INFO_LABEL", tr("Beams"), 30))->addBackground()->setPosition(0, 0, sp::Alignment::BottomLeft)->setSize(80, 50);
         (new GuiBeamFrequencySelector(beam_info_box, "BEAM_FREQUENCY_SELECTOR"))->setPosition(80, 0, sp::Alignment::BottomLeft)->setSize(132, 50);
         (new GuiPowerDamageIndicator(beam_info_box, "", ShipSystem::Type::BeamWeapons, sp::Alignment::CenterLeft))->setPosition(0, 0, sp::Alignment::BottomLeft)->setSize(212, 50);
-        (new GuiBeamTargetSelector(beam_info_box, "BEAM_TARGET_SELECTOR"))->setPosition(0, 0, sp::Alignment::BottomRight)->setSize(288, 50);
+        if (!mvpModeEnabled())
+            (new GuiBeamTargetSelector(beam_info_box, "BEAM_TARGET_SELECTOR"))->setPosition(0, 0, sp::Alignment::BottomRight)->setSize(288, 50);
     }
 
     // Weapon tube locking, and manual aiming controls.
@@ -119,6 +121,8 @@ TacticalScreen::TacticalScreen(GuiContainer* owner)
     missile_aim->hide()->setPosition(0, 0, sp::Alignment::Center)->setSize(GuiElement::GuiSizeMatchHeight, 800);
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim);
     lock_aim->setPosition(250, 20, sp::Alignment::TopCenter)->setSize(110, 50);
+    if (mvpModeEnabled())
+        lock_aim->hide();
 
     // Combat maneuver and propulsion controls in the bottom right corner.
     (new GuiCombatManeuver(this, "COMBAT_MANEUVER"))->setPosition(-20, -390, sp::Alignment::BottomRight)->setSize(200, 150);
@@ -127,6 +131,8 @@ TacticalScreen::TacticalScreen(GuiContainer* owner)
     (new GuiImpulseControls(engine_layout, "IMPULSE"))->setSize(100, GuiElement::GuiSizeMax);
     warp_controls = (new GuiWarpControls(engine_layout, "WARP"))->setSize(100, GuiElement::GuiSizeMax);
     jump_controls = (new GuiJumpControls(engine_layout, "JUMP"))->setSize(100, GuiElement::GuiSizeMax);
+    if (mvpModeEnabled())
+        jump_controls->hide();
     (new GuiDockingButton(this, "DOCKING"))->setPosition(-20, -20, sp::Alignment::BottomRight)->setSize(280, 50);
 
     (new GuiCustomShipFunctions(this, CrewPosition::tacticalOfficer, ""))->setPosition(-20, 120, sp::Alignment::TopRight)->setSize(250, GuiElement::GuiSizeMax);
@@ -137,7 +143,7 @@ void TacticalScreen::onDraw(sp::RenderTarget& renderer)
     if (my_spaceship)
     {
         warp_controls->setVisible(my_spaceship.hasComponent<WarpDrive>());
-        jump_controls->setVisible(my_spaceship.hasComponent<JumpDrive>());
+        jump_controls->setVisible(!mvpModeEnabled() && my_spaceship.hasComponent<JumpDrive>());
         beam_info_box->setVisible(my_spaceship.hasComponent<BeamWeaponSys>() && (gameGlobalInfo->use_beam_shield_frequencies || gameGlobalInfo->use_system_damage));
 
         const bool has_tubes = my_spaceship.hasComponent<MissileTubes>();

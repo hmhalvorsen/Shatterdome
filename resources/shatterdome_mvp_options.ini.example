@@ -1,0 +1,5 @@
+# Copy relevant lines into ~/.shatterdome/options.ini
+
+mvp_mode=1
+hardware_console_mode=1
+language=en

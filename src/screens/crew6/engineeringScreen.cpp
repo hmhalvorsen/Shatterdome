@@ -19,6 +19,7 @@
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/infoDisplay.h"
+#include "mvpConfig.h"
 
 #include "gui/theme.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -281,7 +282,8 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
     for (float snap_point = 0.0f; snap_point <= 10.0f; snap_point += 2.5f)
         coolant_slider->addSnapValue(snap_point, 0.1f);
 
-    (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    if (!mvpModeEnabled())
+        (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     (new GuiCustomShipFunctions(this, crew_position, ""))->setPosition(-20, 120, sp::Alignment::TopRight)->setSize(250, GuiElement::GuiSizeMax);
 }

@@ -89,6 +89,10 @@ cmake --install build --prefix dist
 cmake --build build --target package
 ```
 
+## MVP mode (physical consoles)
+
+See [docs/MVP.md](docs/MVP.md). Enable with `mvp_mode=1` in `~/.shatterdome/options.ini` — hides Jump, repair minigame UI, database, beam targeting/lock, and enables auto-repair for crew-based ships.
+
 ## Self-hosted CI (optional, free)
 
 To run compile checks on **your own machine** (no GitHub-hosted runner minutes):
