@@ -41,4 +41,4 @@ hardware_console_mode=1
 - Relay hacking using the science scan UI
 - Per-station `hardware.ini` profiles
 
-See [ROADMAP.md](ROADMAP.md) for stretch goals (console client, map table, LARP repair, EPSICON) and crew/recruitment planning.
+See [ROADMAP.md](ROADMAP.md) for stretch goals (console client, map table, LARP repair, BLACKBRIDGE) and crew/recruitment planning.

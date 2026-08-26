@@ -1,5 +1,5 @@
 -- Name: Demo Bridge
--- Description: EPSICON / Shatterdome demo — one player ship, no enemies. Consoles autoconnect by station name.
+-- Description: BLACKBRIDGE / Shatterdome demo — one player ship, no enemies. Consoles autoconnect by station name.
 -- Type: Basic
 
 require("utils.lua")

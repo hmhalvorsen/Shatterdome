@@ -9,7 +9,7 @@ REPO_DIR="$(cd "${SDOS_DIR}/../.." && pwd)"
 FILES_DIR="${SDOS_DIR}/files"
 INSTALL_DIR="/opt/shatterdome"
 SCENARIO="${DEMO_SCENARIO:-scenario_demo_bridge.lua}"
-SERVER_NAME="${DEMO_SERVER_NAME:-EPSICON}"
+SERVER_NAME="${DEMO_SERVER_NAME:-BLACKBRIDGE}"
 
 . "${SDOS_DIR}/lib/detect-platform.sh"
 . "${SDOS_DIR}/lib/branding.sh"
@@ -28,7 +28,7 @@ mkdir -p /etc/shatterdome "${INSTALL_DIR}/bin"
 . "${SDOS_DIR}/lib/install-game.sh"
 
 install -m 644 "${SDOS_DIR}/demo/server.ini" /etc/shatterdome/server.ini
-sed -i "s/scenario_demo_bridge.lua/${SCENARIO}/; s/EPSICON/${SERVER_NAME}/" /etc/shatterdome/server.ini
+sed -i "s/scenario_demo_bridge.lua/${SCENARIO}/; s/BLACKBRIDGE/${SERVER_NAME}/" /etc/shatterdome/server.ini
 
 cat > "${INSTALL_DIR}/bin/setup-server.sh" << 'EOS'
 #!/bin/bash

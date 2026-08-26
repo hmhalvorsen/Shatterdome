@@ -6,14 +6,14 @@ Five consoles + one server, minimal configuration. Power on → play.
 
 | Machine | Config | Boots into |
 |---|---|---|
-| **Server** (1× PC) | `/etc/shatterdome/server.ini` | Headless `scenario_demo_bridge.lua`, LAN name **EPSICON** |
+| **Server** (1× PC) | `/etc/shatterdome/server.ini` | Headless `scenario_demo_bridge.lua`, LAN name **BLACKBRIDGE** |
 | **Helm** | `/etc/shatterdome/station` → `helms` | Autoconnect → Helm station |
 | **Weapons** | `weapons` | Weapons station |
 | **Engineering** | `engineering` | Engineering station |
 | **Science** | `science` | Science station |
 | **Relay** | `relay` | Relay station |
 
-No IP addresses on consoles — they **scan the LAN** for server name `EPSICON`.
+No IP addresses on consoles — they **scan the LAN** for server name `BLACKBRIDGE`.
 
 ## ShatterdomeOS setup
 
@@ -45,7 +45,7 @@ sudo cp os/shatterdomeos/demo/stations/helms /etc/shatterdome/station
 
 1. Power **server** → wait ~30s for scenario to load  
 2. Power **all 5 consoles** (order doesn't matter)  
-3. Each console shows "Searching for server…" then connects to **EPSICON**  
+3. Each console shows "Searching for server…" then connects to **BLACKBRIDGE**  
 4. Crew is on the pre-spawned **Bridge** ship at their stations  
 
 ## Manual options.ini (non-ShatterdomeOS)
@@ -55,7 +55,7 @@ sudo cp os/shatterdomeos/demo/stations/helms /etc/shatterdome/station
 ```ini
 demo_mode=server
 demo_scenario=scenario_demo_bridge.lua
-demo_server_name=EPSICON
+demo_server_name=BLACKBRIDGE
 mvp_mode=1
 ```
 
@@ -72,7 +72,7 @@ Or use legacy keys directly:
 
 ```ini
 autoconnect=helms
-autoconnect_servername=EPSICON
+autoconnect_servername=BLACKBRIDGE
 autoconnectship=solo
 mvp_mode=1
 ```
@@ -91,7 +91,7 @@ Or: `sudo DEMO_SCENARIO=scenario_20_training1.lua ./install-server.sh`
 
 - All machines on the **same LAN** (same Wi‑Fi or switch)  
 - No fixed IPs required  
-- Server advertises as **EPSICON** on UDP port 35666  
+- Server advertises as **BLACKBRIDGE** on UDP port 35666  
 
 ## Troubleshooting
 

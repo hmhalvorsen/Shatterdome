@@ -60,6 +60,7 @@ Use the main-menu tutorial to learn the stations.
 
 ## Docs
 
+- [Install guide](docs/INSTALL.md) — server + five consoles, permanent station roles
 - [MVP mode](docs/MVP.md) — simplified controls for physical consoles (`mvp_mode=1`)
 - [Demo session](docs/DEMO.md) — five-console bridge setup
 - [ShatterdomeOS](os/shatterdomeos/README.md) — boot straight into the game on Linux

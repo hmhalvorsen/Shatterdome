@@ -41,7 +41,7 @@ void applyDemoSessionPreferences()
 
     if (demo_client || !station.empty())
     {
-        string server_name = PreferencesManager::get("demo_server_name", "EPSICON");
+        string server_name = PreferencesManager::get("demo_server_name", "BLACKBRIDGE");
         setDefault("autoconnect_servername", server_name);
         setDefault("mvp_mode", "1");
         setDefault("autoconnectship", "solo");
@@ -52,7 +52,7 @@ void applyDemoSessionPreferences()
     if (demo_server)
     {
         string scenario = PreferencesManager::get("demo_scenario", "scenario_demo_bridge.lua");
-        string server_name = PreferencesManager::get("demo_server_name", "EPSICON");
+        string server_name = PreferencesManager::get("demo_server_name", "BLACKBRIDGE");
 
         setDefault("headless", scenario);
         setDefault("headless_name", server_name);
