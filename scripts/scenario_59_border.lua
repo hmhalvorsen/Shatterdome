@@ -3099,13 +3099,12 @@ function wreckModChangeRepair(x,y)
 	wreckModCommonArtifact(wma)
 	wma:onPickup(function(self,p)
 		string.format("")	--global context for serious proton
-		local current_repair_crew_count = p:getRepairCrewCount()
+		local current_repair_crew_count = 0
 		local scan_bonus = 0
 		if self:isScannedByFaction(p:getFaction()) then
 			scan_bonus = difficulty * 5
 		end
 		if random(1,100) < base_wreck_mod_positive - (difficulty * wreck_mod_interval) + scan_bonus then
-			p:setRepairCrewCount(current_repair_crew_count + 1)
 			if p:hasPlayerAtPosition("Engineering") then
 				p.artifact_increase_repair_crew_message = "artifact_increase_repair_crew_message"
 				p:addCustomMessage("Engineering",p.artifact_increase_repair_crew_message,string.format(_("artifactEffect-msgEngineer", "The %s retrieved has increased the number of repair crew"),full_desc))
@@ -3120,7 +3119,6 @@ function wreckModChangeRepair(x,y)
 			end
 		else
 			if current_repair_crew_count > 0 then
-				p:setRepairCrewCount(current_repair_crew_count - 1)
 				if p:hasPlayerAtPosition("Engineering") then
 					p.artifact_decrease_repair_crew_message = "artifact_decrease_repair_crew_message"
 					p:addCustomMessage("Engineering",p.artifact_decrease_repair_crew_message,string.format(_("artifactEffect-msgEngineer", "The %s retrieved has decreased the number of repair crew: assassination malware"),full_desc))
@@ -5143,7 +5141,7 @@ function showPlayerInfoOnConsole(delta, p)
 						info_choice = 1
 					end
 					if info_choice == 1 then
-						ship_info = string.format("Repair Crew: %i",p:getRepairCrewCount())
+						ship_info = string.format("Repair Crew: %i",0)
 						if p.maxRepairCrew ~= nil then
 							ship_info = string.format("%s/%i",ship_info,p.maxRepairCrew)
 						end
@@ -5168,7 +5166,7 @@ function showPlayerInfoOnConsole(delta, p)
 						ship_info = p:getTypeName()
 						print(ship_info)
 						if ship_info == nil then
-							ship_info = string.format("Repair Crew: %i",p:getRepairCrewCount())
+							ship_info = string.format("Repair Crew: %i",0)
 						else
 							ship_info = string.format("Type: %s",ship_info)
 						end
@@ -5426,7 +5424,6 @@ end
 function createPlayerShipNarsil()
 	playerNarsil = PlayerSpaceship():setTemplate("Atlantis"):setFaction("Human Navy"):setCallSign("Narsil")
 	playerNarsil:setTypeName("Proto-Atlantis")
-	playerNarsil:setRepairCrewCount(4)					--more repair crew (vs 3)
 	playerNarsil:setImpulseMaxSpeed(70)					--slower impulse max (vs 90)
 	playerNarsil:setRotationMaxSpeed(14)				--faster spin (vs 10)
 	playerNarsil:setJumpDrive(false)					--no Jump
@@ -5459,7 +5456,6 @@ end
 function createPlayerShipHeadhunter()
 	playerHeadhunter = PlayerSpaceship():setTemplate("Piranha"):setFaction("Human Navy"):setCallSign("Headhunter")
 	playerHeadhunter:setTypeName("Redhook")
-	playerHeadhunter:setRepairCrewCount(4)						--more repair crew (vs 2)
 	playerHeadhunter:setJumpDriveRange(2000,25000)				--shorter jump drive range (vs 5-50)
 	playerHeadhunter:setHullMax(140)							--stronger hull (vs 120)
 	playerHeadhunter:setHull(140)
@@ -5492,7 +5488,6 @@ end
 function createPlayerShipBlazon()
 	playerBlazon = PlayerSpaceship():setTemplate("Striker"):setFaction("Human Navy"):setCallSign("Blazon")
 	playerBlazon:setTypeName("Stricken")
-	playerBlazon:setRepairCrewCount(2)				
 	playerBlazon:setImpulseMaxSpeed(105)			--vs 45		
 	playerBlazon:setRotationMaxSpeed(35)			--vs 15
 	playerBlazon:setShieldsMax(80,50)				--vs 50,30
@@ -5546,7 +5541,6 @@ end
 function createPlayerShipSting()
 	playerSting = PlayerSpaceship():setTemplate("Hathcock"):setFaction("Human Navy"):setCallSign("Sting")
 	playerSting:setTypeName("Surkov")
-	playerSting:setRepairCrewCount(3)	--more repair crew (vs 2)
 	playerSting:setImpulseMaxSpeed(60)	--faster impulse max (vs 50)
 	playerSting:setJumpDrive(false)		--no jump
 	playerSting:setWarpDrive(true)		--add warp
@@ -5571,7 +5565,6 @@ end
 function createPlayerShipSpyder()
 	playerSpyder = PlayerSpaceship():setTemplate("Atlantis"):setFaction("Human Navy"):setCallSign("Spyder")
 	playerSpyder:setTypeName("Atlantis II")
-	playerSpyder:setRepairCrewCount(4)					--more repair crew (vs 3)
 	playerSpyder:setImpulseMaxSpeed(80)					--slower impulse max (vs 90)
 	playerSpyder:setWeaponTubeCount(6)					--one more tube
 	playerSpyder:setWeaponTubeDirection(0,300)			--front left (vs left)
@@ -5593,7 +5586,6 @@ function createPlayerShipSpinstar()
 	playerSpinStar:setTypeName("Proto-Atlantis")
 	playerSpinStar.spine_request = false
 	playerSpinStar.spine_charge = true
-	playerSpinStar:setRepairCrewCount(4)				--more repair crew (vs 3)
 	playerSpinStar:setImpulseMaxSpeed(70)				--slower impulse max (vs 90)
 	playerSpinStar:setRotationMaxSpeed(14)				--faster spin (vs 10)
 	playerSpinStar:setJumpDrive(false)					--no Jump
@@ -7837,14 +7829,13 @@ function handleDockedState()
 		end)
 		if math.random(1,5) <= (3 - difficulty) then
 			local hireCost = math.random(45,90)
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(30,60)
 			end
 			addCommsReply(string.format(_("trade-comms", "Recruit repair crew member for %i reputation"),hireCost), function()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
 				addCommsReply(_("Back"), commsStation)
@@ -7870,14 +7861,13 @@ function handleDockedState()
 	else
 		if math.random(1,5) <= (3 - difficulty) then
 			local hireCost = math.random(60,120)
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(45,90)
 			end
 			addCommsReply(string.format(_("trade-comms", "Recruit repair crew member for %i reputation"),hireCost), function()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
 				addCommsReply(_("Back"), commsStation)
@@ -9278,7 +9268,7 @@ function preOrderOrdnance()
 	if comms_source.preorder_repair_crew == nil then
 		if random(1,100) <= 20 then
 			if comms_source:isFriendly(comms_target) then
-				if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+				if 0 < comms_source.maxRepairCrew then
 					hireCost = math.random(30,60)
 				else
 					hireCost = math.random(45,90)
@@ -11340,7 +11330,7 @@ function setPlayer(pobj)
 		end
 		if pobj.cargo == nil then
 			pobj.cargo = pobj.maxCargo
-			pobj.maxRepairCrew = pobj:getRepairCrewCount()
+			pobj.maxRepairCrew = 0
 			pobj.healthyShield = 1.0
 			pobj.prevShield = 1.0
 			pobj.healthyReactor = 1.0
@@ -11515,7 +11505,6 @@ function expediteDockCheck(delta, p)
 					p:setWeaponStorage("Nuke",new_amount)
 				end
 				if p.preorder_repair_crew ~= nil then
-					p:setRepairCrewCount(p:getRepairCrewCount() + 1)
 					resetPreviousSystemHealth(p)
 				end
 				if p.preorder_coolant ~= nil then
@@ -11548,7 +11537,7 @@ function healthCheck(delta, p)
 	healthCheckTimer = healthCheckTimer - delta
 	if healthCheckTimer < 0 then
 		if healthDiagnostic then print("health check timer expired") end
-		if p:getRepairCrewCount() > 0 then
+		if 0 > 0 then
 			p.system_choice_list = {}
 			if healthDiagnostic then print("crew on valid ship") end
 			local fatalityChance = 0
@@ -11636,7 +11625,7 @@ function healthCheck(delta, p)
 				p.prevJump = p:getSystemHealth("jumpdrive")
 			end
 			if healthDiagnostic then print("adjust") end
-			if p:getRepairCrewCount() == 1 then
+			if 0 == 1 then
 				fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 			end
 			if healthDiagnostic then print("check") end
@@ -11645,7 +11634,6 @@ function healthCheck(delta, p)
 			end
 		else	--no repair crew left
 			if random(1,100) <= (4 - difficulty) then
-				p:setRepairCrewCount(1)
 				if p:hasPlayerAtPosition("Engineering") then
 					local repairCrewRecovery = "repairCrewRecovery"
 					p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer", "Medical team has revived one of your repair crew"))
@@ -11731,7 +11719,6 @@ end
 function crewFate(p, fatalityChance)
 	if math.random() < (fatalityChance) then
 		if p.initialCoolant == nil then
-			p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 			if p:hasPlayerAtPosition("Engineering") then
 				local repairCrewFatality = "repairCrewFatality"
 				p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -11778,7 +11765,6 @@ function crewFate(p, fatalityChance)
 			end
 			consequence = math.random(1,upper_consequence)
 			if consequence == 1 then
-				p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 				if p:hasPlayerAtPosition("Engineering") then
 					local repairCrewFatality = "repairCrewFatality"
 					p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -11940,14 +11926,12 @@ function autoCoolant(p)
 				local tbi = "enableAutoCool" .. p:getCallSign()
 				p:addCustomButton("Engineering",tbi,_("coolant-buttonEngineer", "Auto cool"),function() 
 					string.format("")	--global context for serious proton
-					p:commandSetAutoRepair(true)
 					p:setAutoCoolant(true)
 					p.autoCoolant = true
 				end)
 				tbi = "disableAutoCool" .. p:getCallSign()
 				p:addCustomButton("Engineering",tbi,_("coolant-buttonEngineer", "Manual cool"),function()
 					string.format("")	--global context for serious proton
-					p:commandSetAutoRepair(false)
 					p:setAutoCoolant(false)
 					p.autoCoolant = false
 				end)
@@ -11959,14 +11943,12 @@ function autoCoolant(p)
 				tbi = "enableAutoCoolPlus" .. p:getCallSign()
 				p:addCustomButton("Engineering+",tbi,_("coolant-buttonEngineer+", "Auto cool"),function()
 					string.format("")	--global context for serious proton
-					p:commandSetAutoRepair(true)
 					p:setAutoCoolant(true)
 					p.autoCoolant = true
 				end)
 				tbi = "disableAutoCoolPlus" .. p:getCallSign()
 				p:addCustomButton("Engineering+",tbi,_("coolant-buttonEngineer+", "Manual cool"),function()
 					string.format("")	--global context for serious proton
-					p:commandSetAutoRepair(false)
 					p:setAutoCoolant(false)
 					p.autoCoolant = false
 				end)
@@ -11978,14 +11960,12 @@ function autoCoolant(p)
 				tbi = "enableAutoCoolDmg" .. p:getCallSign()
 				p:addCustomButton("DamageControl",tbi,_("coolant-buttonDamageControl", "Auto cool"),function()
 					string.format("")	--global context for serious proton
-					p:commandSetAutoRepair(true)
 					p:setAutoCoolant(true)
 					p.autoCoolant = true
 				end)
 				tbi = "disableAutoCoolDmg" .. p:getCallSign()
 				p:addCustomButton("DamageControl",tbi,_("coolant-buttonDamageControl", "Manual cool"),function()
 					string.format("")	--global context for serious proton
-					p:commandSetAutoRepair(false)
 					p:setAutoCoolant(false)
 					p.autoCoolant = false
 				end)

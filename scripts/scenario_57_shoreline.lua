@@ -656,7 +656,7 @@ function setPlayers()
 				end
 				if pobj.cargo == nil then
 					pobj.cargo = pobj.maxCargo
-					pobj.maxRepairCrew = pobj:getRepairCrewCount()
+					pobj.maxRepairCrew = 0
 					pobj.healthyShield = 1.0
 					pobj.prevShield = 1.0
 					pobj.healthyReactor = 1.0

@@ -25,40 +25,12 @@ template:setWeaponStorage("Nuke", 4)
 template:setWeaponStorage("Mine", 8)
 template:setWeaponStorage("EMP", 6)
 
-template:addRoomSystem(1, 0, 2, 1, "Maneuver");
-template:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-template:addRoom(2, 2, 2, 1);
 
-template:addRoomSystem(0, 3, 1, 2, "RearShield");
-template:addRoomSystem(1, 3, 2, 2, "Reactor");
-template:addRoomSystem(3, 3, 2, 2, "Warp");
-template:addRoomSystem(5, 3, 1, 2, "JumpDrive");
-template:addRoom(6, 3, 2, 1);
-template:addRoom(6, 4, 2, 1);
-template:addRoomSystem(8, 3, 1, 2, "FrontShield");
 
-template:addRoom(2, 5, 2, 1);
-template:addRoomSystem(1, 6, 2, 1, "MissileSystem");
-template:addRoomSystem(1, 7, 2, 1, "Impulse");
 
-template:addDoor(1, 1, true);
-template:addDoor(2, 2, true);
-template:addDoor(3, 3, true);
-template:addDoor(1, 3, false);
-template:addDoor(3, 4, false);
-template:addDoor(3, 5, true);
-template:addDoor(2, 6, true);
-template:addDoor(1, 7, true);
-template:addDoor(5, 3, false);
-template:addDoor(6, 3, false);
-template:addDoor(6, 4, false);
-template:addDoor(8, 3, false);
-template:addDoor(8, 4, false);
 
 
 --Airlock doors
---template:addDoor(2, 2, false);
---template:addDoor(2, 5, false);
 
 template = ShipTemplate():setName("Player Missile Cr."):setLocaleName(_("playerShip", "Player Missile Cr.")):setModel("space_cruiser_4"):setType("playership")
 template:hidden() -- The Player Missile Cr. is pretty much replaced by the Crucible
@@ -85,35 +57,9 @@ template:setWeaponStorage("Nuke", 8)
 template:setWeaponStorage("Mine", 12)
 template:setWeaponStorage("EMP", 10)
 
-template:addRoomSystem(1, 0, 2, 1, "Maneuver");
-template:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-template:addRoom(2, 2, 2, 1);
 
-template:addRoomSystem(0, 3, 1, 2, "RearShield");
-template:addRoomSystem(1, 3, 2, 2, "Reactor");
-template:addRoomSystem(3, 3, 2, 2, "Warp");
-template:addRoomSystem(5, 3, 1, 2, "JumpDrive");
-template:addRoom(6, 3, 2, 1);
-template:addRoom(6, 4, 2, 1);
-template:addRoomSystem(8, 3, 1, 2, "FrontShield");
 
-template:addRoom(2, 5, 2, 1);
-template:addRoomSystem(1, 6, 2, 1, "MissileSystem");
-template:addRoomSystem(1, 7, 2, 1, "Impulse");
 
-template:addDoor(1, 1, true);
-template:addDoor(2, 2, true);
-template:addDoor(3, 3, true);
-template:addDoor(1, 3, false);
-template:addDoor(3, 4, false);
-template:addDoor(3, 5, true);
-template:addDoor(2, 6, true);
-template:addDoor(1, 7, true);
-template:addDoor(5, 3, false);
-template:addDoor(6, 3, false);
-template:addDoor(6, 4, false);
-template:addDoor(8, 3, false);
-template:addDoor(8, 4, false);
 
 template = ShipTemplate():setName("Player Fighter"):setLocaleName(_("playerShip", "Player Fighter")):setModel("small_fighter_1"):setType("playership")
 template:hidden() -- The Player Figher is replaced by the MP52 Hornet
@@ -132,27 +78,9 @@ template:setEnergyStorage(400)
 template:setTubes(1, 10.0) -- Amount of torpedo tubes, loading time
 template:setWeaponStorage("HVLI", 4)
 
-template:addRoomSystem(3, 0, 1, 1, "Maneuver");
-template:addRoomSystem(1, 0, 2, 1, "BeamWeapons");
 
-template:addRoomSystem(0, 1, 1, 2, "RearShield");
-template:addRoomSystem(1, 1, 2, 2, "Reactor");
-template:addRoomSystem(3, 1, 2, 1, "Warp");
-template:addRoomSystem(3, 2, 2, 1, "JumpDrive");
-template:addRoomSystem(5, 1, 1, 2, "FrontShield");
 
-template:addRoomSystem(1, 3, 2, 1, "MissileSystem");
-template:addRoomSystem(3, 3, 1, 1, "Impulse");
 
-template:addDoor(2, 1, true);
-template:addDoor(3, 1, true);
-template:addDoor(1, 1, false);
-template:addDoor(3, 1, false);
-template:addDoor(3, 2, false);
-template:addDoor(3, 3, true);
-template:addDoor(2, 3, true);
-template:addDoor(5, 1, false);
-template:addDoor(5, 2, false);
 
 --[[ Neutral or special ship types --]]
 --Tug, used for transport of small goods (like weapons)
@@ -195,27 +123,9 @@ variation:setWeaponStorage("Homing", 0)
 variation:setWeaponStorage("Nuke", 0)
 variation:setWeaponStorage("EMP", 0)
 
-variation:setRepairCrewCount(4)
 --	(H)oriz, (V)ert	   HC,VC,HS,VS, system    (C)oordinate (S)ize
-variation:addRoomSystem( 0, 1, 1, 2, "Impulse")
-variation:addRoomSystem( 1, 0, 2, 1, "RearShield")
-variation:addRoomSystem( 1, 1, 2, 2, "JumpDrive")
-variation:addRoomSystem( 1, 3, 2, 1, "FrontShield")
-variation:addRoomSystem( 3, 0, 2, 1, "Beamweapons")
-variation:addRoomSystem( 3, 1, 3, 1, "Warp")
-variation:addRoomSystem( 3, 2, 3, 1, "Reactor")
-variation:addRoomSystem( 3, 3, 2, 1, "MissileSystem")
-variation:addRoomSystem( 6, 1, 1, 2, "Maneuver")
 
 -- (H)oriz, (V)ert H, V, true = horizontal
-variation:addDoor( 1, 1, false)
-variation:addDoor( 2, 1, true)
-variation:addDoor( 1, 3, true)
-variation:addDoor( 3, 2, false)
-variation:addDoor( 4, 3, true)
-variation:addDoor( 6, 1, false)
-variation:addDoor( 4, 2, true)
-variation:addDoor( 4, 1, true)
 
 
 --[[ Enemy ship types --]]
@@ -327,26 +237,8 @@ variation:setJumpDrive(false)
 variation:setCombatManeuver(250, 150)
 variation:setEnergyStorage(500)
 
-variation:setRepairCrewCount(2)
 
-variation:addRoomSystem(4,0,3,1,"RearShield")
-variation:addRoomSystem(3,1,3,1,"MissileSystem")
-variation:addRoomSystem(0,1,1,1,"Beamweapons")
-variation:addRoomSystem(1,1,1,3,"Reactor")
-variation:addRoomSystem(2,2,3,1,"Warp")
-variation:addRoomSystem(5,2,4,1,"JumpDrive")
-variation:addRoomSystem(0,3,1,1,"Impulse")
-variation:addRoomSystem(3,3,3,1,"Maneuver")
-variation:addRoomSystem(4,4,3,1,"FrontShield")
 
-variation:addDoor(1,1,false)
-variation:addDoor(1,3,false)
-variation:addDoor(2,2,false)
-variation:addDoor(5,2,false)
-variation:addDoor(4,3,true)
-variation:addDoor(5,2,true)
-variation:addDoor(4,1,true)
-variation:addDoor(5,4,true)
 
 
 -- The Dreadnought is a flying fortress, it's slow, slow to turn, but packs a huge amount of beam weapons in the front. Taking it head-on is suicide.
@@ -426,36 +318,8 @@ variation:setShields(1200, 1200)
 variation:setSpeed(30, 2, 6)
 variation:setCombatManeuver(800, 500)
 
-variation:setRepairCrewCount(8)
 
-variation:addRoomSystem(0,1,2,4,"RearShield")
-variation:addRoom(3,0,2,1)
-variation:addRoomSystem(7,0,2,1,"Maneuver")
-variation:addRoomSystem(11,0,2,1,"MissileSystem")
-variation:addRoomSystem(2,1,4,2,"Reactor")
-variation:addRoomSystem(6,1,4,2,"Warp")
-variation:addRoom(10,1,4,2)
-variation:addRoomSystem(14,2,2,2,"FrontShield")
-variation:addRoomSystem(2,3,4,2,"Impulse")
-variation:addRoomSystem(6,3,4,2,"JumpDrive")
-variation:addRoom(10,3,4,2)
-variation:addRoom(3,5,2,1)
-variation:addRoom(7,5,2,1)
-variation:addRoomSystem(11,5,2,1,"Beamweapons")
 
-variation:addDoor(3,1,true)
-variation:addDoor(7,1,true)
-variation:addDoor(11,1,true)
-variation:addDoor(2,2,false)
-variation:addDoor(6,1,false)
-variation:addDoor(10,2,false)
-variation:addDoor(14,3,false)
-variation:addDoor(10,4,false)
-variation:addDoor(6,3,false)
-variation:addDoor(8,3,true)
-variation:addDoor(4,5,true)
-variation:addDoor(8,5,true)
-variation:addDoor(12,5,true)
 
 -- The weapons-platform is a stationary platform with beam-weapons. It's extremely slow to turn, but it's beam weapons do a huge amount of damage.
 template = ShipTemplate():setName("Weapons platform"):setLocaleName(_("ship", "Weapons platform")):setModel("space_cruiser_4")

@@ -352,7 +352,6 @@ function init()
   Admin_station.nebula_bonuses.repair.onFullScan = function (self)
     self:setModel("artifact1"):allowPickup(true):onPickUp(function ()
       self.wasFound = true
-      Player:setRepairCrewCount(Player:getRepairCrewCount() + 1)
       Player:addToShipLog(_("nebulaBonuses-shipLog", "A stranded repair crew has been rescued"),"Green")
     end)
   end

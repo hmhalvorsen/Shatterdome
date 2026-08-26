@@ -1,124 +1,65 @@
-# **SHATTERDOME**
+# Shatterdome
 
-**Shatterdome** is a fork of [EmptyEpsilon](https://github.com/daid/EmptyEpsilon), which started as an open-source bridge simulator inspired by [Artemis Spaceship Bridge Simulator](https://www.artemisspaceshipbridge.com/).
+Bridge simulator fork of [EmptyEpsilon](https://github.com/daid/EmptyEpsilon). Primary target: **Linux** (game server + Raspberry Pi consoles).
 
-This fork is trimmed down for two targets only:
+## Build
 
-- **Windows** — portable folder or ZIP
-- **Raspberry Pi** — Linux ARM install or TGZ package
-
-Removed from upstream: Discord, Steam, Android, macOS packaging, website tooling, netboot images, and other platform extras.
-
-## Requirements
-
-Clone **SeriousProton** next to this repo (same parent folder):
+Clone [SeriousProton](https://github.com/daid/SeriousProton) next to this repo:
 
 ```bash
 git clone https://github.com/daid/SeriousProton.git ../SeriousProton
 ```
 
-### Windows
+### Linux (server or dev PC)
 
-- CMake
-- A C++ toolchain (Visual Studio Build Tools, or MinGW)
-- Ninja (recommended)
+Install deps once (Ubuntu/Debian):
 
-### Raspberry Pi
+```bash
+sudo apt-get install build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
+```
 
-- `build-essential`, `cmake`, `ninja-build`, `libsdl2-dev`, `libfreetype6-dev`
+Build and package:
 
-## Build
+```bash
+./tools/build-linux.sh
+```
 
-### Windows
+Or install deps via the script:
 
-From a Developer Command Prompt or shell with `cmake` on PATH:
-
-```bat
-tools\build-windows.bat
+```bash
+INSTALL_DEPS=1 ./tools/build-linux.sh
 ```
 
 Output:
 
-- `dist\` — runnable game folder (`Shatterdome.exe`, resources, scripts, packs)
-- `build\Shatterdome-*.zip` — packaged archive from CPack
+- `dist/bin/Shatterdome` — runnable binary
+- `dist/share/shatterdome/` — game data
+- `build/Shatterdome-*.tar.gz` — install package for ShatterdomeOS
 
-Debug build:
+Quick compile-only check (no install/package):
 
-```bat
-tools\build-windows.bat debug
+```bash
+./tools/build-compile-check.sh
 ```
 
-### Raspberry Pi
+### Raspberry Pi (ARM64)
 
-On the Pi itself:
+Same as Linux on the Pi (or any ARM64 machine):
 
 ```bash
 ./tools/build-raspberrypi.sh
 ```
 
-Install without apt dependency step:
+Use the TGZ from `build/` with [ShatterdomeOS](os/shatterdomeos/README.md).
 
-```bash
-INSTALL_DEPS=0 ./tools/build-raspberrypi.sh
-```
+## Run
 
-Custom install location:
+Settings: `~/.shatterdome/options.ini`
 
-```bash
-INSTALL_PREFIX=/opt/shatterdome ./tools/build-raspberrypi.sh
-```
+Use the main-menu tutorial to learn the stations.
 
-Output:
+## Docs
 
-- `dist/bin/Shatterdome`
-- `dist/share/shatterdome/` — game data
-- `build/Shatterdome-*.tar.gz`
-
-## Configuration
-
-Settings live in `~/.shatterdome/options.ini` on Linux, or next to the executable / in `%USERPROFILE%\.shatterdome` on Windows.
-
-Run the built-in tutorial from the main menu to learn the stations.
-
-## Manual CMake (optional)
-
-```bash
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSERIOUS_PROTON_DIR=../SeriousProton
-cmake --build build
-cmake --install build --prefix dist
-cmake --build build --target package
-```
-
-## MVP mode (physical consoles)
-
-See [docs/MVP.md](docs/MVP.md). Enable with `mvp_mode=1` in `~/.shatterdome/options.ini` — hides Jump, database, beam targeting/lock; repair uses nanobots on Engineering instead of repair crew.
-
-Stretch goals, crew planning, and EPSICON notes: [docs/ROADMAP.md](docs/ROADMAP.md).
-
-## Demo session (5 consoles)
-
-Plug-and-play bridge demo: [docs/DEMO.md](docs/DEMO.md). Server boots first; each console only needs `/etc/shatterdome/station`.
-
-## ShatterdomeOS (boot to game)
-
-**ShatterdomeOS** is Ubuntu-based Linux that boots straight into Shatterdome — no desktop. See [os/shatterdomeos/README.md](os/shatterdomeos/README.md).
-
-```bash
-sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./os/shatterdomeos/install-console.sh   # bridge station
-sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./os/shatterdomeos/install-server.sh  # game server
-```
-
-## Self-hosted CI (optional, free)
-
-To run compile checks on **your own machine** (no GitHub-hosted runner minutes):
-
-```bash
-./tools/runner-setup.sh
-~/.local/share/shatterdome-actions-runner/start-runner.sh   # leave running
-```
-
-Push to `master` triggers `.github/workflows/build-selfhosted.yml`. When finished:
-
-```bash
-./tools/runner-teardown.sh
-```
+- [MVP mode](docs/MVP.md) — simplified controls for physical consoles (`mvp_mode=1`)
+- [Demo session](docs/DEMO.md) — five-console bridge setup
+- [ShatterdomeOS](os/shatterdomeos/README.md) — boot straight into the game on Linux

@@ -641,7 +641,7 @@ function initializeStationRepairCrewEconomy()
 	station_repair_crew_neutral_max = 90
 end
 function initializeCommsSourceMaxRepairCrew()
-	comms_source.maxRepairCrew = comms_source:getRepairCrewCount()
+	comms_source.maxRepairCrew = 0
 end
 function initializeCommsSourceInitialCoolant()
 	comms_source.initialCoolant = comms_source:getMaxCoolant()
@@ -2394,7 +2394,7 @@ function requestSupplyDrop()
 							if comms_source.maxRepairCrew == nil then
 								initializeCommsSourceMaxRepairCrew()
 							end
-							if comms_source:getRepairCrewCount() >= comms_source.maxRepairCrew then
+							if 0 >= comms_source.maxRepairCrew then
 								hire_cost = hire_cost + comms_target.comms_data.available_repair_crew_excess
 							end
 							addCommsReply(string.format(_("stationAssist-comms","Add android repair crew (%d rep + %d rep = %d rep)"),getServiceCost("flingsupplydrop"),hire_cost,getServiceCost("flingsupplydrop") + hire_cost),function()
@@ -2428,7 +2428,7 @@ function requestSupplyDrop()
 											if comms_source.maxRepairCrew == nil then
 												initializeCommsSourceMaxRepairCrew()
 											end
-											if comms_source:getRepairCrewCount() >= comms_source.maxRepairCrew then
+											if 0 >= comms_source.maxRepairCrew then
 												hire_cost = hire_cost + comms_target.comms_data.available_repair_crew_excess
 											end
 											if comms_source:takeReputationPoints(getServiceCost("flingsupplydrop") + hire_cost) then
@@ -2440,7 +2440,6 @@ function requestSupplyDrop()
 												comms_target.comms_data.available_repair_crew = comms_target.comms_data.available_repair_crew - 1
 												sd:onPickUp(function(self,player)
 													string.format("")
-													player:setRepairCrewCount(player:getRepairCrewCount() + 1)
 												end)
 												local supply_location = {
 													string.format(_("stationAssist-comms","Supplies delivered %.1f units from waypoint, bearing %.1f."),flinger_miss/1000,target_angle),
@@ -3231,7 +3230,7 @@ function setExpediteDock()
 							if comms_source.maxRepairCrew == nil then
 								initializeCommsSourceMaxRepairCrew()
 							end
-							if comms_source:getRepairCrewCount() >= comms_source.maxRepairCrew then
+							if 0 >= comms_source.maxRepairCrew then
 								hire_cost = hire_cost + comms_target.comms_data.available_repair_crew_excess
 							end
 							local hire_repair_crew_fast_dock_prompt = {
@@ -3253,7 +3252,7 @@ function setExpediteDock()
 								if comms_source.maxRepairCrew == nil then
 									initializeCommsSourceMaxRepairCrew()
 								end
-								if comms_source:getRepairCrewCount() >= comms_source.maxRepairCrew then
+								if 0 >= comms_source.maxRepairCrew then
 									hire_cost = hire_cost + comms_target.comms_data.available_repair_crew_excess
 								end
 								if comms_source:takeReputationPoints(hire_cost) then
@@ -5952,7 +5951,7 @@ function getRepairCrewFromStation()
 				if comms_source.maxRepairCrew == nil then
 					initializeCommsSourceMaxRepairCrew()
 				end
-				if comms_source:getRepairCrewCount() >= comms_source.maxRepairCrew then
+				if 0 >= comms_source.maxRepairCrew then
 					hire_cost = hire_cost + comms_target.comms_data.available_repair_crew_excess
 				end
 				local consider_repair_crew = {
@@ -5990,7 +5989,6 @@ function getRepairCrewFromStation()
 						}
 						setCommsMessage(tableSelectRandom(insufficient_rep_responses))
 					else
-						comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 						comms_target.comms_data.available_repair_crew = comms_target.comms_data.available_repair_crew - 1
 						if comms_target.comms_data.available_repair_crew <= 0 then
 							comms_target.comms_data.new_repair_crew_delay = getScenarioTime() + random(200,500)
@@ -11186,7 +11184,6 @@ function expeditedDockingServices()
 											elseif service == "hvli" then
 												p:setWeaponStorage("HVLI",p:getWeaponStorage("HVLI") + val)
 											elseif service == "repair_crew" then
-												p:setRepairCrewCount(p:getRepairCrewCount() + 1)
 												p.expedite_dock.station.comms_data.available_repair_crew = p.expedite_dock.station.comms_data.available_repair_crew - 1
 											elseif service == "coolant" then
 												p:setMaxCoolant(p:getMaxCoolant() + 2)

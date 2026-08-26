@@ -220,10 +220,6 @@ function ShipTemplate:setEnergyStorage(amount)
     self.reactor = {max_energy=amount, energy=amount}
     return self
 end
---- Deprecated — repair crew removed; use nanobots instead. No-op for compatibility.
-function ShipTemplate:setRepairCrewCount(amount)
-    return self
-end
 --- As ShipTemplate:setBeamWeapon().
 function ShipTemplate:setBeam(index, arc, direction, range, cycle_time, damage)
     return self:setBeamWeapon(index, arc, direction, range, cycle_time, damage)
@@ -495,43 +491,6 @@ function ShipTemplate:setWeaponStorage(type, amount)
     local type = string.lower(type)
     self.missile_tubes["storage_" .. type] = amount
     self.missile_tubes["max_" .. type] = amount
-    return self
-end
-
---- Adds an empty room to a ShipTemplate.
---- Rooms define internal layout metadata on ship templates (used by scripts).
---- If a system room isn't accessible via other rooms connected by doors, repair crews on player ships might not be able to repair that system.
---- Rooms are placed on a 0-indexed integer x/y grid, with the given values representing the room's upper-left corner, and are sized by damage crew capacity (minimum 1x1).
---- To place multiple rooms, declare addRoom() multiple times.
---- Example: template:addRoom(0,0,3,2) -- adds a 3x2 room with its upper-left coordinate at position 0,0
-function ShipTemplate:addRoom(x, y, w, h)
-    if self.internal_rooms == nil then self.internal_rooms = {} end
-    self.internal_rooms[#self.internal_rooms+1] = {position={x, y}, size={w, h}}
-    return self
-end
-
---- Adds a room containing a ship system to a ShipTemplate.
---- Rooms define internal layout metadata on ship templates (used by scripts).
---- If a system room doesn't exist or isn't accessible via other rooms connected by doors, repair crews on player ships won't be able to repair that system.
---- Rooms are placed on a 0-indexed integer x/y grid, with the given values representing the room's upper-left corner, and are sized by damage crew capacity (minimum 1x1).
---- To place multiple rooms, declare addRoomSystem() multiple times.
---- Example: template:addRoomSystem(1,2,3,4,"reactor")  -- adds a 3x4 room with its upper-left coordinate at position 1,2 that contains the Reactor system
-function ShipTemplate:addRoomSystem(x, y, w, h, system)
-    if self.internal_rooms == nil then self.internal_rooms = {} end
-    self.internal_rooms[#self.internal_rooms+1] = {position={x, y}, size={w, h}, system=system}
-    return self
-end
---- Adds a door between rooms in a ShipTemplate.
---- Doors connect rooms on ship templates. All doors are 1 grid unit wide.
---- If a system room isn't accessible via other rooms connected by doors, repair crews on player ships might not be able to repair that system.
---- The horizontal value defines whether the door is oriented horizontally (true) or vertically (false).
---- Doors are placed on a 0-indexed integer x/y grid, with the given values representing the door's left-most point (horizontal) or top-most point (vertical) point.
---- To place multiple doors, declare addDoor() multiple times.
---- Example: template:addDoor(2,1,true) -- places a horizontal door with its left-most point at 2,1
-function ShipTemplate:addDoor(x, y, horizontal)
-    if self.internal_rooms == nil then self.internal_rooms = {} end
-    if self.internal_rooms.doors == nil then self.internal_rooms.doors = {} end
-    self.internal_rooms.doors[#self.internal_rooms.doors+1] = {x, y, horizontal}
     return self
 end
 --- Sets the default radar trace image for entities created from this ShipTemplate.

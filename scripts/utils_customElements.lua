@@ -23,7 +23,7 @@
 
 -- Create Button Wrapper module with default Operator positions
 customElements = {
-    -- Not assinged ECrewPositions: "DamageControl", "PowerManagement", "Database", "CommsOnly", "ShipLog"
+    -- Not assinged ECrewPositions: "PowerManagement", "Database", "CommsOnly", "ShipLog"
     operators = {
         ["Helms"]={"Helms", "Tactical", "Single"}, 
         ["Weapons"]={"Weapons", "Tactical", "Single"}, 
@@ -133,7 +133,7 @@ end
 -- @param name: String identifier of the element to be removed.
 function customElements:removeCustom(player_ship, name)
     local crew_positions = {"Helms", "Weapons", "Engineering", "Science", "Relay", "Tactical", 
-                            "Engineering+", "Operations", "Single", "DamageControl", "PowerManagement", 
+                            "Engineering+", "Operations", "Single", "PowerManagement", 
                             "Database", "AltRelay", "CommsOnly", "ShipLog"}
     for idx, station in ipairs(crew_positions) do
         player_ship:removeCustom(name..station)

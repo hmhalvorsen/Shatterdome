@@ -31,7 +31,6 @@
 #include "multiplayer/scanning.h"
 #include "multiplayer/missile.h"
 #include "multiplayer/missiletubes.h"
-#include "multiplayer/internalrooms.h"
 #include "multiplayer/orbit.h"
 #include "multiplayer/sfx.h"
 #include "multiplayer/spin.h"
@@ -89,7 +88,6 @@ void initSystemsAndComponents()
     sp::ecs::MultiplayerReplication::registerComponentReplication<HackingDeviceReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<HullReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<ImpulseEngineReplication>();
-    sp::ecs::MultiplayerReplication::registerComponentReplication<InternalRoomsReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<JumpDriveReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<ManeuveringThrustersReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<CombatManeuveringThrustersReplication>();

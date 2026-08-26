@@ -40,7 +40,6 @@
 #include "ai/ai.h"
 #include "components/radarblock.h"
 #include "components/gravity.h"
-#include "components/internalrooms.h"
 #include "components/database.h"
 #include "components/pickup.h"
 #include "components/customshipfunction.h"
@@ -733,41 +732,7 @@ void initComponentScriptBindings()
     BIND_MEMBER(Gravity, wormhole_target);
     BIND_MEMBER(Gravity, on_teleportation);
 
-    sp::script::ComponentHandler<InternalRooms>::name("internal_rooms");
-    BIND_ARRAY_DIRTY_FLAG(InternalRooms, rooms, rooms_dirty);
-    BIND_ARRAY_DIRTY_FLAG_MEMBER(InternalRooms, rooms, position, rooms_dirty);
-    BIND_ARRAY_DIRTY_FLAG_MEMBER(InternalRooms, rooms, size, rooms_dirty);
-    BIND_ARRAY_DIRTY_FLAG_MEMBER(InternalRooms, rooms, system, rooms_dirty);
-    sp::script::ComponentHandler<InternalRooms>::members["doors"] = {
-        [](lua_State* L, const void* ptr) {
-            auto t = reinterpret_cast<const InternalRooms*>(ptr);
-            lua_newtable(L);
-            for(size_t n=0; n<t->doors.size(); n++) {
-                lua_newtable(L);
-                lua_pushinteger(L, t->doors[n].position.x); lua_seti(L, -2, 1);
-                lua_pushinteger(L, t->doors[n].position.y); lua_seti(L, -2, 2);
-                lua_pushboolean(L, t->doors[n].horizontal); lua_seti(L, -2, 3);
-                lua_seti(L, -2, n+1);
-            }
-            return 1;
-        }, [](lua_State* L, void* ptr) {
-            auto t = reinterpret_cast<InternalRooms*>(ptr);
-            t->doors.clear();
-            while(true) {
-                lua_geti(L, -1, t->doors.size() + 1);
-                if (!lua_istable(L, -1))
-                    break;
-                lua_geti(L, -1, 1); auto x = lua_tonumber(L, -1); lua_pop(L, 1);
-                lua_geti(L, -1, 2); auto y = lua_tonumber(L, -1); lua_pop(L, 1);
-                lua_geti(L, -1, 3); bool horizontal = lua_toboolean(L, -1); lua_pop(L, 1);
-                t->doors.push_back({{x, y}, horizontal});
 
-                lua_pop(L, 1);
-            }
-            lua_pop(L, 1);
-            t->doors_dirty = true;
-        }
-    };
     sp::script::ComponentHandler<Database>::name("science_database");
     BIND_MEMBER(Database, name);
     BIND_MEMBER(Database, description);

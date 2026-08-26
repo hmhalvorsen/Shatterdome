@@ -1272,7 +1272,7 @@ function updatePlayerSoftTemplate(p)
 			addGMMessage(string.format(_("stationReport-msgGM", "Player ship %s's template type (%s) could not be found in table PlayerShipStats"),p:getCallSign(),tempTypeName))
 		end
 	end
-	p.maxRepairCrew = p:getRepairCrewCount()
+	p.maxRepairCrew = 0
 	p.healthyShield = 1.0
 	p.prevShield = 1.0
 	p.healthyReactor = 1.0
@@ -4292,7 +4292,7 @@ function getRepairCrewFromStation(relationship)
 					if relationship ~= "friendly" then
 						hire_cost = math.random(60,120)
 					end
-					if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+					if 0 < comms_source.maxRepairCrew then
 						hire_cost = math.random(30,60)
 						if relationship ~= "friendly" then
 							hire_cost = math.random(45,90)
@@ -4307,7 +4307,6 @@ function getRepairCrewFromStation(relationship)
 						if not comms_source:takeReputationPoints(hire_cost) then
 							setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 						else
-							comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 							comms_target.comms_data.available_repair_crew = comms_target.comms_data.available_repair_crew - 1
 							if comms_target.comms_data.available_repair_crew <= 0 then
 								comms_target.comms_data.new_repair_crew_delay = getScenarioTime() + random(200,500)
@@ -5508,7 +5507,7 @@ function saboteurOption()
 						if comms_source.saboteur_deployed ~= nil then
 							out = string.format(_("orders-comms","%s\nYou have already planted the saboteur on %s"),out,comms_source.saboteur_deployed)
 						else
-							if comms_source:getRepairCrewCount() < 1 then
+							if 0 < 1 then
 								out = string.format(_("orders-comms","%s\nYou need to replace one or more of your repair crew. We'll be sure the first one you get also has saboteur training."),out)
 							end
 							if comms_source:getWeaponStorage("Mine") < 1 then
@@ -5519,7 +5518,7 @@ function saboteurOption()
 						addCommsReply(_("Back"), commsStation)
 					end)
 				else
-					if comms_source:getRepairCrewCount() > 0 and comms_source:getWeaponStorage("Mine") > 0 then
+					if 0 > 0 and comms_source:getWeaponStorage("Mine") > 0 then
 						out = string.format(_("orders-comms","%s The outpost leadership have an idea about how an aggressive enemy station might be destroyed. It differs from the confrontational solution of attacking an aggressive enemy station directly. Interested?"),out)
 						addCommsReply(_("orders-comms","Yes, tell me about this idea"),function()
 							setCommsMessage(_("orders-comms","The idea is to sneak a saboteur aboard an aggressive enemy station."))
@@ -5613,7 +5612,7 @@ end
 function deploySaboteur()
 	if comms_source.saboteur_instructions then
 		if comms_source.saboteur_deployed == nil then
-			if comms_source:getRepairCrewCount() > 0 then
+			if 0 > 0 then
 				if comms_source:getWeaponStorage("Mine") > 0 then
 					if not comms_target.saboteur_process_complete then
 						addCommsReply(_("ship-comms","Would you like another crewmember?"),function()
@@ -5623,11 +5622,10 @@ function deploySaboteur()
 								if comms_source:getReputationPoints() >= 50 then
 									convincing_avenue = true
 									addCommsReply(_("ship-comms","Take on crewmember as a favor (50 reputation)?"),function()
-										if comms_source:getRepairCrewCount() > 0 then
+										if 0 > 0 then
 											if comms_source:getWeaponStorage("Mine") > 0 then
 												if comms_source:takeReputationPoints(50) then
 													comms_target.saboteur_process_complete = true
-													comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() - 1)
 													comms_source:setWeaponStorage("Mine",comms_source:getWeaponStorage("Mine") - 1)
 													comms_source.saboteur_deployed = comms_target:getCallSign()
 													comms_source.saboteur_ship = comms_target
@@ -5662,11 +5660,10 @@ function deploySaboteur()
 									for good, goodQuantity in pairs(comms_source.goods) do
 										if goodQuantity > 0 then
 											addCommsReply(string.format(_("ship-comms","Offer %s to take on crewmember"),good),function()
-												if comms_source:getRepairCrewCount() > 0 then
+												if 0 > 0 then
 													if comms_source:getWeaponStorage("Mine") > 0 then
 														comms_source.goods[good] = comms_source.goods[good] - 1
 														comms_target.saboteur_process_complete = true
-														comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() - 1)
 														comms_source:setWeaponStorage("Mine",comms_source:getWeaponStorage("Mine") - 1)
 														comms_source.saboteur_deployed = comms_target:getCallSign()
 														comms_source.saboteur_ship = comms_target
@@ -5701,11 +5698,10 @@ function deploySaboteur()
 								if comms_source:getReputationPoints() >= 25 then
 									convincing_avenue = true
 									addCommsReply(_("ship-comms","Take on crewmember as a favor (25 reputation)?"),function()
-										if comms_source:getRepairCrewCount() > 0 then
+										if 0 > 0 then
 											if comms_source:getWeaponStorage("Mine") > 0 then
 												if comms_source:takeReputationPoints(25) then
 													comms_target.saboteur_process_complete = true
-													comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() - 1)
 													comms_source:setWeaponStorage("Mine",comms_source:getWeaponStorage("Mine") - 1)
 													comms_source.saboteur_deployed = comms_target:getCallSign()
 													comms_source.saboteur_ship = comms_target
@@ -5741,11 +5737,10 @@ function deploySaboteur()
 									for good, goodQuantity in pairs(comms_source.goods) do
 										if goodQuantity > 0 then
 											addCommsReply(string.format(_("ship-comms","Offer %s to take on crewmember"),good),function()
-												if comms_source:getRepairCrewCount() > 0 then
+												if 0 > 0 then
 													if comms_source:getWeaponStorage("Mine") > 0 then
 														comms_source.goods[good] = comms_source.goods[good] - 1
 														comms_target.saboteur_process_complete = true
-														comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() - 1)
 														comms_source:setWeaponStorage("Mine",comms_source:getWeaponStorage("Mine") - 1)
 														comms_source.saboteur_deployed = comms_target:getCallSign()
 														comms_source.saboteur_ship = comms_target
@@ -5782,11 +5777,10 @@ function deploySaboteur()
 								if comms_source:getReputationPoints() >= saboteur_reputation then
 									convincing_avenue = true
 									addCommsReply(string.format(_("ship-comms","Take on crewmember as a favor (%i reputation)?"),saboteur_reputation),function()
-										if comms_source:getRepairCrewCount() > 0 then
+										if 0 > 0 then
 											if comms_source:getWeaponStorage("Mine") > 0 then
 												if comms_source:takeReputationPoints(saboteur_reputation) then
 													comms_target.saboteur_process_complete = true
-													comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() - 1)
 													comms_source:setWeaponStorage("Mine",comms_source:getWeaponStorage("Mine") - 1)
 													comms_source.saboteur_deployed = comms_target:getCallSign()
 													comms_source.saboteur_ship = comms_target
@@ -5821,11 +5815,10 @@ function deploySaboteur()
 									for good, goodQuantity in pairs(comms_source.goods) do
 										if goodQuantity > 0 then
 											addCommsReply(string.format(_("ship-comms","Offer %s to take on crewmember"),good),function()
-												if comms_source:getRepairCrewCount() > 0 then
+												if 0 > 0 then
 													if comms_source:getWeaponStorage("Mine") > 0 then
 														comms_source.goods[good] = comms_source.goods[good] - 1
 														comms_target.saboteur_process_complete = true
-														comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() - 1)
 														comms_source:setWeaponStorage("Mine",comms_source:getWeaponStorage("Mine") - 1)
 														comms_source.saboteur_deployed = comms_target:getCallSign()
 														comms_source.saboteur_ship = comms_target
@@ -7511,7 +7504,6 @@ end
 function createPlayerShipMixer()
 	playerAmalgam = PlayerSpaceship():setTemplate("Atlantis"):setFaction("Human Navy"):setCallSign("Mixer")
 	playerAmalgam:setTypeName("Amalgam")
-	playerAmalgam:setRepairCrewCount(5)					--more repair crew (vs 3)
 	playerAmalgam.max_jump_range = 40000				--shorter (vs 50)
 	playerAmalgam.min_jump_range = 4000					--shorter (vs 5)
 	playerAmalgam:setJumpDriveRange(playerAmalgam.min_jump_range,playerAmalgam.max_jump_range)
@@ -7598,7 +7590,6 @@ end
 function createPlayerShipInk()
 	playerInk = PlayerSpaceship():setTemplate("Piranha"):setFaction("Human Navy"):setCallSign("Ink")
 	playerInk:setTypeName("Squid")
-	playerInk:setRepairCrewCount(5)					--more repair crew (vs 2)
 	playerInk:setShieldsMax(100, 100)				--stronger shields (vs 70, 70)
 	playerInk:setShields(100, 100)
 	playerInk:setHullMax(130)						--stronger (vs 120)
@@ -8093,7 +8084,7 @@ function healthCheck(delta)
 			if healthDiagnostic then print("got player ship") end
 			if p ~= nil and p:isValid() then
 				if healthDiagnostic then print("valid ship") end
-				if p:getRepairCrewCount() > 0 then
+				if 0 > 0 then
 					if healthDiagnostic then print("crew on valid ship") end
 					local fatalityChance = 0
 					if healthDiagnostic then print("shields") end
@@ -8152,7 +8143,7 @@ function healthCheck(delta)
 						p.prevJump = p:getSystemHealth("jumpdrive")
 					end
 					if healthDiagnostic then print("adjust") end
-					if p:getRepairCrewCount() == 1 then
+					if 0 == 1 then
 						fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 					end
 					if healthDiagnostic then print("check") end
@@ -8161,7 +8152,6 @@ function healthCheck(delta)
 					end
 				else	--no repair crew left
 					if random(1,100) <= (4 - difficulty) then
-						p:setRepairCrewCount(1)
 						if p:hasPlayerAtPosition("Engineering") then
 							local repairCrewRecovery = "repairCrewRecovery"
 							p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer","Medical team has revived one of your repair crew"))
@@ -8233,7 +8223,6 @@ end
 function crewFate(p, fatalityChance)
 	if math.random() < (fatalityChance) then
 		if p.initialCoolant == nil then
-			p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 			if p:hasPlayerAtPosition("Engineering") then
 				local repairCrewFatality = "repairCrewFatality"
 				p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer","One of your repair crew has perished"))
@@ -8272,7 +8261,6 @@ function crewFate(p, fatalityChance)
 			end
 			consequence = math.random(1,upper_consequence)
 			if consequence == 1 then
-				p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 				if p:hasPlayerAtPosition("Engineering") then
 					local repairCrewFatality = "repairCrewFatality"
 					p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer","One of your repair crew has perished"))

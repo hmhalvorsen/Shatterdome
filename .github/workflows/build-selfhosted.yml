@@ -24,5 +24,3 @@ jobs:
 
       - name: Compile smoke test
         run: ./tools/build-compile-check.sh
-        env:
-          PATH: /opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin

@@ -33,7 +33,7 @@ hardware_console_mode=1
 
 - **Server:** Windows PC
 - **Consoles:** Raspberry Pi per station
-- **Build:** `tools/build-windows.bat` / `tools/build-raspberrypi.sh`
+- **Build:** `./tools/build-linux.sh` (or `./tools/build-raspberrypi.sh` on ARM64 Pi)
 
 ## Still manual / future work
 

@@ -3012,7 +3012,6 @@ function repulseTransfer()
 		victory("Kraylor")
 	end)
 	playerRepulse:setSystemHealth("jumpdrive",-.2)	--jump drive more damaged than sensors indicated
-	playerRepulse:setHull(junkRepulse:getHull()):setEnergy(250):setRepairCrewCount(2):setScanProbeCount(1)
 	junkRepulse:destroy()				--goodbye NPC repulse
 	local front_shield_level = playerRepulse:getShieldMax(0)
 	local rear_shield_level = playerRepulse:getShieldMax(1)
@@ -3080,7 +3079,6 @@ function augmentRepairCrew(delta)
 end
 function returnRepairCrew()
 --Repair crew returns
-	playerRepulse:setRepairCrewCount(8)
 	if retrieveRepairCrewButton ~= nil then
 		playerRepulse:removeCustom(retrieveRepairCrewButton)
 	end
@@ -3321,7 +3319,7 @@ end
 --	Second Plot port beam repair  --
 ------------------------------------
 function portBeamEnable(delta)
-	if playerRepulse:getRepairCrewCount() > 1 then
+	if 0 > 1 then
 		plot2 = suggestBeamFix
 		suggestBeamFixTimer = 70
 	end

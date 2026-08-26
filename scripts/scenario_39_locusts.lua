@@ -861,7 +861,7 @@ function updatePlayerSoftTemplate(p)
 			addGMMessage(string.format("Player ship %s's template type (%s) could not be found in table PlayerShipStats",p:getCallSign(),tempTypeName))
 		end
 	end
-	p.maxRepairCrew = p:getRepairCrewCount()
+	p.maxRepairCrew = 0
 	p.healthyShield = 1.0
 	p.prevShield = 1.0
 	p.healthyReactor = 1.0

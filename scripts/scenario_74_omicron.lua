@@ -1218,7 +1218,7 @@ function updatePlayerSoftTemplate(p)
 			p:setWarpSpeed(450 + (math.random(1,10)*50))
 		end
 	end
-	p.maxRepairCrew = p:getRepairCrewCount()
+	p.maxRepairCrew = 0
 	p.healthyShield = 1.0
 	p.prevShield = 1.0
 	p.healthyReactor = 1.0
@@ -4057,7 +4057,7 @@ function getRepairCrewFromStation(relationship)
 					if relationship ~= "friendly" then
 						hire_cost = math.random(60,120)
 					end
-					if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+					if 0 < comms_source.maxRepairCrew then
 						hire_cost = math.random(30,60)
 						if relationship ~= "friendly" then
 							hire_cost = math.random(45,90)
@@ -4068,7 +4068,6 @@ function getRepairCrewFromStation(relationship)
 						if not comms_source:takeReputationPoints(hire_cost) then
 							setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 						else
-							comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 							comms_target.comms_data.available_repair_crew = comms_target.comms_data.available_repair_crew - 1
 							if comms_target.comms_data.available_repair_crew <= 0 then
 								comms_target.comms_data.new_repair_crew_delay = getScenarioTime() + random(200,500)
@@ -6744,7 +6743,7 @@ function healthCheck(delta)
 			if healthDiagnostic then print("got player ship") end
 			if p ~= nil and p:isValid() then
 				if healthDiagnostic then print("valid ship") end
-				if p:getRepairCrewCount() > 0 then
+				if 0 > 0 then
 					if healthDiagnostic then print("crew on valid ship") end
 					local fatalityChance = 0
 					if healthDiagnostic then print("shields") end
@@ -6803,7 +6802,7 @@ function healthCheck(delta)
 						p.prevJump = p:getSystemHealth("jumpdrive")
 					end
 					if healthDiagnostic then print("adjust") end
-					if p:getRepairCrewCount() == 1 then
+					if 0 == 1 then
 						fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 					end
 					if healthDiagnostic then print("check") end
@@ -6812,7 +6811,6 @@ function healthCheck(delta)
 					end
 				else	--no repair crew left
 					if random(1,100) <= (4 - difficulty) then
-						p:setRepairCrewCount(1)
 						if p:hasPlayerAtPosition("Engineering") then
 							local repairCrewRecovery = "repairCrewRecovery"
 							p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer", "Medical team has revived one of your repair crew"))
@@ -6877,7 +6875,6 @@ end
 function crewFate(p, fatalityChance)
 	if math.random() < (fatalityChance) then
 		if p.initialCoolant == nil then
-			p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 			if p:hasPlayerAtPosition("Engineering") then
 				local repairCrewFatality = "repairCrewFatality"
 				p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -6912,7 +6909,6 @@ function crewFate(p, fatalityChance)
 			end
 			consequence = math.random(1,upper_consequence)
 			if consequence == 1 then
-				p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 				if p:hasPlayerAtPosition("Engineering") then
 					local repairCrewFatality = "repairCrewFatality"
 					p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -9260,7 +9256,6 @@ end
 function createPlayerShipMixer()
 	playerAmalgam = PlayerSpaceship():setTemplate("Atlantis"):setFaction("Human Navy"):setCallSign("Mixer")
 	playerAmalgam:setTypeName("Amalgam")
-	playerAmalgam:setRepairCrewCount(5)					--more repair crew (vs 3)
 	playerAmalgam.max_jump_range = 40000				--shorter (vs 50)
 	playerAmalgam.min_jump_range = 4000					--shorter (vs 5)
 	playerAmalgam:setJumpDriveRange(playerAmalgam.min_jump_range,playerAmalgam.max_jump_range)
@@ -9347,7 +9342,6 @@ end
 function createPlayerShipInk()
 	playerInk = PlayerSpaceship():setTemplate("Piranha"):setFaction("Human Navy"):setCallSign("Ink")
 	playerInk:setTypeName("Squid")
-	playerInk:setRepairCrewCount(5)					--more repair crew (vs 2)
 	playerInk:setShieldsMax(100, 100)				--stronger shields (vs 70, 70)
 	playerInk:setShields(100, 100)
 	playerInk:setHullMax(130)						--stronger (vs 120)
@@ -9569,7 +9563,6 @@ function getRepairCrewFromFreighter(p)
 						p.too_fast_to_transport_plus = "too_fast_to_transport_plus"
 						p:addCustomMessage("Engineering+",p.too_fast_to_transport_plus,string.format(_("crewTransfer-msgEngineer+", "%s is moving too fast to transport a repair crew member from %s."),p:getCallSign(),critical_transport:getCallSign()))
 					else
-						p:setRepairCrewCount(p:getRepairCrewCount() + 1)
 						p.repair_crew_returned_eng = "repair_crew_returned_eng"
 						p:addCustomMessage("Engineering",p.repair_crew_returned_eng,string.format(_("crewTransfer-msgEngineer", "Repair crew member retrieved from %s"),critical_transport:getCallSign()))
 						p.repair_crew_returned_plus = "repair_crew_returned_plus"
@@ -9626,8 +9619,7 @@ function sendRepairCrewToFreighter(p)
 					p.too_fast_to_transport_plus = "too_fast_to_transport_plus"
 					p:addCustomMessage("Engineering+",p.too_fast_to_transport_plus,string.format(_("crewTransfer-msgEngineer+", "%s is moving too fast to transport a repair crew member to %s."),p:getCallSign(),critical_transport:getCallSign()))
 				else
-					if p:getRepairCrewCount() > 0 then
-						p:setRepairCrewCount(p:getRepairCrewCount() - 1)
+					if 0 > 0 then
 						critical_transport.engine_repair_complete_timer = getScenarioTime() + 90
 						critical_transport.engine_trouble = "in work"
 						for pidx, p2 in ipairs(getActivePlayerShips()) do

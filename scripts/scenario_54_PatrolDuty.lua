@@ -3367,7 +3367,7 @@ function setPlayers()
 				end
 				if pobj.cargo == nil then
 					pobj.cargo = pobj.maxCargo
-					pobj.maxRepairCrew = pobj:getRepairCrewCount()
+					pobj.maxRepairCrew = 0
 					pobj.healthyShield = 1.0
 					pobj.prevShield = 1.0
 					pobj.healthyReactor = 1.0
@@ -4451,7 +4451,7 @@ function handleDockedState()
 				addCommsReply(_("Back"), commsStation)
 			end)
 			if math.random(1,8) <= (6 - difficulty) then
-				if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+				if 0 < comms_source.maxRepairCrew then
 					hireCost = math.random(30,60)
 				else
 					hireCost = math.random(45,90)
@@ -4460,7 +4460,6 @@ function handleDockedState()
 					if not comms_source:takeReputationPoints(hireCost) then
 						setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 					else
-						comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 						setCommsMessage(_("trade-comms", "Repair crew member hired"))
 					end
 					addCommsReply(_("Back"), commsStation)
@@ -4483,7 +4482,7 @@ function handleDockedState()
 			end
 		else
 			if math.random(1,8) <= (6 - difficulty) then
-				if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+				if 0 < comms_source.maxRepairCrew then
 					hireCost = math.random(45,90)
 				else
 					hireCost = math.random(60,120)
@@ -4492,7 +4491,6 @@ function handleDockedState()
 					if not comms_source:takeReputationPoints(hireCost) then
 						setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 					else
-						comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 						setCommsMessage(_("trade-comms", "Repair crew member hired"))
 					end
 				end)
@@ -8283,7 +8281,7 @@ function healthCheck(delta)
 		for pidx=1,8 do
 			p = getPlayerShip(pidx)
 			if p ~= nil and p:isValid() then
-				if p:getRepairCrewCount() > 0 then
+				if 0 > 0 then
 					fatalityChance = 0
 					if p:getShieldCount() > 1 then
 						cShield = (p:getSystemHealth("frontshield") + p:getSystemHealth("rearshield"))/2
@@ -8330,7 +8328,7 @@ function healthCheck(delta)
 						fatalityChance = fatalityChance + (p.prevJump - p:getSystemHealth("jumpdrive"))
 						p.prevJump = p:getSystemHealth("jumpdrive")
 					end
-					if p:getRepairCrewCount() == 1 then
+					if 0 == 1 then
 						fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 					end
 					if fatalityChance > 0 then
@@ -8338,7 +8336,6 @@ function healthCheck(delta)
 					end
 				else
 					if random(1,100) <= (4 - difficulty) then
-						p:setRepairCrewCount(1)
 						if p:hasPlayerAtPosition("Engineering") then
 							local repairCrewRecovery = "repairCrewRecovery"
 							p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer", "Medical team has revived one of your repair crew"))
@@ -8379,7 +8376,6 @@ function resetPreviousSystemHealth(p)
 end
 function crewFate(p, fatalityChance)
 	if math.random() < (fatalityChance) then
-		p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 		if p:hasPlayerAtPosition("Engineering") then
 			repairCrewFatality = "repairCrewFatality"
 			p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))

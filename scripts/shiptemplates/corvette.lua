@@ -46,39 +46,11 @@ variation:weaponTubeDisallowMissle(0, "Mine"):weaponTubeDisallowMissle(1, "Mine"
 variation:weaponTubeDisallowMissle(2, "Mine"):weaponTubeDisallowMissle(3, "Mine")
 variation:setTubeDirection(4, 180):setWeaponTubeExclusiveFor(4, "Mine")
 
-variation:addRoomSystem(1, 0, 2, 1, "Maneuver");
-variation:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-variation:addRoom(2, 2, 2, 1);
 
-variation:addRoomSystem(0, 3, 1, 2, "RearShield");
-variation:addRoomSystem(1, 3, 2, 2, "Reactor");
-variation:addRoomSystem(3, 3, 2, 2, "Warp");
-variation:addRoomSystem(5, 3, 1, 2, "JumpDrive");
-variation:addRoom(6, 3, 2, 1);
-variation:addRoom(6, 4, 2, 1);
-variation:addRoomSystem(8, 3, 1, 2, "FrontShield");
 
-variation:addRoom(2, 5, 2, 1);
-variation:addRoomSystem(1, 6, 2, 1, "MissileSystem");
-variation:addRoomSystem(1, 7, 2, 1, "Impulse");
 
-variation:addDoor(1, 1, true);
-variation:addDoor(2, 2, true);
-variation:addDoor(3, 3, true);
-variation:addDoor(1, 3, false);
-variation:addDoor(3, 4, false);
-variation:addDoor(3, 5, true);
-variation:addDoor(2, 6, true);
-variation:addDoor(1, 7, true);
-variation:addDoor(5, 3, false);
-variation:addDoor(6, 3, false);
-variation:addDoor(6, 4, false);
-variation:addDoor(8, 3, false);
-variation:addDoor(8, 4, false);
 
 --Airlock doors
---variation:addDoor(2, 2, false);
---variation:addDoor(2, 5, false);
 
 template = ShipTemplate():setName("Starhammer II"):setLocaleName(_("ship", "Starhammer II")):setClass(_("class", "Corvette"), _("subclass", "Destroyer")):setModel("battleship_destroyer_4_upgraded")
 template:setDescription(_([[Contrary to its predecessor, the Starhammer II lives up to its name. By resolving the original Starhammer's power and heat management issues, the updated model makes for a phenomenal frontal assault ship. Its low speed makes it difficult to position, but when in the right place at the right time, even the strongest shields can't withstand a Starhammer's assault for long.]]))
@@ -131,28 +103,8 @@ template:weaponTubeDisallowMissle(3, "Mine")
 template:weaponTubeDisallowMissle(4, "Mine")
 template:setWeaponTubeExclusiveFor(5, "Mine")
 
-template:setRepairCrewCount(4)
 
-template:addRoomSystem(2, 0, 2, 1, "Maneuver");
-template:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-template:addRoomSystem(0, 2, 3, 2, "RearShield");
-template:addRoomSystem(1, 4, 2, 1, "Reactor");
-template:addRoomSystem(2, 5, 2, 1, "Warp");
-template:addRoomSystem(3, 1, 3, 2, "JumpDrive");
-template:addRoomSystem(3, 3, 3, 2, "FrontShield");
-template:addRoom(6, 2, 6, 2);
-template:addRoomSystem(9, 1, 2, 1, "MissileSystem");
-template:addRoomSystem(9, 4, 2, 1, "Impulse");
 
-template:addDoor(2, 1, true)
-template:addDoor(1, 2, true)
-template:addDoor(1, 4, true)
-template:addDoor(2, 5, true)
-template:addDoor(3, 2, false)
-template:addDoor(4, 3, true)
-template:addDoor(6, 3, false)
-template:addDoor(9, 2, true)
-template:addDoor(10,4, true)
 
 template = ShipTemplate():setName("Maverick"):setLocaleName(_("playerShip", "Maverick")):setClass(_("class", "Corvette"), _("subclass", "Gunner")):setModel("LaserCorvetteGreen"):setType("playership")
 template:setDescription(_("A number of beams bristle from various points on this gunner. Missiles were deemed lower priority, though they are still present. Stronger defenses than a frigate, but not as strong as the Atlantis"))
@@ -185,28 +137,8 @@ template:weaponTubeDisallowMissle(0, "Mine")
 template:weaponTubeDisallowMissle(1, "Mine")
 template:setWeaponTubeExclusiveFor(2, "Mine")
 
-template:setRepairCrewCount(4)
 
-template:addRoomSystem(2, 0, 2, 1, "Maneuver");
-template:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-template:addRoomSystem(0, 2, 3, 2, "RearShield");
-template:addRoomSystem(1, 4, 2, 1, "Reactor");
-template:addRoomSystem(2, 5, 2, 1, "Warp");
-template:addRoomSystem(3, 1, 3, 2, "JumpDrive");
-template:addRoomSystem(3, 3, 3, 2, "FrontShield");
-template:addRoom(6, 2, 6, 2);
-template:addRoomSystem(9, 1, 2, 1, "MissileSystem");
-template:addRoomSystem(9, 4, 2, 1, "Impulse");
 
-template:addDoor(2, 1, true)
-template:addDoor(1, 2, true)
-template:addDoor(1, 4, true)
-template:addDoor(2, 5, true)
-template:addDoor(3, 2, false)
-template:addDoor(4, 3, true)
-template:addDoor(6, 3, false)
-template:addDoor(9, 2, true)
-template:addDoor(10,4, true)
 
 
 
@@ -326,25 +258,7 @@ variation:setBeamWeaponTurret( 1, 90, 180, 6)
 variation:setCombatManeuver(400, 250)
 variation:setJumpDriveRange(5000, 90000)
 
-variation:setRepairCrewCount(6)
-variation:addRoomSystem(3,0,2,3, "Reactor")
-variation:addRoomSystem(3,3,2,3, "Warp")
-variation:addRoomSystem(6,0,2,3, "JumpDrive")
-variation:addRoomSystem(6,3,2,3, "MissileSystem")
-variation:addRoomSystem(5,2,1,2, "Maneuver")
-variation:addRoomSystem(2,2,1,2, "RearShield")
-variation:addRoomSystem(0,1,2,4, "Beamweapons")
-variation:addRoomSystem(8,2,1,2, "FrontShield")
-variation:addRoomSystem(9,1,2,4, "Impulse")
 
-variation:addDoor(3, 3, true)
-variation:addDoor(6, 3, true)
-variation:addDoor(5, 2, false)
-variation:addDoor(6, 3, false)
-variation:addDoor(3, 2, false)
-variation:addDoor(2, 3, false)
-variation:addDoor(8, 2, false)
-variation:addDoor(9, 3, false)
 
 var2 = variation:copy("Kiriya"):setLocaleName(_("playerShip", "Kiriya"))
 var2:setDescription(_("Kiriya is an improved warp drive version of the Jump Carrier"))
@@ -389,28 +303,7 @@ template:setWeaponStorage("Mine",   6)
 template:setWeaponStorage("EMP",    6)
 template:setWeaponStorage("HVLI",   16)
 
-template:setRepairCrewCount(5)
 --	HC:Horizontal Coordinate (x), VC:Vertical Coordinate (y)
 --	HS:Horizontal Size, VS:Vertical Size
 --					  HC,VC,HS,VS, system 
-template:addRoomSystem(0, 0, 4, 1, "Maneuver")
-template:addRoomSystem(1, 1, 2, 2, "Impulse")
-template:addRoomSystem(3, 2, 3, 1, "Warp")
-template:addRoomSystem(6, 2, 2, 1, "BeamWeapons")
-template:addRoomSystem(2, 3, 2, 2, "JumpDrive")
-template:addRoomSystem(7, 3, 3, 2, "FrontShield")
-template:addRoomSystem(1, 5, 2, 2, "Reactor")
-template:addRoomSystem(3, 5, 3, 1, "MissileSystem")
-template:addRoom(6, 5, 2, 1)
-template:addRoomSystem(0, 7, 4, 1, "RearShield")
 --				HC,VC, true = horizontal door, false = vertical door
-template:addDoor(1, 1, true)
-template:addDoor(2, 3, true)
-template:addDoor(3, 3, true)
-template:addDoor(6, 2, false)
-template:addDoor(7, 3, true)
-template:addDoor(2, 5, true)
-template:addDoor(3, 5, true)
-template:addDoor(6, 5, false)
-template:addDoor(7, 5, true)
-template:addDoor(1, 7, true)

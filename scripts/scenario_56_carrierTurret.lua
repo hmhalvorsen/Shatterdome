@@ -148,7 +148,6 @@ function init()
 		playerBlade:setBeamWeaponTurret(0,60,-15,2)			-- 60: narrower than default 100, 
 		playerBlade:setBeamWeaponTurret(1,60, 15,2)			-- 2: slower than default 6
 		playerBlade:setBeamWeapon(2,20,0,1200,6,5)	
-		playerBlade:setRepairCrewCount(4)
 		playerBlade:setWeaponTubeCount(1)
 		playerBlade:setWeaponTubeDirection(0,180):setTubeLoadTime(0,20):setWeaponTubeExclusiveFor(0,"Mine")
 		playerBlade:setWeaponStorageMax("Mine",1):setWeaponStorage("Mine",1)
@@ -156,7 +155,6 @@ function init()
 		playerBlade = PlayerSpaceship():setFaction("Human Navy"):setTemplate(fighter_template):setJumpDrive(false):setWarpDrive(false)
 	end
 	playerBlade:setPosition(startx-240,starty):commandDock(playerCarrier):setRotation(-180):commandTargetRotation(-180)
-	playerBlade:setLongRangeRadarRange(10000):setAutoCoolant(true):commandSetAutoRepair(true)
 	playerBlade.normal_long_range_radar = 10000
 	playerBlade:addCustomButton("Tactical","shield",_("buttonTactical","Shield"),function()
 		if playerBlade:getShieldsActive() then
@@ -184,7 +182,6 @@ function init()
 		playerPoint = PlayerSpaceship():setFaction("Human Navy"):setTemplate(fighter_template_2):setJumpDrive(false):setWarpDrive(false)
 	end
 	playerPoint:setPosition(startx+125,starty):commandDock(playerCarrier):setRotation(0):commandTargetRotation(0)
-	playerPoint:setLongRangeRadarRange(10000):setAutoCoolant(true):commandSetAutoRepair(true)
 	playerPoint.normal_long_range_radar = 10000
 	playerPoint:addCustomButton("Tactical","shield",_("buttonTactical","Shield"),function()
 		if playerPoint:getShieldsActive() then
@@ -1952,7 +1949,6 @@ function respawnFighter1()
 		playerBlade:setBeamWeaponTurret(0,60,-15,2)			-- 60: narrower than default 100, 
 		playerBlade:setBeamWeaponTurret(1,60, 15,2)			-- 2: slower than default 6
 		playerBlade:setBeamWeapon(2,20,0,1200,6,5)	
-		playerBlade:setRepairCrewCount(4)
 		playerBlade:setWeaponTubeCount(1)
 		playerBlade:setWeaponTubeDirection(0,180):setTubeLoadTime(1,20):setWeaponTubeExclusiveFor(0,"Mine")
 		playerBlade:setWeaponStorageMax("Mine",1):setWeaponStorage("Mine",1)
@@ -1961,7 +1957,6 @@ function respawnFighter1()
 	end
 	local respawn_x, respawn_y = comms_target:getPosition()
 	playerBlade:setPosition(respawn_x, respawn_y)
-	playerBlade:setLongRangeRadarRange(10000):setAutoCoolant(true):commandSetAutoRepair(true)
 	playerBlade.normal_long_range_radar = 10000
 	playerBlade:addCustomButton("Tactical","shield",_("buttonTactical","Shield"),function()
 		if playerBlade:getShieldsActive() then
@@ -1987,7 +1982,6 @@ function respawnFighter2()
 	end
 	local respawn_x, respawn_y = comms_target:getPosition()
 	playerPoint:setPosition(respawn_x, respawn_y)
-	playerPoint:setLongRangeRadarRange(10000):setAutoCoolant(true):commandSetAutoRepair(true)
 	playerPoint.normal_long_range_radar = 10000
 	playerPoint:addCustomButton("Tactical","shield",_("buttonTactical","Shield"),function()
 		if playerPoint:getShieldsActive() then
@@ -2097,7 +2091,7 @@ function handleDockedState()
 			addCommsReply(_("Back"), commsStation)
 		end)
 		if random(1,5) <= (3 - difficulty) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(30,60)
 			else
 				hireCost = math.random(45,90)
@@ -2106,14 +2100,13 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
 			end)
 		end
 	else
 		if random(1,5) <= (3 - difficulty) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(45,90)
 			else
 				hireCost = math.random(60,120)
@@ -2122,7 +2115,6 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
 			end)
@@ -5313,7 +5305,7 @@ function setPlayers()
 			pobj.maxCargo = player_ship_stats[tempPlayerType].cargo
 			if pobj.cargo == nil then
 				pobj.cargo = pobj.maxCargo
-				pobj.maxRepairCrew = pobj:getRepairCrewCount()
+				pobj.maxRepairCrew = 0
 				pobj.healthyShield = 1.0
 				pobj.prevShield = 1.0
 				pobj.healthyReactor = 1.0
@@ -5483,7 +5475,7 @@ function healthCheck()
 	if getScenarioTime() > health_check_time then
 		health_check_time = nil
 		for i,p in ipairs(getActivePlayerShips()) do
-			if p:getRepairCrewCount() > 0 then
+			if 0 > 0 then
 				fatalityChance = 0
 				if p:getShieldCount() > 1 then
 					cShield = (p:getSystemHealth("frontshield") + p:getSystemHealth("rearshield"))/2
@@ -5530,7 +5522,7 @@ function healthCheck()
 					fatalityChance = fatalityChance + (p.prevJump - p:getSystemHealth("jumpdrive"))
 					p.prevJump = p:getSystemHealth("jumpdrive")
 				end
-				if p:getRepairCrewCount() == 1 then
+				if 0 == 1 then
 					fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 				end
 				if fatalityChance > 0 then
@@ -5542,7 +5534,6 @@ function healthCheck()
 end
 function crewFate(p, fatalityChance)
 	if math.random() < (fatalityChance) then
-		p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 		if p:hasPlayerAtPosition("Engineering") then
 			repairCrewFatality = "repairCrewFatality"
 			p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))

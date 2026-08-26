@@ -131,7 +131,6 @@ end
 function createPlayerShipNarsil()
 	playerNarsil = PlayerSpaceship():setTemplate("Atlantis"):setFaction("Human Navy"):setCallSign("Narsil")
 	playerNarsil:setTypeName("Proto-Atlantis")
-	playerNarsil:setRepairCrewCount(4)					--more repair crew (vs 3)
 	playerNarsil:setImpulseMaxSpeed(70)					--slower impulse max (vs 90)
 	playerNarsil:setRotationMaxSpeed(14)				--faster spin (vs 10)
 	playerNarsil:setJumpDrive(false)					--no Jump
@@ -160,7 +159,6 @@ end
 function createPlayerShipHeadhunter()
 	playerHeadhunter = PlayerSpaceship():setTemplate("Piranha"):setFaction("Human Navy"):setCallSign("Headhunter")
 	playerHeadhunter:setTypeName("Redhook")
-	playerHeadhunter:setRepairCrewCount(4)						--more repair crew (vs 2)
 	playerHeadhunter:setJumpDriveRange(2000,25000)				--shorter jump drive range (vs 5-50)
 	playerHeadhunter:setHullMax(140)							--stronger hull (vs 120)
 	playerHeadhunter:setHull(140)
@@ -196,7 +194,6 @@ end
 function createPlayerShipBlazon()
 	playerBlazon = PlayerSpaceship():setTemplate("Striker"):setFaction("Human Navy"):setCallSign("Blazon")
 	playerBlazon:setTypeName("Stricken")
-	playerBlazon:setRepairCrewCount(2)
 	playerBlazon:setImpulseMaxSpeed(105)					
 	playerBlazon:setRotationMaxSpeed(35)				
 	playerBlazon:setShieldsMax(80,50)
@@ -226,7 +223,6 @@ end
 function createPlayerShipSting()
 	playerSting = PlayerSpaceship():setTemplate("Hathcock"):setFaction("Human Navy"):setCallSign("Sting")
 	playerSting:setTypeName("Surkov")
-	playerSting:setRepairCrewCount(3)	--more repair crew (vs 2)
 	playerSting:setImpulseMaxSpeed(60)	--faster impulse max (vs 50)
 	playerSting:setJumpDrive(false)		--no jump
 	playerSting:setWarpDrive(true)		--add warp
@@ -4001,7 +3997,7 @@ function handleDockedState()
 			addCommsReply(_("Back"), commsStation)
 		end)
 		if math.random(1,5) <= (3 - difficulty) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(30,60)
 			else
 				hireCost = math.random(45,90)
@@ -4010,7 +4006,6 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms","Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms","Repair crew member hired"))
 				end
 				addCommsReply(_("Back"), commsStation)
@@ -4036,7 +4031,7 @@ function handleDockedState()
 		showCurrentStats()
 	else	--neutral 
 		if math.random(1,5) <= (3 - difficulty) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(45,90)
 			else
 				hireCost = math.random(60,120)
@@ -4045,7 +4040,6 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms","Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms","Repair crew member hired"))
 				end
 				addCommsReply(_("Back"), commsStation)
@@ -6038,7 +6032,7 @@ function healthCheck(delta)
 			if healthDiagnostic then print("got player ship") end
 			if p ~= nil and p:isValid() then
 				if healthDiagnostic then print("valid ship") end
-				if p:getRepairCrewCount() > 0 then
+				if 0 > 0 then
 					if healthDiagnostic then print("crew on valid ship") end
 					local fatalityChance = 0
 					if healthDiagnostic then print("shields") end
@@ -6097,7 +6091,7 @@ function healthCheck(delta)
 						p.prevJump = p:getSystemHealth("jumpdrive")
 					end
 					if healthDiagnostic then print("adjust") end
-					if p:getRepairCrewCount() == 1 then
+					if 0 == 1 then
 						fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 					end
 					if healthDiagnostic then print("check") end
@@ -6106,7 +6100,6 @@ function healthCheck(delta)
 					end
 				else	--no repair crew left
 					if random(1,100) <= (4 - dificulty) then
-						p:setRepairCrewCount(1)
 						if p:hasPlayerAtPosition("Engineering") then
 							local repairCrewRecovery = "repairCrewRecovery"
 							p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer","Medical team has revived one of your repair crew"))
@@ -6152,7 +6145,6 @@ end
 function crewFate(p, fatalityChance)
 	if math.random() < (fatalityChance) then
 		if p.initialCoolant == nil then
-			p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 			if p:hasPlayerAtPosition("Engineering") then
 				local repairCrewFatality = "repairCrewFatality"
 				p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer","One of your repair crew has perished"))
@@ -6167,7 +6159,6 @@ function crewFate(p, fatalityChance)
 			end
 		else
 			if random(1,100) < 50 then
-				p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 				if p:hasPlayerAtPosition("Engineering") then
 					local repairCrewFatality = "repairCrewFatality"
 					p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer","One of your repair crew has perished"))
@@ -7945,7 +7936,7 @@ function setPlayers()
 			if pobj.cargo == nil then
 				pobj.goods = {}
 				pobj.cargo = pobj.maxCargo
-				pobj.maxRepairCrew = pobj:getRepairCrewCount()
+				pobj.maxRepairCrew = 0
 				pobj.healthyShield = 1.0
 				pobj.prevShield = 1.0
 				pobj.healthyReactor = 1.0

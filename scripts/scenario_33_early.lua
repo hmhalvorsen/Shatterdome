@@ -2517,7 +2517,7 @@ function identifyPlayerShip(p,paused)
 		end
 	end
 	local player_template = p:getTypeName()
-	p.max_repair_crew = p:getRepairCrewCount()
+	p.max_repair_crew = 0
 	p.ship_score = player_ship_stats[player_template].strength
 	p.max_cargo = player_ship_stats[player_template].cargo
 	p.cargo = p.max_cargo

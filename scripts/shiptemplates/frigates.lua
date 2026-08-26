@@ -50,39 +50,11 @@ variation:setWeaponStorage("Nuke", 2)
 variation:setWeaponStorage("Mine", 4)
 variation:setWeaponStorage("EMP", 3)
 
-variation:addRoomSystem(1, 0, 2, 1, "Maneuver");
-variation:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-variation:addRoom(2, 2, 2, 1);
 
-variation:addRoomSystem(0, 3, 1, 2, "RearShield");
-variation:addRoomSystem(1, 3, 2, 2, "Reactor");
-variation:addRoomSystem(3, 3, 2, 2, "Warp");
-variation:addRoomSystem(5, 3, 1, 2, "JumpDrive");
-variation:addRoom(6, 3, 2, 1);
-variation:addRoom(6, 4, 2, 1);
-variation:addRoomSystem(8, 3, 1, 2, "FrontShield");
 
-variation:addRoom(2, 5, 2, 1);
-variation:addRoomSystem(1, 6, 2, 1, "MissileSystem");
-variation:addRoomSystem(1, 7, 2, 1, "Impulse");
 
-variation:addDoor(1, 1, true);
-variation:addDoor(2, 2, true);
-variation:addDoor(3, 3, true);
-variation:addDoor(1, 3, false);
-variation:addDoor(3, 4, false);
-variation:addDoor(3, 5, true);
-variation:addDoor(2, 6, true);
-variation:addDoor(1, 7, true);
-variation:addDoor(5, 3, false);
-variation:addDoor(6, 3, false);
-variation:addDoor(6, 4, false);
-variation:addDoor(8, 3, false);
-variation:addDoor(8, 4, false);
 
 --Airlock doors
---variation:addDoor(2, 2, false);
---variation:addDoor(2, 5, false);
 
 template = ShipTemplate():setName("Nirvana R5"):setLocaleName(_("ship", "Nirvana R5")):setClass(_("class", "Frigate"), _("subclass", "Cruiser: Anti-fighter")):setModel("small_frigate_5") -- TODO: Better 3D model selection
 template:setRadarTrace("cruiser.png")
@@ -151,29 +123,9 @@ template:setWeaponStorage("Nuke", 1)
 template:setTubeDirection(0, -90)
 template:setTubeDirection(1,  90)
 
-template:setRepairCrewCount(2)
 --	(H)oriz, (V)ert	   HC,VC,HS,VS, system    (C)oordinate (S)ize
-template:addRoomSystem( 0, 0, 1, 4, "Reactor")
-template:addRoomSystem( 1, 0, 1, 1, "JumpDrive")
-template:addRoomSystem( 1, 3, 1, 1, "Warp")
-template:addRoomSystem( 2, 0, 1, 1, "FrontShield")
-template:addRoomSystem( 2, 3, 1, 1, "RearShield")
-template:addRoomSystem( 3, 0, 1, 1, "MissileSystem")
-template:addRoomSystem( 3, 3, 1, 1, "Impulse")
-template:addRoomSystem( 3, 1, 2, 1, "Maneuver")
-template:addRoom( 3, 2, 2, 1)
-template:addRoomSystem( 5, 1, 2, 2, "Beamweapons")
 
 --(H)oriz, (V)ert H, V, true = horizontal
-template:addDoor( 1, 0, false)
-template:addDoor( 1, 3, false)
-template:addDoor( 2, 0, false)
-template:addDoor( 2, 3, false)
-template:addDoor( 3, 0, false)
-template:addDoor( 3, 3, false)
-template:addDoor( 3, 3, true)
-template:addDoor( 3, 2, true)
-template:addDoor( 5, 1, false)
 
 
 template = ShipTemplate():setName("Piranha F12"):setLocaleName(_("ship", "Piranha F12")):setClass(_("class", "Frigate"), _("subclass", "Cruiser: Light Artillery")):setModel("HeavyCorvetteRed")
@@ -230,43 +182,14 @@ variation:weaponTubeAllowMissle(3, "Homing"):weaponTubeAllowMissle(5, "Homing")
 variation:setTubeDirection(6, 170):setWeaponTubeExclusiveFor(6, "Mine")
 variation:setTubeDirection(7, 190):setWeaponTubeExclusiveFor(7, "Mine")
 
-variation:setRepairCrewCount(2)
-variation:addRoomSystem(0, 0, 1, 4, "RearShield")
-variation:addRoom(1, 0, 1, 1)
-variation:addRoomSystem(1, 1, 3, 2, "MissileSystem")
-variation:addRoom(1, 3, 1, 1)
 
-variation:addRoomSystem(2, 0, 2, 1, "Beamweapons")
-variation:addRoomSystem(2, 3, 2, 1, "Maneuver")
 
-variation:addRoomSystem(4, 0, 2, 1, "Warp")
-variation:addRoomSystem(4, 3, 2, 1, "JumpDrive")
-variation:addRoomSystem(5, 1, 1, 2, "Reactor")
 
-variation:addRoom(6, 0, 1, 1)
-variation:addRoomSystem(6, 1, 1, 2, "Impulse")
-variation:addRoom(6, 3, 1, 1)
 
-variation:addRoomSystem(7, 0, 1, 4, "FrontShield")
 
-variation:addDoor(1, 0, false)
-variation:addDoor(2, 0, false)
-variation:addDoor(4, 0, false)
-variation:addDoor(6, 0, false)
-variation:addDoor(7, 0, false)
 
-variation:addDoor(1, 1, true)
-variation:addDoor(1, 3, true)
 
-variation:addDoor(6, 1, true)
-variation:addDoor(6, 2, false)
-variation:addDoor(6, 3, true)
 
-variation:addDoor(1, 3, false)
-variation:addDoor(2, 3, false)
-variation:addDoor(4, 3, false)
-variation:addDoor(6, 3, false)
-variation:addDoor(7, 3, false)
 
 --Cruiser: strike craft (fast in/out)
 template = ShipTemplate():setName("Stalker Q7"):setLocaleName(_("ship", "Stalker Q7")):setClass(_("class", "Frigate"), _("subclass", "Cruiser: Strike ship")):setModel("small_frigate_3")
@@ -336,35 +259,11 @@ variation:setWeaponStorage("Homing", 3)
 variation:setWeaponStorage("Mine", 1)
 variation:setWeaponStorage("Nuke", 1)
 
-variation:setRepairCrewCount(8)
 
-variation:addRoom(1, 0, 6, 1)
-variation:addRoom(1, 5, 6, 1)
-variation:addRoomSystem(0, 1, 2, 2, "RearShield")
-variation:addRoomSystem(0, 3, 2, 2, "MissileSystem")
-variation:addRoomSystem(2, 1, 2, 2, "Beamweapons")
-variation:addRoomSystem(2, 3, 2, 2, "Reactor")
-variation:addRoomSystem(4, 1, 2, 2, "Warp")
-variation:addRoomSystem(4, 3, 2, 2, "JumpDrive")
-variation:addRoomSystem(6, 1, 2, 2, "Impulse")
-variation:addRoomSystem(6, 3, 2, 2, "Maneuver")
-variation:addRoomSystem(8, 2, 2, 2, "FrontShield")
 
-variation:addDoor(1, 1, true)
-variation:addDoor(3, 1, true)
-variation:addDoor(4, 1, true)
-variation:addDoor(6, 1, true)
 
-variation:addDoor(4, 3, true)
-variation:addDoor(5, 3, true)
 
-variation:addDoor(8, 2, false)
-variation:addDoor(8, 3, false)
 
-variation:addDoor(1, 5, true)
-variation:addDoor(2, 5, true)
-variation:addDoor(5, 5, true)
-variation:addDoor(6, 5, true)
 
 template = ShipTemplate():setName("Repulse"):setLocaleName(_("playerShip", "Repulse")):setClass(_("class", "Frigate"), _("subclass", "Armored Transport")):setModel("LightCorvetteRed"):setType("playership")
 template:setRadarTrace("tug.png")
@@ -386,30 +285,8 @@ template:setTubeDirection(1, 180)
 template:setWeaponStorage("HVLI", 6)
 template:setWeaponStorage("Homing", 4)
 
-template:setRepairCrewCount(8)
 --	(H)oriz, (V)ert	   HC,VC,HS,VS, system    (C)oordinate (S)ize
-template:addRoomSystem( 0, 1, 2, 4, "Impulse")
-template:addRoomSystem( 2, 0, 2, 2, "RearShield")
-template:addRoomSystem( 2, 2, 2, 2, "Warp")
-template:addRoom( 2, 4, 2, 2)
-template:addRoomSystem( 4, 1, 1, 4, "Maneuver")
-template:addRoom( 5, 0, 2, 2)
-template:addRoomSystem( 5, 2, 2, 2, "JumpDrive")
-template:addRoomSystem( 5, 4, 2, 2, "Beamweapons")
-template:addRoomSystem( 7, 1, 3, 2, "Reactor")
-template:addRoomSystem( 7, 3, 3, 2, "MissileSystem")
-template:addRoomSystem(10, 2, 2, 2, "FrontShield")
 
-template:addDoor( 2, 2, false)
-template:addDoor( 2, 4, false)
-template:addDoor( 3, 2, true)
-template:addDoor( 4, 3, false)
-template:addDoor( 5, 2, false)
-template:addDoor( 5, 4, true)
-template:addDoor( 7, 3, false)
-template:addDoor( 7, 1, false)
-template:addDoor( 8, 3, true)
-template:addDoor(10, 2, false)
 
 template = ShipTemplate():setName("Fiend G3"):setLocaleName(_("ship", "Fiend G3")):setModel("battleship_destroyer_4_upgraded"):setClass(_("class", "Frigate"), _("subclass", "Gunship"))
 template:setRadarTrace("adv_gunship.png")

@@ -28,7 +28,6 @@
 #include "components/shields.h"
 #include "components/coolant.h"
 #include "components/beamweapon.h"
-#include "components/internalrooms.h"
 #include "components/zone.h"
 #include "components/shiplog.h"
 #include "components/selfdestruct.h"
@@ -1084,10 +1083,6 @@ void luaCommandSendCommPlayer(sp::ecs::Entity ship, string message) {
     CommsSystem::textReply(ship, message);
 }
 
-void luaCommandSetAutoRepair(sp::ecs::Entity ship, bool enabled) {
-    (void)ship;
-    (void)enabled;
-}
 
 void luaCommandSetBeamFrequency(sp::ecs::Entity ship, int frequency) {
     if (my_player_info && my_player_info->ship == ship) { my_player_info->commandSetBeamFrequency(frequency); return; }
@@ -1583,9 +1578,6 @@ bool setupScriptEnvironment(sp::script::Environment& env)
     /// Example:
     /// commandSendCommPlayer(getPlayerShip(-1), "Requesting permission to dock.")
     env.setGlobal("commandSendCommPlayer", &luaCommandSendCommPlayer);
-    /// void commandSetAutoRepair(entity ship, boolean enabled)
-    /// Deprecated — repair crew removed; use nanobots on Engineering instead.
-    env.setGlobal("commandSetAutoRepair", &luaCommandSetAutoRepair);
     /// void commandSetBeamFrequency(entity ship, integer frequency)
     /// Sets the beam weapon frequency for the given ship.
     /// frequency is clamped to a value from 0 to 20.

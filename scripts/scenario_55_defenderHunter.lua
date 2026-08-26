@@ -2072,7 +2072,7 @@ function handleDockedState()
 			addCommsReply(_("Back"), commsStation)
 		end)
 		if math.random(1,5) <= (3 - difficulty) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(30,60)
 			else
 				hireCost = math.random(45,90)
@@ -2081,7 +2081,6 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
 			end)
@@ -2105,7 +2104,7 @@ function handleDockedState()
 		end
 	else
 		if math.random(1,5) <= (3 - difficulty) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(45,90)
 			else
 				hireCost = math.random(60,120)
@@ -2114,7 +2113,6 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
 				addCommsReply(_("Back"), commsStation)
@@ -5756,7 +5754,7 @@ function setPlayers()
 				end
 				if pobj.cargo == nil then
 					pobj.cargo = pobj.maxCargo
-					pobj.maxRepairCrew = pobj:getRepairCrewCount()
+					pobj.maxRepairCrew = 0
 					pobj.healthyShield = 1.0
 					pobj.prevShield = 1.0
 					pobj.healthyReactor = 1.0
@@ -5865,7 +5863,7 @@ function healthCheck(delta)
 		local players = getActivePlayerShips()
 		for pidx, p in ipairs(players) do
 			if p ~= nil and p:isValid() then
-				if p:getRepairCrewCount() > 0 then
+				if 0 > 0 then
 					fatalityChance = 0
 					if p:getShieldCount() > 1 then
 						cShield = (p:getSystemHealth("frontshield") + p:getSystemHealth("rearshield"))/2
@@ -5912,7 +5910,7 @@ function healthCheck(delta)
 						fatalityChance = fatalityChance + (p.prevJump - p:getSystemHealth("jumpdrive"))
 						p.prevJump = p:getSystemHealth("jumpdrive")
 					end
-					if p:getRepairCrewCount() == 1 then
+					if 0 == 1 then
 						fatalityChance = fatalityChance/2	-- increase chances of last repair crew standing
 					end
 					if fatalityChance > 0 then
@@ -5920,7 +5918,6 @@ function healthCheck(delta)
 					end
 				else
 					if random(1,100) <= (4 - difficulty) then
-						p:setRepairCrewCount(1)
 						if p:hasPlayerAtPosition("Engineering") then
 							local repairCrewRecovery = "repairCrewRecovery"
 							p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer", "Medical team has revived one of your repair crew"))
@@ -6011,7 +6008,6 @@ function crewFate(p, fatalityChance)
 		end
 		consequence = math.random(1,upper_consequence)
 		if consequence == 1 then
-			p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 			if p:hasPlayerAtPosition("Engineering") then
 				local repairCrewFatality = "repairCrewFatality"
 				p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -6122,14 +6118,12 @@ function autoCoolant(delta)
 						p:addCustomButton("Engineering",tbi,_("coolant-buttonEngineer", "Auto cool"),function()
 							string.format("")
 							p:setAutoCoolant(true)
-							p:commandSetAutoRepair(true)
 							p.autoCoolant = true
 						end)
 						tbi = "disableAutoCool" .. p:getCallSign()
 						p:addCustomButton("Engineering",tbi,_("coolant-buttonEngineer", "Manual cool"),function()
 							string.format("")
 							p:setAutoCoolant(false)
-							p:commandSetAutoRepair(false)
 							p.autoCoolant = false
 						end)
 						p.autoCoolButton = true
@@ -6141,14 +6135,12 @@ function autoCoolant(delta)
 						p:addCustomButton("Engineering+",tbi,_("coolant-buttonEngineer+", "Auto cool"),function()
 							string.format("")
 							p:setAutoCoolant(true)
-							p:commandSetAutoRepair(true)
 							p.autoCoolant = true
 						end)
 						tbi = "disableAutoCoolPlus" .. p:getCallSign()
 						p:addCustomButton("Engineering+",tbi,_("coolant-buttonEngineer+", "Manual cool"),function()
 							string.format("")
 							p:setAutoCoolant(false)
-							p:commandSetAutoRepair(false)
 							p.autoCoolant = false
 						end)
 						p.autoCoolButton = true

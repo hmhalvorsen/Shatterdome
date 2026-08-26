@@ -39,28 +39,9 @@ variation:setBeam(0, 30, 5, 900.0, 4.0, 2.5)
 variation:setBeam(1, 30,-5, 900.0, 4.0, 2.5)
 variation:setEnergyStorage(400)
 
-variation:setRepairCrewCount(1)
-variation:addRoomSystem(3, 0, 1, 1, "Maneuver");
-variation:addRoomSystem(1, 0, 2, 1, "BeamWeapons");
 
-variation:addRoomSystem(0, 1, 1, 2, "RearShield");
-variation:addRoomSystem(1, 1, 2, 2, "Reactor");
-variation:addRoomSystem(3, 1, 2, 1, "Warp");
-variation:addRoomSystem(3, 2, 2, 1, "JumpDrive");
-variation:addRoomSystem(5, 1, 1, 2, "FrontShield");
 
-variation:addRoomSystem(1, 3, 2, 1, "MissileSystem");
-variation:addRoomSystem(3, 3, 1, 1, "Impulse");
 
-variation:addDoor(2, 1, true);
-variation:addDoor(3, 1, true);
-variation:addDoor(1, 1, false);
-variation:addDoor(3, 1, false);
-variation:addDoor(3, 2, false);
-variation:addDoor(3, 3, true);
-variation:addDoor(2, 3, true);
-variation:addDoor(5, 1, false);
-variation:addDoor(5, 2, false);
 
 template = ShipTemplate():setName("Adder MK5"):setLocaleName(_("ship", "Adder MK5")):setClass(_("class", "Starfighter"), _("subclass", "Gunship")):setModel("AdlerLongRangeScoutYellow")
 template:setRadarTrace("fighter.png")
@@ -152,26 +133,5 @@ variation:setBeamWeaponTurret( 0, 270, 180, 4)
 variation:setCombatManeuver(250, 150)
 variation:setEnergyStorage(400)
 
-variation:setRepairCrewCount(1)
-variation:addRoomSystem(0,0,1,3,"RearShield")
-variation:addRoomSystem(1,1,3,1,"MissileSystem")
-variation:addRoomSystem(4,1,2,1,"Beamweapons")
-variation:addRoomSystem(3,2,2,1,"Reactor")
-variation:addRoomSystem(2,3,2,1,"Warp")
-variation:addRoomSystem(4,3,5,1,"JumpDrive")
-variation:addRoomSystem(0,4,1,3,"Impulse")
-variation:addRoomSystem(3,4,2,1,"Maneuver")
-variation:addRoomSystem(1,5,3,1,"FrontShield")
-variation:addRoom(4,5,2,1)
 
-variation:addDoor(1,1,false)
-variation:addDoor(1,5,false)
-variation:addDoor(3,2,true)
-variation:addDoor(4,2,true)
-variation:addDoor(3,3,true)
-variation:addDoor(4,3,true)
-variation:addDoor(3,4,true)
-variation:addDoor(4,4,true)
-variation:addDoor(3,5,true)
-variation:addDoor(4,5,true)
 

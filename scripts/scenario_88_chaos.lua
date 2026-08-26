@@ -4008,7 +4008,6 @@ function customPlayerShip(custom_template,p)
 	if custom_template == "Striker LX" then
 		p:setTemplate("Striker")
 		p:setTypeName("Striker LX")
-		p:setRepairCrewCount(3)						--more (vs 2)
 		p:setShieldsMax(100,100)					--stronger shields (vs 50, 30)
 		p:setShields(100,100)
 		p:setHullMax(100)							--weaker hull (vs 120)
@@ -4100,7 +4099,6 @@ function customPlayerShip(custom_template,p)
 	elseif custom_template == "Phobos T2" then
 		p:setTemplate("Phobos M3P")
 		p:setTypeName("Phobos T2")
-		p:setRepairCrewCount(4)					--more repair crew (vs 3)
 		p:setRotationMaxSpeed(20)				--faster spin (vs 10)
 		p:setShieldsMax(120,80)					--stronger front, weaker rear (vs 100,100)
 		p:setShields(120,80)
@@ -4372,7 +4370,7 @@ function commonPlayerSet(p)
 	p.shipScore = player_ship_stats[template_player_type].strength
 	p.maxCargo = player_ship_stats[template_player_type].cargo
 	p.cargo = p.maxCargo
-	p.maxRepairCrew = p:getRepairCrewCount()
+	p.maxRepairCrew = 0
 	p.healthyShield = 1.0
 	p.prevShield = 1.0
 	p.healthyReactor = 1.0
@@ -4802,7 +4800,7 @@ function handleDockedState()
 	stationFlavorInformation(commsStation)
 	if comms_source:isFriendly(comms_target) then
 		if random(1,100) <= (20 - difficulty*2) then
-			if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+			if 0 < comms_source.maxRepairCrew then
 				hireCost = math.random(30,60)
 			else
 				hireCost = math.random(45,90)
@@ -4811,7 +4809,6 @@ function handleDockedState()
 				if not comms_source:takeReputationPoints(hireCost) then
 					setCommsMessage(_("needRep-comms", "Insufficient reputation"))
 				else
-					comms_source:setRepairCrewCount(comms_source:getRepairCrewCount() + 1)
 					resetPreviousSystemHealth(comms_source)
 					setCommsMessage(_("trade-comms", "Repair crew member hired"))
 				end
@@ -5621,7 +5618,7 @@ function preOrderOrdnance(return_function)
 	if comms_source.preorder_repair_crew == nil then
 		if random(1,100) <= 20 then
 			if comms_source:isFriendly(comms_target) then
-				if comms_source:getRepairCrewCount() < comms_source.maxRepairCrew then
+				if 0 < comms_source.maxRepairCrew then
 					hireCost = math.random(30,60)
 				else
 					hireCost = math.random(45,90)
@@ -7596,7 +7593,7 @@ function update(delta)
 				end
 			end
 			if healthCheckTimer < 0 then	--check to see if any crew perish (or other consequences) due to excessive damage
-				if p:getRepairCrewCount() > 0 then
+				if 0 > 0 then
 					local fatalityChance = 0
 					local currentShield = 0
 					if p:getShieldCount() > 1 then
@@ -7651,13 +7648,12 @@ function update(delta)
 						fatalityChance = fatalityChance + (p.prevJump - currentJump)
 						p.prevJump = currentJump
 					end
-					if p:getRepairCrewCount() == 1 then
+					if 0 == 1 then
 						fatalityChance = fatalityChance/2	-- increase survival chances of last repair crew standing
 					end
 					if fatalityChance > 0 then
 						if math.random() < (fatalityChance) then
 							if p.initialCoolant == nil then
-								p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 								if p:hasPlayerAtPosition("Engineering") then
 									local repairCrewFatality = "repairCrewFatality"
 									p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -7696,7 +7692,6 @@ function update(delta)
 								end
 								consequence = math.random(1,upper_consequence)
 								if consequence == 1 then
-									p:setRepairCrewCount(p:getRepairCrewCount() - 1)
 									if p:hasPlayerAtPosition("Engineering") then
 										local repairCrewFatality = "repairCrewFatality"
 										p:addCustomMessage("Engineering",repairCrewFatality,_("repairCrew-msgEngineer", "One of your repair crew has perished"))
@@ -7796,7 +7791,6 @@ function update(delta)
 					end	--possible chance of bad consequences branch
 				else	--no repair crew left
 					if random(1,100) <= 4 then
-						p:setRepairCrewCount(1)
 						if p:hasPlayerAtPosition("Engineering") then
 							local repairCrewRecovery = "repairCrewRecovery"
 							p:addCustomMessage("Engineering",repairCrewRecovery,_("repairCrew-msgEngineer", "Medical team has revived one of your repair crew"))

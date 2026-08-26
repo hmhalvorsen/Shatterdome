@@ -21,7 +21,7 @@ include(GNUInstallDirs)
 set(SERIOUS_PROTON_DIR "../SeriousProton" CACHE PATH "Path to SeriousProton")
 
 message(STATUS "Shatterdome Version = ${PROJECT_VERSION}")
-message(STATUS "Supported targets: Windows and Linux (Raspberry Pi)")
+message(STATUS "Supported targets: Linux (x86_64 / ARM64) and Windows")
 
 # Enable colored output with Ninja
 if((CMAKE_GENERATOR MATCHES "Ninja") AND (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
@@ -288,8 +288,6 @@ set(MAIN_SOURCES
     src/components/comms.h
     src/components/scanning.h
     src/components/scanning.cpp
-    src/components/internalrooms.h
-    src/components/internalrooms.cpp
     src/components/probe.h
     src/components/hacking.h
     src/components/ai.h
@@ -430,8 +428,6 @@ set(MAIN_SOURCES
     src/multiplayer/spin.cpp
     src/multiplayer/moveto.h
     src/multiplayer/moveto.cpp
-    src/multiplayer/internalrooms.h
-    src/multiplayer/internalrooms.cpp
     src/multiplayer/shiplog.h
     src/multiplayer/shiplog.cpp
     src/multiplayer/zone.h
