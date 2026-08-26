@@ -1,44 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "$0")/.."
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT"
-
-BUILD_TYPE="${1:-Release}"
-INSTALL_PREFIX="${INSTALL_PREFIX:-$ROOT/dist}"
-INSTALL_DEPS="${INSTALL_DEPS:-1}"
-
-if [[ ! -f ../SeriousProton/CMakeLists.txt ]]; then
+if [ ! -d ../SeriousProton ]; then
   echo "Error: clone SeriousProton next to Shatterdome:"
   echo "  git clone https://github.com/daid/SeriousProton.git ../SeriousProton"
   exit 1
 fi
 
-if [[ "$INSTALL_DEPS" == "1" ]] && command -v apt-get >/dev/null; then
-  echo "Installing build dependencies (requires sudo)..."
-  sudo apt-get update
-  sudo apt-get install -y build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
-fi
-
-GENERATOR=()
-if command -v ninja >/dev/null; then
-  GENERATOR=(-G Ninja)
-fi
-
-echo "Configuring Shatterdome for Linux/Raspberry Pi ($BUILD_TYPE)..."
-cmake -S . -B build "${GENERATOR[@]}" \
-  -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+echo "Configuring Shatterdome for Raspberry Pi / Linux ARM64..."
+cmake -S . -B build -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
   -DSERIOUS_PROTON_DIR=../SeriousProton \
-  -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX"
+  -DCMAKE_INSTALL_PREFIX=/opt/shatterdome
 
 echo "Building..."
 cmake --build build
 
-echo "Installing to $INSTALL_PREFIX ..."
-rm -rf "$INSTALL_PREFIX"
-cmake --install build
+echo "Installing to dist/..."
+cmake --install build --prefix dist
 
 echo "Creating TGZ package..."
 cmake --build build --target package
 
-echo "Done."
+echo "Done. Use the TGZ in build/ with ShatterdomeOS on Raspberry Pi (arm64)."

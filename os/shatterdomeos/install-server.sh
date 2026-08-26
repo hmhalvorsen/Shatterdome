@@ -1,7 +1,5 @@
 #!/bin/bash
-# ShatterdomeOS server mode on Ubuntu: boot straight into headless game server.
-#
-#   sudo SHATTERDOME_TGZ=Shatterdome-*.tgz HEADLESS_SCENARIO=scenario_01_empty.lua ./install-server.sh
+# ShatterdomeOS server mode — Ubuntu on PC or Raspberry Pi.
 set -euo pipefail
 
 if [ "$(id -u)" -ne 0 ]; then echo "Run as root: sudo $0"; exit 1; fi
@@ -14,13 +12,18 @@ SCENARIO="${HEADLESS_SCENARIO:-scenario_01_empty.lua}"
 SERVER_NAME="${HEADLESS_NAME:-Shatterdome Bridge}"
 SERVER_PORT="${SERVER_PORT:-35666}"
 
+. "${SDOS_DIR}/lib/detect-platform.sh"
 . "${SDOS_DIR}/lib/branding.sh"
+. "${SDOS_DIR}/lib/pi-setup.sh"
 
 echo "==> ShatterdomeOS server installer (Ubuntu)"
+is_raspberry_pi && echo "    Platform: Raspberry Pi (arm64)"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y --no-install-recommends libsdl2-2.0-0 libfreetype6 alsa-utils
+
+is_raspberry_pi && configure_raspberry_pi_server
 
 mkdir -p /etc/shatterdome "${INSTALL_DIR}/bin"
 . "${SDOS_DIR}/lib/install-game.sh"
@@ -43,6 +46,10 @@ install -m 644 "${FILES_DIR}/shatterdome-server.service" /etc/systemd/system/sha
 systemctl daemon-reload
 systemctl enable shatterdome-server.service
 
-HOSTNAME_TARGET="shatterdomeos-server" apply_shatterdomeos_branding "${FILES_DIR}"
+if is_raspberry_pi; then
+  HOSTNAME_TARGET="shatterdomeos-pi-server" apply_shatterdomeos_branding "${FILES_DIR}"
+else
+  HOSTNAME_TARGET="shatterdomeos-server" apply_shatterdomeos_branding "${FILES_DIR}"
+fi
 
 echo "ShatterdomeOS server ready. Reboot to host ${SCENARIO} on port ${SERVER_PORT}."

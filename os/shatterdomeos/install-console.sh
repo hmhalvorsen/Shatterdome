@@ -1,8 +1,8 @@
 #!/bin/bash
-# ShatterdomeOS console mode on Ubuntu: boot straight into the game client.
-# Run on Ubuntu Server 24.04 (amd64 or arm64), including Raspberry Pi with Ubuntu.
+# ShatterdomeOS console mode — Ubuntu on PC or Raspberry Pi (arm64).
 #
-#   sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./install-console.sh
+# Raspberry Pi: flash Ubuntu Server 24.04 for Raspberry Pi, then:
+#   sudo SHATTERDOME_TGZ=Shatterdome-*-Linux-ARM64.tgz ./install-console.sh
 set -euo pipefail
 
 if [ "$(id -u)" -ne 0 ]; then echo "Run as root: sudo $0"; exit 1; fi
@@ -11,14 +11,22 @@ SDOS_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "${SDOS_DIR}/../.." && pwd)"
 FILES_DIR="${SDOS_DIR}/files"
 INSTALL_DIR="/opt/shatterdome"
-INSTALL_USER="${SHATTERDOME_USER:-shatterdome}"
 
+. "${SDOS_DIR}/lib/detect-platform.sh"
 . "${SDOS_DIR}/lib/branding.sh"
+. "${SDOS_DIR}/lib/pi-setup.sh"
+
+INSTALL_USER="$(default_console_user)"
 
 echo "==> ShatterdomeOS console installer (Ubuntu)"
+if is_raspberry_pi; then
+  echo "    Platform: Raspberry Pi (arm64)"
+else
+  echo "    Platform: $(uname -m)"
+fi
 
 if ! grep -qi ubuntu /etc/os-release 2>/dev/null; then
-  echo "Warning: this installer targets Ubuntu. Other Debian-based systems may work."
+  echo "Warning: this installer targets Ubuntu. Raspberry Pi OS (Debian) is not supported — use Ubuntu for Pi."
 fi
 
 export DEBIAN_FRONTEND=noninteractive
@@ -27,6 +35,10 @@ apt-get install -y --no-install-recommends \
   xserver-xorg-core xserver-xorg-input-all xserver-xorg-video-all \
   xinit x11-xserver-utils alsa-utils mesa-utils \
   libsdl2-2.0-0 libfreetype6 network-manager
+
+if is_raspberry_pi; then
+  configure_raspberry_pi_console "${INSTALL_USER}"
+fi
 
 if ! id "${INSTALL_USER}" >/dev/null 2>&1; then
   useradd -m -s /bin/bash "${INSTALL_USER}"
@@ -61,9 +73,16 @@ Section "ServerFlags"
 EndSection
 EOX
 
-HOSTNAME_TARGET="shatterdomeos-console" apply_shatterdomeos_branding "${FILES_DIR}"
+if is_raspberry_pi; then
+  HOSTNAME_TARGET="shatterdomeos-pi" apply_shatterdomeos_branding "${FILES_DIR}"
+else
+  HOSTNAME_TARGET="shatterdomeos-console" apply_shatterdomeos_branding "${FILES_DIR}"
+fi
 
 echo
 echo "ShatterdomeOS console ready. Reboot to play."
 echo "Machine ID: $(cat /etc/machine-id)"
 echo "Config: /etc/shatterdome/consoles/<machine-id>.ini"
+if is_raspberry_pi; then
+  echo "Tip: set GPU memory to 128MB+ in firmware config if graphics are slow."
+fi
