@@ -158,6 +158,7 @@ set(MAIN_SOURCES
     src/httpScriptAccess.cpp
     src/packResourceProvider.cpp
     src/gameGlobalInfo.cpp
+    src/demoSession.cpp
     src/GMActions.cpp
     src/script.cpp
     src/crewPosition.cpp
@@ -195,7 +196,6 @@ set(MAIN_SOURCES
     src/screens/crew6/weaponsScreen.cpp
     src/screens/crew6/helmsScreen.cpp
     src/screens/crew1/singlePilotScreen.cpp
-    src/screens/extra/damcon.cpp
     src/screens/extra/powerManagement.cpp
     src/screens/extra/databaseScreen.cpp
     src/screens/extra/commsScreen.cpp
@@ -225,7 +225,6 @@ set(MAIN_SOURCES
     src/screenComponents/noiseOverlay.cpp
     src/screenComponents/powerDamageIndicator.cpp
     src/screenComponents/beamTargetSelector.cpp
-    src/screenComponents/shipInternalView.cpp
     src/screenComponents/beamFrequencySelector.cpp
     src/screenComponents/radarView.cpp
     src/screenComponents/radarZoomSlider.cpp
@@ -261,6 +260,8 @@ set(MAIN_SOURCES
     src/components/rendering.cpp
     src/components/docking.h
     src/components/coolant.h
+    src/components/nanobots.h
+    src/components/nanobots.cpp
     src/components/shipsystem.h
     src/components/shipsystem.cpp
     src/components/impulse.h
@@ -311,6 +312,8 @@ set(MAIN_SOURCES
     src/systems/shipsystemssystem.cpp
     src/systems/coolantsystem.h
     src/systems/coolantsystem.cpp
+    src/systems/nanobotsystem.h
+    src/systems/nanobotsystem.cpp
     src/systems/energysystem.h
     src/systems/energysystem.cpp
     src/systems/impulse.h
@@ -345,8 +348,6 @@ set(MAIN_SOURCES
     src/systems/comms.cpp
     src/systems/radarblock.h
     src/systems/radarblock.cpp
-    src/systems/internalcrew.h
-    src/systems/internalcrew.cpp
     src/systems/pathfinding.h
     src/systems/pathfinding.cpp
     src/systems/rendering.h
@@ -395,6 +396,8 @@ set(MAIN_SOURCES
     src/multiplayer/docking.cpp
     src/multiplayer/coolant.h
     src/multiplayer/coolant.cpp
+    src/multiplayer/nanobots.h
+    src/multiplayer/nanobots.cpp
     src/multiplayer/reactor.h
     src/multiplayer/reactor.cpp
     src/multiplayer/rendering.h
@@ -464,6 +467,7 @@ set(MAIN_SOURCES
     src/epsilonServer.h
     src/featureDefs.h
     src/gameGlobalInfo.h
+    src/demoSession.h
     src/glObjects.h
     src/GMActions.h
     src/hardware/devices/dmx512SerialDevice.h
@@ -539,7 +543,6 @@ set(MAIN_SOURCES
     src/screenComponents/shieldFreqencySelect.h
     src/screenComponents/shieldsEnableButton.h
     src/screenComponents/shipDestroyedPopup.h
-    src/screenComponents/shipInternalView.h
     src/screenComponents/shipsLogControl.h
     src/screenComponents/signalQualityIndicator.h
     src/screenComponents/snapSlider.h
@@ -559,7 +562,6 @@ set(MAIN_SOURCES
     src/screens/crew6/weaponsScreen.h
     src/screens/crewStationScreen.h
     src/screens/extra/commsScreen.h
-    src/screens/extra/damcon.h
     src/screens/extra/databaseScreen.h
     src/screens/extra/powerManagement.h
     src/screens/extra/shipLogScreen.h

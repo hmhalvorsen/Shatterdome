@@ -7,6 +7,7 @@
 #include "components/shields.h"
 #include "components/hull.h"
 #include "components/coolant.h"
+#include "components/nanobots.h"
 #include "playerInfo.h"
 
 static string toNearbyIntString(float value)
@@ -158,5 +159,21 @@ void CoolantInfoDisplay::onUpdate()
     setVisible(coolant);
     if (coolant) {
         setValue(toNearbyIntString(coolant->max * 100.0f / coolant->max_coolant_per_system) + "%");
+    }
+}
+
+NanobotsInfoDisplay::NanobotsInfoDisplay(GuiContainer* owner, const string& id, float div_distance)
+: GuiKeyValueDisplay(owner, id, div_distance, tr("total","Nanobots"), "")
+{
+    setIcon("gui/icons/system_health");
+    setTextSize(20);
+}
+
+void NanobotsInfoDisplay::onUpdate()
+{
+    auto nanobots = my_spaceship.getComponent<Nanobots>();
+    setVisible(nanobots);
+    if (nanobots) {
+        setValue(toNearbyIntString(nanobots->pool / nanobots->max * 100.0f) + "%");
     }
 }

@@ -2,91 +2,52 @@
 
 **ShatterdomeOS** is an Ubuntu-based Linux that boots straight into [Shatterdome](https://github.com/hmhalvorsen/Shatterdome) — no desktop, no main menu.
 
-Two modes:
-
 | Mode | Boots into |
 |---|---|
-| **Console** | Fullscreen bridge station (Helm, Weapons, …) |
-| **Server** | Headless game server on the LAN |
+| **Console** | Fullscreen bridge station |
+| **Server** | Demo game server (headless) |
 
-Based on **Ubuntu 24.04 LTS** (Noble Numbat) — **PC (amd64) and Raspberry Pi 4/5 (arm64)**.
+Ubuntu 24.04 LTS — PC (amd64) and Raspberry Pi 4/5 (arm64).
 
-> **Raspberry Pi guide:** [RASPBERRY_PI.md](RASPBERRY_PI.md)
+> Pi guide: [RASPBERRY_PI.md](RASPBERRY_PI.md)  
+> Demo setup: [docs/DEMO.md](../../docs/DEMO.md)
 
-## Fastest path: Ubuntu Server + installer
+## Plug-and-play demo (5 consoles + server)
 
-Ubuntu Server has no desktop, but `install-console.sh` adds a minimal X11 stack and starts the game fullscreen on HDMI.
-
-1. Install **[Ubuntu Server 24.04](https://ubuntu.com/download/server)** (PC or [Raspberry Pi](https://ubuntu.com/download/raspberry-pi))
-2. Copy a Shatterdome release TGZ to the machine (ARM64 TGZ on Pi from `./tools/build-raspberrypi.sh`)
-3. Run one script and reboot
-
-### Console (bridge station)
+**Server first**, then consoles. No IP addresses — LAN auto-discovery.
 
 ```bash
-git clone https://github.com/hmhalvorsen/Shatterdome.git
-cd Shatterdome/os/shatterdomeos
+# Server (once)
+sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./install-server.sh && sudo reboot
+
+# Each console — set station, then install
+echo helms | sudo tee /etc/shatterdome/station   # weapons, engineering, science, relay
+sudo SHATTERDOME_TGZ=Shatterdome-*.tgz ./install-console.sh && sudo reboot
+```
+
+Station files: `demo/stations/`. Server advertises as **EPSICON**.
+
+## Manual install
+
+Ubuntu Server + `install-console.sh` adds minimal X11 and starts the game on HDMI.
+
+```bash
 sudo SHATTERDOME_TGZ=/path/to/Shatterdome-*.tgz ./install-console.sh
 sudo reboot
 ```
 
-### Server (game host)
+## Build rootfs image (advanced)
 
 ```bash
-sudo SHATTERDOME_TGZ=/path/to/Shatterdome-*.tgz \
-     HEADLESS_SCENARIO=scenario_01_empty.lua \
-     HEADLESS_NAME="EPSICON Bridge" \
-     ./install-server.sh
-sudo reboot
-```
-
-After reboot the game starts automatically.
-
-## Build a rootfs image (advanced)
-
-On an **Ubuntu 24.04** build machine:
-
-```bash
-cd os/shatterdomeos
 sudo SHATTERDOMEOS_MODE=console SHATTERDOME_TGZ=../../Shatterdome-*.tgz ./build-image.sh
-# output: out/shatterdomeos-console-amd64.tar.gz
 ```
 
-For ARM64 (Raspberry Pi): build on the Pi with `./tools/build-raspberrypi.sh`, or on an amd64 host run `sudo ARCH=arm64 ./build-image.sh` (needs `qemu-user-static`). For Pi SD cards, flashing Ubuntu for Raspberry Pi + `install-console.sh` is easier than a custom rootfs tarball.
+For Pi SD cards, flashing [Ubuntu for Raspberry Pi](https://ubuntu.com/download/raspberry-pi) + `install-console.sh` is easier.
 
-## Per-station configuration
+## Per-station config
 
-Each console loads config by **machine ID**:
+Simplest: `/etc/shatterdome/station` containing one word (`helms`, `weapons`, `engineering`, `science`, `relay`).
 
-```bash
-cat /etc/machine-id
-sudo cp consoles/helm.ini.example /etc/shatterdome/consoles/<machine-id>.ini
-sudo nano /etc/shatterdome/consoles/<machine-id>.ini
-```
+Or full ini: `/etc/shatterdome/consoles/<machine-id>.ini`
 
-Example:
-
-```ini
-instance_name=Helm
-mvp_mode=1
-autoconnect=Helms
-autoconnect_address=192.168.1.100
-```
-
-## What gets installed
-
-| Path | Purpose |
-|---|---|
-| `/etc/os-release` | Identifies as `ShatterdomeOS` |
-| `/opt/shatterdome/bin/Shatterdome` | Game |
-| `/etc/shatterdome/consoles/` | Station profiles |
-| `shatterdome.service` | Console: boot → X → game |
-| `shatterdome-server.service` | Server: boot → headless scenario |
-
-## EPSICON setup
-
-1. **One server** — `install-server.sh` on a Ubuntu PC
-2. **Each console** — `install-console.sh` on Ubuntu (Pi or mini PC) + station ini
-3. Power on → play
-
-See also: [MVP mode](../../docs/MVP.md), [7-segment displays](../../docs/SEVEN_SEGMENT.md), [netboot](../netboot/) for diskless x86 laptops.
+See [docs/DEMO.md](../../docs/DEMO.md) for the full demo workflow.

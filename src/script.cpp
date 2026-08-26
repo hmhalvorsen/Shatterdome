@@ -1085,9 +1085,8 @@ void luaCommandSendCommPlayer(sp::ecs::Entity ship, string message) {
 }
 
 void luaCommandSetAutoRepair(sp::ecs::Entity ship, bool enabled) {
-    if (my_player_info && my_player_info->ship == ship) { my_player_info->commandSetAutoRepair(enabled); return; }
-    if (auto ir = ship.getComponent<InternalRooms>())
-        ir->auto_repair_enabled = enabled;
+    (void)ship;
+    (void)enabled;
 }
 
 void luaCommandSetBeamFrequency(sp::ecs::Entity ship, int frequency) {
@@ -1585,10 +1584,7 @@ bool setupScriptEnvironment(sp::script::Environment& env)
     /// commandSendCommPlayer(getPlayerShip(-1), "Requesting permission to dock.")
     env.setGlobal("commandSendCommPlayer", &luaCommandSendCommPlayer);
     /// void commandSetAutoRepair(entity ship, boolean enabled)
-    /// Enables or disables automatic repair crew assignment for the given ship.
-    /// When enabled, repair crew are automatically sent to damaged systems.
-    /// Example:
-    /// commandSetAutoRepair(getPlayerShip(-1), true) -- enable auto-repair
+    /// Deprecated — repair crew removed; use nanobots on Engineering instead.
     env.setGlobal("commandSetAutoRepair", &luaCommandSetAutoRepair);
     /// void commandSetBeamFrequency(entity ship, integer frequency)
     /// Sets the beam weapon frequency for the given ship.

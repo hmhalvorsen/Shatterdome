@@ -28,6 +28,7 @@
 #include "components/jumpdrive.h"
 #include "components/missiletubes.h"
 #include "components/coolant.h"
+#include "components/nanobots.h"
 #include "components/selfdestruct.h"
 #include "components/scanning.h"
 #include "components/probe.h"
@@ -180,13 +181,14 @@
     BIND_MEMBER(T, heat_level); \
     BIND_MEMBER(T, coolant_level); \
     BIND_MEMBER(T, coolant_request); \
+    BIND_MEMBER(T, nanobot_level); \
+    BIND_MEMBER(T, nanobot_request); \
     BIND_MEMBER(T, can_be_hacked); \
     BIND_MEMBER(T, hacked_level); \
     BIND_MEMBER(T, power_factor); \
     BIND_MEMBER(T, coolant_change_rate_per_second); \
     BIND_MEMBER(T, heat_add_rate_per_second); \
     BIND_MEMBER(T, power_change_rate_per_second); \
-    BIND_MEMBER(T, auto_repair_per_second); \
     BIND_MEMBER(T, damage_per_second_on_overheat);
 
 
@@ -395,13 +397,14 @@ void initComponentScriptBindings()
     BIND_MEMBER_NAMED(Shields, front_system.heat_level, "front_heat_level");
     BIND_MEMBER_NAMED(Shields, front_system.coolant_level, "front_coolant_level");
     BIND_MEMBER_NAMED(Shields, front_system.coolant_request, "front_coolant_request");
+    BIND_MEMBER_NAMED(Shields, front_system.nanobot_level, "front_nanobot_level");
+    BIND_MEMBER_NAMED(Shields, front_system.nanobot_request, "front_nanobot_request");
     BIND_MEMBER_NAMED(Shields, front_system.can_be_hacked, "front_can_be_hacked");
     BIND_MEMBER_NAMED(Shields, front_system.hacked_level, "front_hacked_level");
     BIND_MEMBER_NAMED(Shields, front_system.power_factor, "front_power_factor");
     BIND_MEMBER_NAMED(Shields, front_system.coolant_change_rate_per_second, "front_coolant_change_rate_per_second");
     BIND_MEMBER_NAMED(Shields, front_system.heat_add_rate_per_second, "front_heat_add_rate_per_second");
     BIND_MEMBER_NAMED(Shields, front_system.power_change_rate_per_second, "front_power_change_rate_per_second");
-    BIND_MEMBER_NAMED(Shields, front_system.auto_repair_per_second, "front_auto_repair_per_second");
     BIND_MEMBER_NAMED(Shields, front_system.damage_per_second_on_overheat, "front_damage_per_second_on_overheat");
     BIND_MEMBER_NAMED(Shields, rear_system.health, "rear_health");
     BIND_MEMBER_NAMED(Shields, rear_system.health_max, "rear_health_max");
@@ -410,13 +413,14 @@ void initComponentScriptBindings()
     BIND_MEMBER_NAMED(Shields, rear_system.heat_level, "rear_heat_level");
     BIND_MEMBER_NAMED(Shields, rear_system.coolant_level, "rear_coolant_level");
     BIND_MEMBER_NAMED(Shields, rear_system.coolant_request, "rear_coolant_request");
+    BIND_MEMBER_NAMED(Shields, rear_system.nanobot_level, "rear_nanobot_level");
+    BIND_MEMBER_NAMED(Shields, rear_system.nanobot_request, "rear_nanobot_request");
     BIND_MEMBER_NAMED(Shields, rear_system.can_be_hacked, "rear_can_be_hacked");
     BIND_MEMBER_NAMED(Shields, rear_system.hacked_level, "rear_hacked_level");
     BIND_MEMBER_NAMED(Shields, rear_system.power_factor, "rear_power_factor");
     BIND_MEMBER_NAMED(Shields, rear_system.coolant_change_rate_per_second, "rear_coolant_change_rate_per_second");
     BIND_MEMBER_NAMED(Shields, rear_system.heat_add_rate_per_second, "rear_heat_add_rate_per_second");
     BIND_MEMBER_NAMED(Shields, rear_system.power_change_rate_per_second, "rear_power_change_rate_per_second");
-    BIND_MEMBER_NAMED(Shields, rear_system.auto_repair_per_second, "rear_auto_repair_per_second");
     BIND_MEMBER_NAMED(Shields, rear_system.damage_per_second_on_overheat, "rear_damage_per_second_on_overheat");
 
     BIND_MEMBER(Shields, active);
@@ -625,6 +629,16 @@ void initComponentScriptBindings()
     BIND_MEMBER(Coolant, max_coolant_per_system);
     BIND_MEMBER(Coolant, auto_levels);
 
+    sp::script::ComponentHandler<Nanobots>::name("nanobots");
+    BIND_MEMBER(Nanobots, max);
+    BIND_MEMBER(Nanobots, max_per_system);
+    BIND_MEMBER(Nanobots, pool);
+    BIND_MEMBER(Nanobots, recharge_rate_per_second);
+    BIND_MEMBER(Nanobots, deploy_rate_per_second);
+    BIND_MEMBER(Nanobots, repair_health_per_second);
+    BIND_MEMBER(Nanobots, consume_rate_per_second);
+    BIND_MEMBER(Nanobots, unhack_per_second);
+
     sp::script::ComponentHandler<SelfDestruct>::name("self_destruct");
     BIND_MEMBER(SelfDestruct, active);
     BIND_MEMBER(SelfDestruct, countdown);
@@ -720,7 +734,6 @@ void initComponentScriptBindings()
     BIND_MEMBER(Gravity, on_teleportation);
 
     sp::script::ComponentHandler<InternalRooms>::name("internal_rooms");
-    BIND_MEMBER(InternalRooms, auto_repair_enabled);
     BIND_ARRAY_DIRTY_FLAG(InternalRooms, rooms, rooms_dirty);
     BIND_ARRAY_DIRTY_FLAG_MEMBER(InternalRooms, rooms, position, rooms_dirty);
     BIND_ARRAY_DIRTY_FLAG_MEMBER(InternalRooms, rooms, size, rooms_dirty);
@@ -755,16 +768,6 @@ void initComponentScriptBindings()
             t->doors_dirty = true;
         }
     };
-    sp::script::ComponentHandler<InternalCrew>::name("internal_crew");
-    BIND_MEMBER(InternalCrew, move_speed);
-    BIND_MEMBER(InternalCrew, position);
-    BIND_MEMBER(InternalCrew, target_position);
-    //TODO: action, direction, action_delay
-    BIND_MEMBER(InternalCrew, ship);
-    sp::script::ComponentHandler<InternalRepairCrew>::name("internal_repair_crew");
-    BIND_MEMBER(InternalRepairCrew, repair_per_second);
-    BIND_MEMBER(InternalRepairCrew, unhack_per_second);
-
     sp::script::ComponentHandler<Database>::name("science_database");
     BIND_MEMBER(Database, name);
     BIND_MEMBER(Database, description);

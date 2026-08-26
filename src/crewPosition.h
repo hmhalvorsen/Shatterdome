@@ -20,7 +20,6 @@ enum class CrewPosition
     //1 player crew
     singlePilot,
     //extras
-    damageControl,
     powerManagement,
     databaseView,
     altRelay,

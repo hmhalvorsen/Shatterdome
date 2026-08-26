@@ -698,48 +698,21 @@ function Entity:commandSetAlertLevel(level)
     return self
 end
 
---- Returns a 1-indexed table of internal_crew entities that are assigned to this entity.
---- Example: local crew = entity:getRepairCrew()
+--- Returns a 1-indexed table of repair crew entities (deprecated — always empty).
 function Entity:getRepairCrew()
-    local crew = {}
-
-    for _, e in ipairs(getEntitiesWithComponent("internal_crew")) do
-        if e.components.internal_crew.ship == self then
-            table.insert(crew, e)
-        end
-    end
-
-    return crew
+    return {}
 end
---- Returns the number of repair crews on this entity.
---- Example: entity:getRepairCrewCount()
+--- Returns 0 — repair crew removed; use nanobots instead.
 function Entity:getRepairCrewCount()
-    local count = 0
-    for _, e in ipairs(getEntitiesWithComponent("internal_crew")) do
-        if e.components.internal_crew.ship == self then
-            count = count + 1
-        end
-    end
-    return count
+    return 0
 end
---- Sets the total number of repair crews on this entity.
---- If the value is less than the number of repair crews, this function removes repair crews.
---- If the value is greater, this function adds new repair crews to random rooms.
---- Example: entity:setRepairCrewCount(5)
+--- No-op — repair crew removed. Destroys any legacy crew entities if amount is 0.
 function Entity:setRepairCrewCount(amount)
-    if self.components.internal_rooms then
+    if amount <= 0 then
         for _, e in ipairs(getEntitiesWithComponent("internal_crew")) do
-            if e.components.internal_crew.ship == self then
-                amount = amount - 1
-                if amount < 0 then
-                    e:destroy()
-                end
+            if e.components.internal_crew and e.components.internal_crew.ship == self then
+                e:destroy()
             end
-        end
-        for n = 1, amount do
-            local crew = createEntity()
-            crew.components.internal_crew = {ship=self}
-            crew.components.internal_repair_crew = {}
         end
     end
     return self
@@ -803,38 +776,13 @@ end
 --- Example:
 --- target_position = {3, 2} -- must be a table
 --- entity:moveRepairCrewToPosition(1, target_position)
+--- Deprecated — repair crew removed.
 function Entity:moveRepairCrewToPosition(crew_index, pos)
-    local ir = self.components.internal_rooms
-    if not ir then return false end
-
-    if not self:isValidCrewPosition(pos) then return false end
-
-    local crew = self:getRepairCrew()
-    if not crew[crew_index] then return false end
-
-    crew[crew_index].components.internal_crew.target_position = pos
-    return true
+    return false
 end
---- Sets the target room of a repair crew within this entity's internal rooms, selected by passing a room.
---- Returns a Boolean value indicating success.
---- The crew_index is 1-indexed. If the crew_index is invalid, this returns false.
---- The crew is assigned a random set of coordinates within the room.
---- Using this function to assign multiple crews to the same room can stack them on the same square, which players should not be able to do!
---- Example:
---- target_room = entity:getInternalRoomForSystem("beamweapons")
---- entity:moveRepairCrewToRoom(1, target_room)
+--- Deprecated — repair crew removed.
 function Entity:moveRepairCrewToRoom(crew_index, room)
-    local ir = self.components.internal_rooms
-    if not ir then return false end
-
-    local crew = self:getRepairCrew()
-    if not crew[crew_index] then return false end
-
-    local coordinates_list = self:getCoordinatesForInternalRoom(room)
-    if not coordinates_list or #coordinates_list == 0 then return false end
-    local coords = coordinates_list[math.random(#coordinates_list)]
-    crew[crew_index].components.internal_crew.target_position = coords
-    return true
+    return false
 end
 --- Defines whether automatic coolant distribution is enabled on this entity.
 --- If true, coolant is automatically distributed proportionally to the amount of heat in that system.

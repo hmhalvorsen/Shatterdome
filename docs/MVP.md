@@ -21,8 +21,8 @@ hardware_console_mode=1
 | Meeting decision | Software change |
 |---|---|
 | Drop Jump (phase 1) | Jump controls hidden on Helm/Tactical/Single Pilot |
-| Remove repair minigame | Engineering crew-room UI hidden; Damage Control station tab removed |
-| Auto-repair system | Auto-repair enabled when you board a ship with internal rooms |
+| Remove repair minigame | Repair crew, Damage Control station, and internal crew UI removed |
+| Nanobot repair | Engineering allocates nanobots from a ship pool to repair systems and unhack |
 | Weapons: no beam subsystem picker / lock | Beam target selector and missile lock button hidden; beams default to hull |
 | Science: optional remove Database | Database tab/mode hidden on Science; Database station tab removed |
 | Hacking: signal-lock minigame | Same sinus slider minigame as science scanning |

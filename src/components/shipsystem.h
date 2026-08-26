@@ -35,13 +35,14 @@ public:
     float heat_level = 0.0f; //0.0-1.0, system will damage at 1.0
     float coolant_level = 0.0f; //0.0-10.0
     float coolant_request = 0.0f;
+    float nanobot_level = 0.0f; //0.0-10.0, bots deployed in this system
+    float nanobot_request = 0.0f; // allocation from the main nanobot pool
     bool can_be_hacked = true;
     float hacked_level = 0.0f; //0.0-1.0
     float power_factor = 1.0f;
     float coolant_change_rate_per_second = default_coolant_rate_per_second;
     float heat_add_rate_per_second = default_add_heat_rate_per_second;
     float power_change_rate_per_second = default_power_rate_per_second;
-    float auto_repair_per_second = 0.0f;
     float damage_per_second_on_overheat = 0.08f;
 
     float getSystemEffectiveness();

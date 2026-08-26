@@ -29,6 +29,7 @@
 #include "init/displaywindows.h"
 #include "init/ecs.h"
 #include "stdinLuaConsole.h"
+#include "demoSession.h"
 
 #include "graphics/opengl.h"
 
@@ -99,6 +100,7 @@ int main(int argc, char** argv)
     initSystemsAndComponents();
 
     auto configuration_path = initConfiguration(argc, argv);
+    applyDemoSessionPreferences();
 
     if (PreferencesManager::get("headless") == "")
     {

@@ -296,11 +296,9 @@ Keys::Keys() :
     engineering_increase_coolant("ENGINEERING_COOLANT_INCREASE", "="),
     engineering_decrease_coolant("ENGINEERING_COOLANT_DECREASE", "-"),
     engineering_set_coolant("ENGINEERING_COOLANT_SET"),
-    engineering_next_repair_crew("ENGINEERING_REPAIR_CREW_NEXT", "C"),
-    engineering_repair_crew_up("ENGINEERING_REPAIR_CREW_UP", "Up"),
-    engineering_repair_crew_down("ENGINEERING_REPAIR_CREW_DOWN", "Down"),
-    engineering_repair_crew_left("ENGINEERING_REPAIR_CREW_LEFT", "Left"),
-    engineering_repair_crew_right("ENGINEERING_REPAIR_CREW_RIGHT", "Right"),
+    engineering_increase_nanobot("ENGINEERING_NANOBOT_INCREASE", "'"),
+    engineering_decrease_nanobot("ENGINEERING_NANOBOT_DECREASE", ";"),
+    engineering_set_nanobot("ENGINEERING_NANOBOT_SET"),
     engineering_self_destruct_start("ENGINEERING_SELF_DESTRUCT_START"),
     engineering_self_destruct_confirm("ENGINEERING_SELF_DESTRUCT_CONFIRM"),
     engineering_self_destruct_cancel("ENGINEERING_SELF_DESTRUCT_CANCEL"),
@@ -325,6 +323,17 @@ Keys::Keys() :
         {"ENGINEERING_SET_SYSTEM_COOLANT_JUMP_DRIVE"},
         {"ENGINEERING_SET_SYSTEM_COOLANT_FRONT_SHIELD"},
         {"ENGINEERING_SET_SYSTEM_COOLANT_READ_SHIELD"},
+    },
+    engineering_set_nanobot_for_system{
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_REACTOR"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_BEAM_WEAPONS"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_MISSILE"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_MANEUVERING"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_IMPULSE"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_WARP"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_JUMP_DRIVE"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_FRONT_SHIELD"},
+        {"ENGINEERING_SET_SYSTEM_NANOBOT_READ_SHIELD"},
     },
 
     // Relay crew screen
@@ -493,11 +502,9 @@ void Keys::init()
     engineering_increase_coolant.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Increase system coolant"));
     engineering_decrease_coolant.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Decrease system coolant"));
     engineering_set_coolant.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set system coolant (joystick)"));
-    engineering_next_repair_crew.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Next repair crew"));
-    engineering_repair_crew_up.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Crew move up"));
-    engineering_repair_crew_down.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Crew move down"));
-    engineering_repair_crew_left.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Crew move left"));
-    engineering_repair_crew_right.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Crew move right"));
+    engineering_increase_nanobot.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Increase system nanobots"));
+    engineering_decrease_nanobot.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Decrease system nanobots"));
+    engineering_set_nanobot.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set system nanobots (joystick)"));
     engineering_self_destruct_start.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Start self-destruct"));
     engineering_self_destruct_confirm.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Confirm self-destruct"));
     engineering_self_destruct_cancel.setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Cancel self-destruct"));
@@ -521,6 +528,16 @@ void Keys::init()
     engineering_set_coolant_for_system[static_cast<int>(ShipSystem::Type::JumpDrive)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set jump drive coolant (joystick)"));
     engineering_set_coolant_for_system[static_cast<int>(ShipSystem::Type::FrontShield)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set front shields coolant (joystick)"));
     engineering_set_coolant_for_system[static_cast<int>(ShipSystem::Type::RearShield)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set rear shields coolant (joystick)"));
+
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::Reactor)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set reactor nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::BeamWeapons)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set beam weapon nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::MissileSystem)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set missile weapon nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::Maneuver)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set maneuvering nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::Impulse)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set impulse nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::Warp)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set warp nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::JumpDrive)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set jump drive nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::FrontShield)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set front shields nanobots (joystick)"));
+    engineering_set_nanobot_for_system[static_cast<int>(ShipSystem::Type::RearShield)].setLabel(tr("hotkey_menu", "Engineering"), tr("hotkey_Engineering", "Set rear shields nanobots (joystick)"));
 
     // Relay
     relay_alert_level_none.setLabel(tr("hotkey_menu", "Relay"), tr("hotkey_Relay", "Alert level: Normal"));

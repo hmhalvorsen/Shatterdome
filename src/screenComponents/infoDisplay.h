@@ -57,3 +57,11 @@ public:
 
     void onUpdate() override;
 };
+
+class NanobotsInfoDisplay : public GuiKeyValueDisplay
+{
+public:
+    NanobotsInfoDisplay(GuiContainer* owner, const string& id, float div_distance);
+
+    void onUpdate() override;
+};

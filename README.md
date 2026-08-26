@@ -91,9 +91,13 @@ cmake --build build --target package
 
 ## MVP mode (physical consoles)
 
-See [docs/MVP.md](docs/MVP.md). Enable with `mvp_mode=1` in `~/.shatterdome/options.ini` — hides Jump, repair minigame UI, database, beam targeting/lock, and enables auto-repair for crew-based ships.
+See [docs/MVP.md](docs/MVP.md). Enable with `mvp_mode=1` in `~/.shatterdome/options.ini` — hides Jump, database, beam targeting/lock; repair uses nanobots on Engineering instead of repair crew.
 
 Stretch goals, crew planning, and EPSICON notes: [docs/ROADMAP.md](docs/ROADMAP.md).
+
+## Demo session (5 consoles)
+
+Plug-and-play bridge demo: [docs/DEMO.md](docs/DEMO.md). Server boots first; each console only needs `/etc/shatterdome/station`.
 
 ## ShatterdomeOS (boot to game)
 

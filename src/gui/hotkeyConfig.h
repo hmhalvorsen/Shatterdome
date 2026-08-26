@@ -143,17 +143,16 @@ public:
     sp::io::Keybinding engineering_increase_coolant;
     sp::io::Keybinding engineering_decrease_coolant;
     sp::io::Keybinding engineering_set_coolant;
-    sp::io::Keybinding engineering_next_repair_crew;
-    sp::io::Keybinding engineering_repair_crew_up;
-    sp::io::Keybinding engineering_repair_crew_down;
-    sp::io::Keybinding engineering_repair_crew_left;
-    sp::io::Keybinding engineering_repair_crew_right;
+    sp::io::Keybinding engineering_increase_nanobot;
+    sp::io::Keybinding engineering_decrease_nanobot;
+    sp::io::Keybinding engineering_set_nanobot;
     sp::io::Keybinding engineering_self_destruct_start;
     sp::io::Keybinding engineering_self_destruct_confirm;
     sp::io::Keybinding engineering_self_destruct_cancel;
 
     sp::io::Keybinding engineering_set_power_for_system[ShipSystem::COUNT];
     sp::io::Keybinding engineering_set_coolant_for_system[ShipSystem::COUNT];
+    sp::io::Keybinding engineering_set_nanobot_for_system[ShipSystem::COUNT];
 
     // Relay screen binds
     sp::io::Keybinding relay_alert_level_none;

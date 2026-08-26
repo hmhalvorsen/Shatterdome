@@ -54,6 +54,7 @@ public:
     void commandScan(sp::ecs::Entity object, sp::ecs::Entity link_source = sp::ecs::Entity());
     void commandSetSystemPowerRequest(ShipSystem::Type system, float power_level);
     void commandSetSystemCoolantRequest(ShipSystem::Type system, float coolant_level);
+    void commandSetSystemNanobotRequest(ShipSystem::Type system, float nanobot_level);
     void commandDock(sp::ecs::Entity station);
     void commandUndock();
     void commandAbortDock();
@@ -62,7 +63,6 @@ public:
     void commandAnswerCommHail(bool awnser);
     void commandSendComm(uint8_t index);
     void commandSendCommPlayer(string message);
-    void commandSetAutoRepair(bool enabled);
     void commandSetBeamFrequency(int32_t frequency);
     void commandSetBeamSystemTarget(ShipSystem::Type system);
     void commandSetShieldFrequency(int32_t frequency);
@@ -86,8 +86,6 @@ public:
     void commandSetMainScreen(int monitor_index, bool enabled);
     void commandSetMainScreenControl(int monitor_index, bool control);
     void commandSetName(const string& name);
-
-    void commandCrewSetTargetPosition(sp::ecs::Entity crew, glm::ivec2 target);
 
     virtual void onReceiveClientCommand(int32_t client_id, sp::io::DataBuffer& packet) override;
 

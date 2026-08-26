@@ -11,13 +11,14 @@ BASIC_REPLICATION_IMPL(ShieldsReplication, Shields)
     BASIC_REPLICATION_FIELD(front_system.heat_level);
     BASIC_REPLICATION_FIELD(front_system.coolant_level);
     BASIC_REPLICATION_FIELD(front_system.coolant_request);
+    BASIC_REPLICATION_FIELD(front_system.nanobot_level);
+    BASIC_REPLICATION_FIELD(front_system.nanobot_request);
     BASIC_REPLICATION_FIELD(front_system.can_be_hacked);
     BASIC_REPLICATION_FIELD(front_system.hacked_level);
     BASIC_REPLICATION_FIELD(front_system.power_factor);
     BASIC_REPLICATION_FIELD(front_system.coolant_change_rate_per_second);
     BASIC_REPLICATION_FIELD(front_system.heat_add_rate_per_second);
     BASIC_REPLICATION_FIELD(front_system.power_change_rate_per_second);
-    BASIC_REPLICATION_FIELD(front_system.auto_repair_per_second);
     BASIC_REPLICATION_FIELD(front_system.damage_per_second_on_overheat);
 
     BASIC_REPLICATION_FIELD(rear_system.health);
@@ -27,13 +28,14 @@ BASIC_REPLICATION_IMPL(ShieldsReplication, Shields)
     BASIC_REPLICATION_FIELD(rear_system.heat_level);
     BASIC_REPLICATION_FIELD(rear_system.coolant_level);
     BASIC_REPLICATION_FIELD(rear_system.coolant_request);
+    BASIC_REPLICATION_FIELD(rear_system.nanobot_level);
+    BASIC_REPLICATION_FIELD(rear_system.nanobot_request);
     BASIC_REPLICATION_FIELD(rear_system.can_be_hacked);
     BASIC_REPLICATION_FIELD(rear_system.hacked_level);
     BASIC_REPLICATION_FIELD(rear_system.power_factor);
     BASIC_REPLICATION_FIELD(rear_system.coolant_change_rate_per_second);
     BASIC_REPLICATION_FIELD(rear_system.heat_add_rate_per_second);
     BASIC_REPLICATION_FIELD(rear_system.power_change_rate_per_second);
-    BASIC_REPLICATION_FIELD(rear_system.auto_repair_per_second);
     BASIC_REPLICATION_FIELD(rear_system.damage_per_second_on_overheat);
 
     BASIC_REPLICATION_FIELD(calibration_time);

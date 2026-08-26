@@ -27,9 +27,13 @@ private:
     GuiSlider* power_slider;
     GuiLabel* coolant_label;
     GuiSlider* coolant_slider;
+    GuiLabel* nanobot_label;
+    GuiSlider* nanobot_slider;
     GuiImage* system_health_icon;
     GuiImage* heat_icon;
+    GuiImage* nanobot_icon;
     GuiProgressbar* coolant_remaining_bar;
+    GuiProgressbar* nanobot_pool_bar;
 
     class SystemRow
     {
@@ -45,6 +49,8 @@ private:
         GuiProgressSlider* power_bar;
         GuiProgressSlider* coolant_bar;
         GuiImage* coolant_max_indicator;
+        GuiProgressSlider* nanobot_bar;
+        GuiImage* nanobot_max_indicator;
     };
     std::vector<SystemRow> system_rows;
     GuiElement* system_effects_container;
@@ -54,6 +60,7 @@ private:
 
     bool set_power_active[ShipSystem::COUNT] = {false};
     bool set_coolant_active[ShipSystem::COUNT] = {false};
+    bool set_nanobot_active[ShipSystem::COUNT] = {false};
 
     void addSystemEffect(string key, string value);
     void selectSystem(ShipSystem::Type system);

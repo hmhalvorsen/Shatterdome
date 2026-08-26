@@ -44,8 +44,6 @@ void ShipSystemsSystem::updateSystem(sp::ecs::Entity entity, ShipSystem& system,
     if (!has_coolant && !entity.hasComponent<Reactor>())
         system.power_request = std::min(system.power_request, 1.0f);
 
-    system.health = std::min(1.0f, system.health + delta * system.auto_repair_per_second);
-
     system.hacked_level = std::max(0.0f, system.hacked_level - delta / unhack_time);
     system.health = std::min(system.health, system.health_max);
 

@@ -9,13 +9,14 @@ BASIC_REPLICATION_IMPL(BeamWeaponSysReplication, BeamWeaponSys)
     BASIC_REPLICATION_FIELD(heat_level);
     BASIC_REPLICATION_FIELD(coolant_level);
     BASIC_REPLICATION_FIELD(coolant_request);
+    BASIC_REPLICATION_FIELD(nanobot_level);
+    BASIC_REPLICATION_FIELD(nanobot_request);
     BASIC_REPLICATION_FIELD(can_be_hacked);
     BASIC_REPLICATION_FIELD(hacked_level);
     BASIC_REPLICATION_FIELD(power_factor);
     BASIC_REPLICATION_FIELD(coolant_change_rate_per_second);
     BASIC_REPLICATION_FIELD(heat_add_rate_per_second);
     BASIC_REPLICATION_FIELD(power_change_rate_per_second);
-    BASIC_REPLICATION_FIELD(auto_repair_per_second);
     BASIC_REPLICATION_FIELD(damage_per_second_on_overheat);
 
     BASIC_REPLICATION_FIELD(frequency);

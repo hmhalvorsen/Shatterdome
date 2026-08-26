@@ -408,14 +408,6 @@ function __exportShipChanges(entity, template, default_scan_state)
         end
     end
 
-    -- Repair crew: only export if we found actual crew entities and the count differs from template.
-    -- internal_crew entities are not always instantiated, so a count of 0 is not reliable.
-    local crew_count = __countShipCrew(entity)
-    local template_crew_count = template.__repair_crew_count or 0
-    if crew_count > 0 and crew_count ~= template_crew_count then
-        extras = extras .. string.format(":setRepairCrewCount(%d)", crew_count)
-    end
-
     -- AI controller (CPU ships only): export AI name and non-entity-targeted orders
     local ai = entity.components.ai_controller
     local t_ai = template.ai_controller
@@ -446,17 +438,6 @@ function __exportShipChanges(entity, template, default_scan_state)
     end
 
     return extras
-end
-
--- Returns the number of internal repair crew belonging to `entity`.
-function __countShipCrew(entity)
-    local n = 0
-    for _, crew in ipairs(getEntitiesWithComponent("internal_crew")) do
-        if crew.components.internal_crew and crew.components.internal_crew.ship == entity then
-            n = n + 1
-        end
-    end
-    return n
 end
 
 function __exportPlanet(entity)

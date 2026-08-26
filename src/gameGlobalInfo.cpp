@@ -9,7 +9,6 @@
 #include "config.h"
 #include "mvpConfig.h"
 #include "components/collision.h"
-#include "components/internalrooms.h"
 #include "components/beamweapon.h"
 #include "systems/collision.h"
 #include "ecs/query.h"
@@ -116,13 +115,8 @@ void GameGlobalInfo::update(float delta)
         if (my_spaceship != my_player_info->ship)
         {
             my_spaceship = my_player_info->ship;
-            if (mvpModeEnabled() && my_spaceship)
-            {
-                if (my_spaceship.hasComponent<InternalRooms>())
-                    my_player_info->commandSetAutoRepair(true);
-                if (my_spaceship.hasComponent<BeamWeaponSys>())
-                    my_player_info->commandSetBeamSystemTarget(ShipSystem::Type::None);
-            }
+            if (mvpModeEnabled() && my_spaceship && my_spaceship.hasComponent<BeamWeaponSys>())
+                my_player_info->commandSetBeamSystemTarget(ShipSystem::Type::None);
         }
     }
     elapsed_time += delta;

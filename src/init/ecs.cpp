@@ -17,6 +17,7 @@
 #include "multiplayer/docking.h"
 #include "multiplayer/hull.h"
 #include "multiplayer/coolant.h"
+#include "multiplayer/nanobots.h"
 #include "multiplayer/reactor.h"
 #include "multiplayer/rendering.h"
 #include "multiplayer/selfdestruct.h"
@@ -49,6 +50,7 @@
 #include "systems/shieldsystem.h"
 #include "systems/shipsystemssystem.h"
 #include "systems/coolantsystem.h"
+#include "systems/nanobotsystem.h"
 #include "systems/missilesystem.h"
 #include "systems/maneuvering.h"
 #include "systems/energysystem.h"
@@ -56,7 +58,6 @@
 #include "systems/selfdestruct.h"
 #include "systems/basicmovement.h"
 #include "systems/gravity.h"
-#include "systems/internalcrew.h"
 #include "systems/pathfinding.h"
 #include "systems/rendering.h"
 #include "systems/planet.h"
@@ -77,6 +78,7 @@ void initSystemsAndComponents()
     sp::ecs::MultiplayerReplication::registerComponentReplication<CommsReceiverReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<CommsTransmitterReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<CoolantReplication>();
+    sp::ecs::MultiplayerReplication::registerComponentReplication<NanobotsReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<CustomShipFunctionsReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<DatabaseReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<DockingBayReplication>();
@@ -88,7 +90,6 @@ void initSystemsAndComponents()
     sp::ecs::MultiplayerReplication::registerComponentReplication<HullReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<ImpulseEngineReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<InternalRoomsReplication>();
-    sp::ecs::MultiplayerReplication::registerComponentReplication<InternalCrewReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<JumpDriveReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<ManeuveringThrustersReplication>();
     sp::ecs::MultiplayerReplication::registerComponentReplication<CombatManeuveringThrustersReplication>();
@@ -148,12 +149,12 @@ void initSystemsAndComponents()
     engine->registerSystem<MissileSystem>();
     engine->registerSystem<ShieldSystem>();
     engine->registerSystem<CoolantSystem>();
+    engine->registerSystem<NanobotSystem>();
     engine->registerSystem<ShipSystemsSystem>();
     engine->registerSystem<SelfDestructSystem>();
     engine->registerSystem<SfxSystem>();
     engine->registerSystem<BasicMovementSystem>();
     engine->registerSystem<GravitySystem>();
-    engine->registerSystem<InternalCrewSystem>();
     engine->registerSystem<PathFindingSystem>();
     engine->registerSystem<NebulaRenderSystem>();
     engine->registerSystem<ExplosionRenderSystem>();

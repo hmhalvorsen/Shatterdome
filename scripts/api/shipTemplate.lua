@@ -59,7 +59,6 @@ function ShipTemplate:__init__()
         color_by_faction=true,
         arrow_if_not_scanned=true,
     }
-    self.__repair_crew_count = 3
     self.share_short_range_radar = {}
     self.comms_receiver = {script="comms_ship.lua"}
 end
@@ -120,6 +119,7 @@ function ShipTemplate:setType(template_type)
         --Add some default player ship components.
         self.reactor = {}
         self.coolant = {}
+        self.nanobots = {}
         self.self_destruct = {}
         self.science_scanner = {}
         self.scan_probe_launcher = {}
@@ -220,12 +220,8 @@ function ShipTemplate:setEnergyStorage(amount)
     self.reactor = {max_energy=amount, energy=amount}
     return self
 end
---- Sets the default number of repair crew for player ships created from this ShipTemplate.
---- Defaults to 3.
---- Only player ships use repair crews. Setting this for other entity types has no effect.
---- Example: template:setRepairCrewCount(5)
+--- Deprecated — repair crew removed; use nanobots instead. No-op for compatibility.
 function ShipTemplate:setRepairCrewCount(amount)
-    self.__repair_crew_count = amount
     return self
 end
 --- As ShipTemplate:setBeamWeapon().
@@ -503,7 +499,7 @@ function ShipTemplate:setWeaponStorage(type, amount)
 end
 
 --- Adds an empty room to a ShipTemplate.
---- Rooms are displayed on the engineering and damcon screens.
+--- Rooms define internal layout metadata on ship templates (used by scripts).
 --- If a system room isn't accessible via other rooms connected by doors, repair crews on player ships might not be able to repair that system.
 --- Rooms are placed on a 0-indexed integer x/y grid, with the given values representing the room's upper-left corner, and are sized by damage crew capacity (minimum 1x1).
 --- To place multiple rooms, declare addRoom() multiple times.
@@ -515,7 +511,7 @@ function ShipTemplate:addRoom(x, y, w, h)
 end
 
 --- Adds a room containing a ship system to a ShipTemplate.
---- Rooms are displayed on the engineering and damcon screens.
+--- Rooms define internal layout metadata on ship templates (used by scripts).
 --- If a system room doesn't exist or isn't accessible via other rooms connected by doors, repair crews on player ships won't be able to repair that system.
 --- Rooms are placed on a 0-indexed integer x/y grid, with the given values representing the room's upper-left corner, and are sized by damage crew capacity (minimum 1x1).
 --- To place multiple rooms, declare addRoomSystem() multiple times.
@@ -526,7 +522,7 @@ function ShipTemplate:addRoomSystem(x, y, w, h, system)
     return self
 end
 --- Adds a door between rooms in a ShipTemplate.
---- Doors connect rooms as displayed on the engineering and damcon screens. All doors are 1 damage crew wide.
+--- Doors connect rooms on ship templates. All doors are 1 grid unit wide.
 --- If a system room isn't accessible via other rooms connected by doors, repair crews on player ships might not be able to repair that system.
 --- The horizontal value defines whether the door is oriented horizontally (true) or vertically (false).
 --- Doors are placed on a 0-indexed integer x/y grid, with the given values representing the door's left-most point (horizontal) or top-most point (vertical) point.

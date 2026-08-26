@@ -6,6 +6,7 @@
 
 #include "components/reactor.h"
 #include "components/coolant.h"
+#include "components/nanobots.h"
 #include "components/beamweapon.h"
 #include "components/hull.h"
 #include "components/jumpdrive.h"
@@ -14,12 +15,10 @@
 #include "components/maneuveringthrusters.h"
 #include "components/selfdestruct.h"
 
-#include "screenComponents/shipInternalView.h"
-#include "screenComponents/selfDestructButton.h"
-#include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/infoDisplay.h"
-#include "mvpConfig.h"
+#include "screenComponents/selfDestructButton.h"
+#include "screenComponents/alertOverlay.h"
 
 #include "gui/theme.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -35,11 +34,13 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
 : GuiOverlay(owner, "ENGINEERING_SCREEN", GuiTheme::getColor("background"))
 {
     bool has_coolant = false;
+    bool has_nanobots = false;
     bool has_reactor = false;
     float power_max = 3.0f;
     if (my_spaceship)
     {
         has_coolant = my_spaceship.hasComponent<Coolant>();
+        has_nanobots = my_spaceship.hasComponent<Nanobots>();
         has_reactor = my_spaceship.hasComponent<Reactor>();
         if (!has_coolant && !has_reactor) power_max = 1.0f;
     }
@@ -73,12 +74,16 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
     coolant_display
         ->setSize(240.0f, 40.0f)
         ->setVisible(has_coolant);
+    auto nanobots_display = new NanobotsInfoDisplay(stats, "NANOBOTS_DISPLAY", 0.45);
+    nanobots_display
+        ->setSize(240.0f, 40.0f)
+        ->setVisible(has_nanobots);
 
     self_destruct_button = new GuiSelfDestructButton(this, "SELF_DESTRUCT");
     self_destruct_button->setPosition(20, 20, sp::Alignment::TopLeft)->setSize(240, 100)->setVisible(my_spaceship && my_spaceship.hasComponent<SelfDestruct>());
 
     GuiElement* system_config_container = new GuiElement(this, "");
-    system_config_container->setPosition(0, -20, sp::Alignment::BottomCenter)->setSize(750 + 300, GuiElement::GuiSizeMax);
+    system_config_container->setPosition(0, -20, sp::Alignment::BottomCenter)->setSize(750 + 300 + (has_nanobots ? 100 : 0), GuiElement::GuiSizeMax);
     GuiElement* system_row_layouts = new GuiElement(system_config_container, "SYSTEM_ROWS");
     system_row_layouts->setPosition(0, 0, sp::Alignment::BottomLeft)->setAttribute("layout", "verticalbottom");
     system_row_layouts->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -144,6 +149,22 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
             ->setVisible(has_coolant);
         info.coolant_max_indicator = new GuiImage(info.coolant_bar, "", slider_tick_style->get(getState()).texture);
         info.coolant_max_indicator
+            ->setAngle(90.0f)
+            ->setColor({255,255,255,0})
+            ->setSize(40.0f, 40.0f);
+        info.nanobot_bar = new GuiProgressSlider(info.row, id + "_NANOBOTS", 0.0f, 10.0f, 0.0f,
+            [n](float value)
+            {
+                if (my_spaceship)
+                    my_player_info->commandSetSystemNanobotRequest(ShipSystem::Type(n), value);
+            }
+        );
+        info.nanobot_bar
+            ->setColor(glm::u8vec4(32, 192, 64, 128))
+            ->setSize(column_width, GuiElement::GuiSizeMax)
+            ->setVisible(has_nanobots);
+        info.nanobot_max_indicator = new GuiImage(info.nanobot_bar, "", slider_tick_style->get(getState()).texture);
+        info.nanobot_max_indicator
             ->setAngle(90.0f)
             ->setColor({255,255,255,0})
             ->setSize(40.0f, 40.0f);
@@ -220,6 +241,16 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
     (new GuiImage(coolant_remaining_bar, "COOLANT_ICON", "gui/icons/coolant"))
         ->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
+    nanobot_pool_bar = new GuiProgressbar(icon_layout, "NANOBOT_POOL", 0.0f, 10.0f, 10.0f);
+    nanobot_pool_bar
+        ->setColor(glm::u8vec4(32, 192, 64, 128))
+        ->setSize(column_width, GuiElement::GuiSizeMax)
+        ->setVisible(has_nanobots);
+    nanobot_icon = new GuiImage(nanobot_pool_bar, "NANOBOT_ICON", "gui/icons/system_health");
+    nanobot_icon
+        ->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)
+        ->setVisible(has_nanobots);
+
     system_rows[int(ShipSystem::Type::Reactor)].button->setIcon("gui/icons/system_reactor");
     system_rows[int(ShipSystem::Type::BeamWeapons)].button->setIcon("gui/icons/system_beam");
     system_rows[int(ShipSystem::Type::MissileSystem)].button->setIcon("gui/icons/system_missile");
@@ -239,7 +270,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
     GuiPanel* box = new GuiPanel(system_config_container, "POWER_COOLANT_BOX");
     box
         ->setPosition(0.0f, 0.0f, sp::Alignment::BottomRight)
-        ->setSize(270.0f, 400.0f);
+        ->setSize(has_nanobots ? 360.0f : 270.0f, 400.0f);
     power_label = new GuiLabel(box, "POWER_LABEL", tr("slider", "Power"), 30.0f);
     power_label
         ->setVertical()
@@ -281,9 +312,27 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, CrewPosition crew_posi
         ->setVisible(has_coolant);
     for (float snap_point = 0.0f; snap_point <= 10.0f; snap_point += 2.5f)
         coolant_slider->addSnapValue(snap_point, 0.1f);
-
-    if (!mvpModeEnabled())
-        (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    nanobot_label = new GuiLabel(box, "NANOBOT_LABEL", tr("slider", "Nanobots"), 30);
+    nanobot_label
+        ->setVertical()
+        ->setAlignment(sp::Alignment::Center)
+        ->setPosition(200.0f, 20.0f, sp::Alignment::TopLeft)
+        ->setSize(30.0f, 360.0f)
+        ->setVisible(has_nanobots);
+    nanobot_slider = new GuiSlider(box, "NANOBOT_SLIDER", 10.0, 0.0, 0.0,
+        [this](float value)
+        {
+            if (my_spaceship && selected_system != ShipSystem::Type::None)
+                my_player_info->commandSetSystemNanobotRequest(selected_system, value);
+        }
+    );
+    nanobot_slider
+        ->setPosition(230.0f, 20.0f, sp::Alignment::TopLeft)
+        ->setSize(60.0f, 360.0f)
+        ->disable()
+        ->setVisible(has_nanobots);
+    for (float snap_point = 0.0f; snap_point <= 10.0f; snap_point += 2.5f)
+        nanobot_slider->addSnapValue(snap_point, 0.1f);
 
     (new GuiCustomShipFunctions(this, crew_position, ""))->setPosition(-20, 120, sp::Alignment::TopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
@@ -295,10 +344,13 @@ void EngineeringScreen::onDraw(sp::RenderTarget& renderer)
         float total_coolant_used = 0.0f;
         auto reactor = my_spaceship.getComponent<Reactor>();
         auto coolant = my_spaceship.getComponent<Coolant>();
+        auto nanobots = my_spaceship.getComponent<Nanobots>();
         float power_max = (reactor || coolant) ? 3.0f : 1.0f;
 
         system_health_icon->setVisible(gameGlobalInfo->use_system_damage);
         heat_icon->setVisible(coolant);
+        nanobot_pool_bar->setVisible(nanobots);
+        nanobot_icon->setVisible(nanobots);
 
         for (int n = 0; n < ShipSystem::COUNT; n++)
         {
@@ -333,6 +385,7 @@ void EngineeringScreen::onDraw(sp::RenderTarget& renderer)
 
             info.heat_bar->setVisible(coolant);
             info.coolant_bar->setVisible(coolant);
+            info.nanobot_bar->setVisible(nanobots);
 
             if (coolant)
             {
@@ -368,6 +421,23 @@ void EngineeringScreen::onDraw(sp::RenderTarget& renderer)
 
                 total_coolant_used += system->coolant_level;
             }
+
+            if (nanobots)
+            {
+                info.nanobot_bar
+                    ->setValue(system->nanobot_level)
+                    ->setEnable(true);
+
+                auto slider_tick_color = slider_tick_style->get(getState()).color;
+                if (system->nanobot_request > 0.0f)
+                {
+                    info.nanobot_max_indicator
+                        ->setColor({slider_tick_color.r, slider_tick_color.g, slider_tick_color.b, 255})
+                        ->setPosition(-20.0f + info.nanobot_bar->getSize().x * (system->nanobot_request * 0.1f), 5.0f);
+                }
+                else
+                    info.nanobot_max_indicator->setColor({slider_tick_color.r, slider_tick_color.g, slider_tick_color.b, 0});
+            }
         }
 
         // Render total remaining coolant
@@ -377,6 +447,13 @@ void EngineeringScreen::onDraw(sp::RenderTarget& renderer)
             coolant_remaining_bar
                 ->setRange(0.0f, coolant->max)
                 ->setValue(coolant->max - total_coolant_used);
+        }
+
+        if (nanobots)
+        {
+            nanobot_pool_bar
+                ->setRange(0.0f, nanobots->max)
+                ->setValue(nanobots->pool);
         }
 
         if (selected_system != ShipSystem::Type::None)
@@ -408,6 +485,19 @@ void EngineeringScreen::onDraw(sp::RenderTarget& renderer)
                     coolant_slider
                         ->setValue(std::min(system->coolant_request, coolant->max))
                         ->setEnable(!coolant->auto_levels);
+                }
+
+                nanobot_label->setVisible(nanobots);
+                nanobot_slider->setVisible(nanobots);
+                if (nanobots)
+                {
+                    nanobot_label->setText(tr("slider", "Nanobots: {current_level}% / {requested}%").format({
+                        {"current_level", toNearbyIntString(system->nanobot_level / nanobots->max_per_system * 100.0f)},
+                        {"requested", toNearbyIntString(system->nanobot_request / nanobots->max_per_system * 100.0f)}
+                    }));
+                    nanobot_slider
+                        ->setValue(system->nanobot_request)
+                        ->setEnable(true);
                 }
 
                 system_effects_index = 0;
@@ -528,6 +618,7 @@ void EngineeringScreen::onUpdate()
     {
         auto reactor = my_spaceship.getComponent<Reactor>();
         auto coolant = my_spaceship.getComponent<Coolant>();
+        auto nanobots = my_spaceship.getComponent<Nanobots>();
 
         for (int n = 0; n < ShipSystem::COUNT; n++)
         {
@@ -560,6 +651,15 @@ void EngineeringScreen::onUpdate()
                     my_player_info->commandSetSystemCoolantRequest(static_cast<ShipSystem::Type>(n), set_value);
                     // Make sure the next update is sent, even if it is back to zero.
                     set_coolant_active[n] = set_value != 0.0f;
+                }
+            }
+            if (nanobots)
+            {
+                set_value = keys.engineering_set_nanobot_for_system[n].getValue() * nanobots->max_per_system;
+                if (sys && set_value != sys->nanobot_request && (set_value != 0.0f || set_nanobot_active[n]))
+                {
+                    my_player_info->commandSetSystemNanobotRequest(static_cast<ShipSystem::Type>(n), set_value);
+                    set_nanobot_active[n] = set_value != 0.0f;
                 }
             }
         }
@@ -656,6 +756,23 @@ void EngineeringScreen::onUpdate()
                     set_coolant_active[static_cast<int>(selected_system)] = set_value != 0.0f; //Make sure the next update is send, even if it is back to zero.
                 }
             }
+            auto nanobot_adjust = (keys.engineering_increase_nanobot.getValue() - keys.engineering_decrease_nanobot.getValue()) * 0.5f;
+            if (nanobot_adjust != 0.0f && nanobots)
+            {
+                auto sys = ShipSystem::get(my_spaceship, selected_system);
+                if (sys) {
+                    nanobot_slider->setValue(sys->nanobot_request + nanobot_adjust);
+                    my_player_info->commandSetSystemNanobotRequest(selected_system, nanobot_slider->getValue());
+                }
+            }
+            if (nanobots && sys) {
+                set_value = keys.engineering_set_nanobot.getValue() * nanobots->max_per_system;
+                if (set_value != sys->nanobot_request && (set_value != 0.0f || set_nanobot_active[static_cast<int>(selected_system)]))
+                {
+                    my_player_info->commandSetSystemNanobotRequest(selected_system, set_value);
+                    set_nanobot_active[static_cast<int>(selected_system)] = set_value != 0.0f;
+                }
+            }
         }
     }
 }
@@ -671,12 +788,15 @@ void EngineeringScreen::selectSystem(ShipSystem::Type system)
     }
     selected_system = system;
     power_slider->enable();
+    if (my_spaceship && my_spaceship.hasComponent<Nanobots>())
+        nanobot_slider->enable();
     if (my_spaceship)
     {
         auto sys = ShipSystem::get(my_spaceship, system);
         if (sys) {
             power_slider->setValue(sys->power_request);
             coolant_slider->setValue(sys->coolant_request);
+            nanobot_slider->setValue(sys->nanobot_request);
         }
     }
 }

@@ -1,5 +1,5 @@
 #!/bin/bash
-# ShatterdomeOS server mode — Ubuntu on PC or Raspberry Pi.
+# ShatterdomeOS demo server — boots headless scenario, consoles autoconnect via LAN.
 set -euo pipefail
 
 if [ "$(id -u)" -ne 0 ]; then echo "Run as root: sudo $0"; exit 1; fi
@@ -8,15 +8,14 @@ SDOS_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "${SDOS_DIR}/../.." && pwd)"
 FILES_DIR="${SDOS_DIR}/files"
 INSTALL_DIR="/opt/shatterdome"
-SCENARIO="${HEADLESS_SCENARIO:-scenario_01_empty.lua}"
-SERVER_NAME="${HEADLESS_NAME:-Shatterdome Bridge}"
-SERVER_PORT="${SERVER_PORT:-35666}"
+SCENARIO="${DEMO_SCENARIO:-scenario_demo_bridge.lua}"
+SERVER_NAME="${DEMO_SERVER_NAME:-EPSICON}"
 
 . "${SDOS_DIR}/lib/detect-platform.sh"
 . "${SDOS_DIR}/lib/branding.sh"
 . "${SDOS_DIR}/lib/pi-setup.sh"
 
-echo "==> ShatterdomeOS server installer (Ubuntu)"
+echo "==> ShatterdomeOS demo server installer (Ubuntu)"
 is_raspberry_pi && echo "    Platform: Raspberry Pi (arm64)"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -28,12 +27,8 @@ is_raspberry_pi && configure_raspberry_pi_server
 mkdir -p /etc/shatterdome "${INSTALL_DIR}/bin"
 . "${SDOS_DIR}/lib/install-game.sh"
 
-cat > /etc/shatterdome/server.ini << EOFINI
-headless=${SCENARIO}
-headless_name=${SERVER_NAME}
-server_port=${SERVER_PORT}
-language=en
-EOFINI
+install -m 644 "${SDOS_DIR}/demo/server.ini" /etc/shatterdome/server.ini
+sed -i "s/scenario_demo_bridge.lua/${SCENARIO}/; s/EPSICON/${SERVER_NAME}/" /etc/shatterdome/server.ini
 
 cat > "${INSTALL_DIR}/bin/setup-server.sh" << 'EOS'
 #!/bin/bash
@@ -52,4 +47,7 @@ else
   HOSTNAME_TARGET="shatterdomeos-server" apply_shatterdomeos_branding "${FILES_DIR}"
 fi
 
-echo "ShatterdomeOS server ready. Reboot to host ${SCENARIO} on port ${SERVER_PORT}."
+echo "ShatterdomeOS demo server ready."
+echo "  Scenario: ${SCENARIO}"
+echo "  LAN name: ${SERVER_NAME}"
+echo "  Start this machine FIRST, then boot the 5 consoles."

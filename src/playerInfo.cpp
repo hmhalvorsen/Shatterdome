@@ -18,7 +18,6 @@
 
 #include "screens/crew1/singlePilotScreen.h"
 
-#include "screens/extra/damcon.h"
 #include "screens/extra/powerManagement.h"
 #include "screens/extra/databaseScreen.h"
 #include "screens/extra/commsScreen.h"
@@ -27,7 +26,6 @@
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
 
-#include "components/internalrooms.h"
 #include "mvpConfig.h"
 
 #include "components/collision.h"
@@ -38,6 +36,7 @@
 #include "components/probe.h"
 #include "components/reactor.h"
 #include "components/coolant.h"
+#include "components/nanobots.h"
 #include "components/beamweapon.h"
 #include "components/warpdrive.h"
 #include "components/jumpdrive.h"
@@ -49,7 +48,6 @@
 #include "components/hacking.h"
 #include "components/scanning.h"
 #include "components/radar.h"
-#include "components/internalrooms.h"
 #include "components/moveto.h"
 #include "components/lifetime.h"
 #include "components/rendering.h"
@@ -84,7 +82,6 @@ static const uint16_t CMD_CLOSE_TEXT_COMM = 0x0013;
 static const uint16_t CMD_SEND_TEXT_COMM = 0x0014;
 static const uint16_t CMD_SEND_TEXT_COMM_PLAYER = 0x0015;
 static const uint16_t CMD_ANSWER_COMM_HAIL = 0x0016;
-static const uint16_t CMD_SET_AUTO_REPAIR = 0x0017;
 static const uint16_t CMD_SET_BEAM_FREQUENCY = 0x0018;
 static const uint16_t CMD_SET_BEAM_SYSTEM_TARGET = 0x0019;
 static const uint16_t CMD_SET_SHIELD_FREQUENCY = 0x001A;
@@ -104,8 +101,8 @@ static const uint16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0027;
 static const uint16_t CMD_HACKING_FINISHED = 0x0028;
 static const uint16_t CMD_CUSTOM_FUNCTION = 0x0029;
 static const uint16_t CMD_TURN_SPEED = 0x002A;
-static const uint16_t CMD_CREW_SET_TARGET = 0x002B;
 static const uint16_t CMD_ABORT_JUMP = 0x002C;
+static const uint16_t CMD_SET_SYSTEM_NANOBOT_REQUEST = 0x002D;
 
 //Pre-ship commands
 static const uint16_t CMD_UPDATE_CREW_POSITION = 0x0101;
@@ -322,6 +319,15 @@ void PlayerInfo::commandSetSystemCoolantRequest(ShipSystem::Type system, float c
     sendClientCommand(packet);
 }
 
+void PlayerInfo::commandSetSystemNanobotRequest(ShipSystem::Type system, float nanobot_request)
+{
+    sp::io::DataBuffer packet;
+    if (ship)
+        applyNanobotRequest(ship, system, nanobot_request);
+    packet << CMD_SET_SYSTEM_NANOBOT_REQUEST << system << nanobot_request;
+    sendClientCommand(packet);
+}
+
 void PlayerInfo::commandDock(sp::ecs::Entity object)
 {
     if (!object) return;
@@ -377,13 +383,6 @@ void PlayerInfo::commandSendCommPlayer(string message)
 {
     sp::io::DataBuffer packet;
     packet << CMD_SEND_TEXT_COMM_PLAYER << message;
-    sendClientCommand(packet);
-}
-
-void PlayerInfo::commandSetAutoRepair(bool enabled)
-{
-    sp::io::DataBuffer packet;
-    packet << CMD_SET_AUTO_REPAIR << enabled;
     sendClientCommand(packet);
 }
 
@@ -599,13 +598,6 @@ void PlayerInfo::commandSetName(const string& name)
     this->name = name;
 }
 
-void PlayerInfo::commandCrewSetTargetPosition(sp::ecs::Entity crew, glm::ivec2 position)
-{
-    sp::io::DataBuffer packet;
-    packet << CMD_CREW_SET_TARGET << crew << position;
-    sendClientCommand(packet);
-}
-
 void PlayerInfo::onReceiveClientCommand(int32_t client_id, sp::io::DataBuffer& packet)
 {
     if (client_id != this->client_id) return;
@@ -792,6 +784,14 @@ void PlayerInfo::onReceiveClientCommand(int32_t client_id, sp::io::DataBuffer& p
             }
         }
         break;
+    case CMD_SET_SYSTEM_NANOBOT_REQUEST:
+        {
+            ShipSystem::Type system;
+            float request;
+            packet >> system >> request;
+            applyNanobotRequest(ship, system, request);
+        }
+        break;
     case CMD_DOCK:
         {
             sp::ecs::Entity target;
@@ -836,14 +836,6 @@ void PlayerInfo::onReceiveClientCommand(int32_t client_id, sp::io::DataBuffer& p
             packet >> message;
 
             CommsSystem::textReply(ship, message);
-        }
-        break;
-    case CMD_SET_AUTO_REPAIR:
-        {
-            bool auto_repair_enabled = false;
-            packet >> auto_repair_enabled;
-            if (auto ir = ship.getComponent<InternalRooms>())
-                ir->auto_repair_enabled = auto_repair_enabled;
         }
         break;
     case CMD_SET_BEAM_FREQUENCY:
@@ -1055,12 +1047,6 @@ void PlayerInfo::onReceiveClientCommand(int32_t client_id, sp::io::DataBuffer& p
     case CMD_UPDATE_NAME:
         packet >> name;
         break;
-
-    case CMD_CREW_SET_TARGET:{
-            auto [crew, position] = packet.read<sp::ecs::Entity, glm::ivec2>();
-            if (auto ic = crew.getComponent<InternalCrew>())
-                ic->target_position = position;
-        }break;
     }
 }
 
@@ -1103,8 +1089,6 @@ void PlayerInfo::spawnUI(int monitor_index, RenderLayer* render_layer)
             screen->addStationTab(new SinglePilotScreen(container), CrewPosition::singlePilot, getCrewPositionName(CrewPosition::singlePilot), getCrewPositionIcon(CrewPosition::singlePilot));
 
         //Extra
-        if (cps.has(CrewPosition::damageControl) && !mvpModeEnabled())
-            screen->addStationTab(new DamageControlScreen(container), CrewPosition::damageControl, getCrewPositionName(CrewPosition::damageControl), getCrewPositionIcon(CrewPosition::damageControl));
         if (cps.has(CrewPosition::powerManagement))
             screen->addStationTab(new PowerManagementScreen(container), CrewPosition::powerManagement, getCrewPositionName(CrewPosition::powerManagement), getCrewPositionIcon(CrewPosition::powerManagement));
         if (cps.has(CrewPosition::databaseView) && !mvpModeEnabled())
@@ -1155,7 +1139,6 @@ string getCrewPositionName(CrewPosition position)
     case CrewPosition::engineeringAdvanced: return tr("station","Engineering+");
     case CrewPosition::operationsOfficer: return tr("station","Operations");
     case CrewPosition::singlePilot: return tr("station","Single Pilot");
-    case CrewPosition::damageControl: return tr("station","Damage Control");
     case CrewPosition::powerManagement: return tr("station","Power Management");
     case CrewPosition::databaseView: return tr("station","Database");
     case CrewPosition::altRelay: return tr("station","Strategic Map");
@@ -1178,7 +1161,6 @@ string getCrewPositionIcon(CrewPosition position)
     case CrewPosition::engineeringAdvanced: return "gui/icons/station-engineering-plus";
     case CrewPosition::operationsOfficer: return "gui/icons/station-operations";
     case CrewPosition::singlePilot: return "gui/icons/station-single-pilot";
-    case CrewPosition::damageControl: return "gui/icons/status_damaged";
     case CrewPosition::powerManagement: return "gui/icons/status_low_energy";
     case CrewPosition::databaseView: return "gui/icons/station-database";
     case CrewPosition::altRelay: return "gui/icons/station-strategic-map";
