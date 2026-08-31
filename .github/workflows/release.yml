@@ -23,9 +23,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-linux-amd64:
-    name: Linux amd64
-    needs: [build-linux-arm64]
+  build-and-release:
+    name: Build and publish release
     runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
@@ -42,119 +41,33 @@ jobs:
             tools/build-release-docker.sh
           chmod +x tools/*.sh
 
-      - name: Parse version from tag
-        id: version
-        run: |
-          TAG="${{ env.RELEASE_TAG }}"
-          echo "package=Shatterdome-${TAG}-Linux-amd64" >> "$GITHUB_OUTPUT"
-
-      - name: Build and package (Docker)
-        env:
-          RELEASE_TAG: ${{ env.RELEASE_TAG }}
-        run: ./tools/build-release-docker.sh linux-amd64
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-amd64
-          path: build/${{ steps.version.outputs.package }}.tgz
-          if-no-files-found: error
-
-  build-linux-arm64:
-    name: Linux ARM64 (Raspberry Pi)
-    runs-on: [self-hosted, shatterdome]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.RELEASE_TAG }}
-
-      - name: Restore release build tools
-        run: |
-          git fetch origin master
-          git checkout origin/master -- \
-            tools/build-linux.sh \
-            tools/build-raspberrypi.sh \
-            tools/build-windows.sh \
-            tools/build-release-docker.sh
-          chmod +x tools/*.sh
-
-      - name: Parse version from tag
-        id: version
-        run: |
-          TAG="${{ env.RELEASE_TAG }}"
-          echo "package=Shatterdome-${TAG}-Linux-arm64" >> "$GITHUB_OUTPUT"
-
-      - name: Build and package (Docker)
+      - name: Build Linux ARM64 (Raspberry Pi)
         env:
           RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: ./tools/build-release-docker.sh linux-arm64
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-arm64
-          path: build/${{ steps.version.outputs.package }}.tgz
-          if-no-files-found: error
+      - name: Build Linux amd64
+        env:
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+        run: ./tools/build-release-docker.sh linux-amd64
 
-  build-windows:
-    name: Windows amd64
-    needs: [build-linux-arm64]
-    runs-on: [self-hosted, shatterdome]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.RELEASE_TAG }}
-
-      - name: Restore release build tools
-        run: |
-          git fetch origin master
-          git checkout origin/master -- \
-            tools/build-linux.sh \
-            tools/build-raspberrypi.sh \
-            tools/build-windows.sh \
-            tools/build-release-docker.sh
-          chmod +x tools/*.sh
-
-      - name: Parse version from tag
-        id: version
-        run: |
-          TAG="${{ env.RELEASE_TAG }}"
-          echo "package=Shatterdome-${TAG}-Windows-amd64" >> "$GITHUB_OUTPUT"
-
-      - name: Build and package (Docker)
+      - name: Build Windows amd64
         env:
           RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: ./tools/build-release-docker.sh windows-amd64
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-amd64
-          path: build-win/${{ steps.version.outputs.package }}.zip
-          if-no-files-found: error
-
-  release:
-    name: Publish GitHub Release
-    needs: [build-linux-amd64, build-linux-arm64, build-windows]
-    runs-on: [self-hosted, shatterdome]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.RELEASE_TAG }}
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-          merge-multiple: true
-
       - name: Create checksums
         run: |
-          cd artifacts
-          shasum -a 256 Shatterdome-*.tgz Shatterdome-*.zip > SHA256SUMS.txt
+          TAG="${{ env.RELEASE_TAG }}"
+          mkdir -p release-assets
+          cp "build/Shatterdome-${TAG}-Linux-arm64.tgz" release-assets/
+          cp "build/Shatterdome-${TAG}-Linux-amd64.tgz" release-assets/
+          cp "build-win/Shatterdome-${TAG}-Windows-amd64.zip" release-assets/
+          cd release-assets
+          shasum -a 256 Shatterdome-* > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
-      - name: Upload release assets
+      - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
@@ -181,8 +94,8 @@ jobs:
 
             Full deployment guide: [docs/INSTALL.md](https://github.com/hmhalvorsen/Shatterdome/blob/${{ env.RELEASE_TAG }}/docs/INSTALL.md)
           files: |
-            artifacts/Shatterdome-*.tgz
-            artifacts/Shatterdome-*.zip
-            artifacts/SHA256SUMS.txt
+            release-assets/Shatterdome-*.tgz
+            release-assets/Shatterdome-*.zip
+            release-assets/SHA256SUMS.txt
           generate_release_notes: false
           fail_on_unmatched_files: true
