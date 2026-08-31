@@ -22,27 +22,33 @@ fi
 case "$PLATFORM" in
   linux-amd64)
     DOCKER_PLATFORM="linux/amd64"
+    COLIMA_PROFILE="amd64"
     PACKAGE="Shatterdome-${TAG}-Linux-amd64"
     BUILD_SCRIPT="./tools/build-linux.sh"
     BUILD_DIR="build-amd64"
     ARTIFACT_EXT="tgz"
     APT_PACKAGES="build-essential cmake ninja-build libsdl2-dev libfreetype6-dev"
+    BUILD_JOBS="${BUILD_JOBS:-2}"
     ;;
   linux-arm64)
     DOCKER_PLATFORM="linux/arm64"
+    COLIMA_PROFILE="arm64"
     PACKAGE="Shatterdome-${TAG}-Linux-arm64"
     BUILD_SCRIPT="./tools/build-raspberrypi.sh"
     BUILD_DIR="build-arm64"
     ARTIFACT_EXT="tgz"
     APT_PACKAGES="build-essential cmake ninja-build libsdl2-dev libfreetype6-dev"
+    BUILD_JOBS="${BUILD_JOBS:-4}"
     ;;
   windows-amd64)
     DOCKER_PLATFORM="linux/amd64"
+    COLIMA_PROFILE="amd64"
     PACKAGE="Shatterdome-${TAG}-Windows-amd64"
     BUILD_SCRIPT="./tools/build-windows.sh"
     BUILD_DIR="build-win"
     ARTIFACT_EXT="zip"
     APT_PACKAGES="build-essential cmake ninja-build mingw-w64 p7zip-full"
+    BUILD_JOBS="${BUILD_JOBS:-2}"
     ;;
   *)
     echo "Error: unknown platform '${PLATFORM}'"
@@ -50,7 +56,9 @@ case "$PLATFORM" in
     ;;
 esac
 
-echo "==> Building ${PACKAGE}.${ARTIFACT_EXT} (${DOCKER_PLATFORM})"
+echo "==> Building ${PACKAGE}.${ARTIFACT_EXT} (${DOCKER_PLATFORM}, colima ${COLIMA_PROFILE})"
+
+"${ROOT}/tools/ensure-docker.sh" "${COLIMA_PROFILE}"
 
 docker run --rm \
   --platform "${DOCKER_PLATFORM}" \
@@ -61,6 +69,7 @@ docker run --rm \
   -e CPACK_PACKAGE_VERSION_PATCH="${PATCH}" \
   -e CPACK_PACKAGE_FILE_NAME="${PACKAGE}" \
   -e BUILD_DIR="${BUILD_DIR}" \
+  -e BUILD_JOBS="${BUILD_JOBS}" \
   ubuntu:24.04 \
   bash -c "
     set -euo pipefail
@@ -74,6 +83,7 @@ docker run --rm \
     chmod +x tools/*.sh
     ARCH=\$(uname -m)
     export SDL2_DIR=/usr/lib/\${ARCH}-linux-gnu/cmake/SDL2
+    export NPROC=${BUILD_JOBS}
     ${BUILD_SCRIPT}
   "
 

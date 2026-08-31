@@ -16,6 +16,7 @@ if [[ ! -f ../SeriousProton/CMakeLists.txt ]]; then
 fi
 
 NPROC="$(nproc 2>/dev/null || echo 4)"
+NPROC="${BUILD_JOBS:-${NPROC}}"
 CMAKE_EXTRA=()
 
 if [[ -n "${CPACK_PACKAGE_FILE_NAME:-}" ]]; then

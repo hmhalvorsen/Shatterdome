@@ -47,7 +47,7 @@ jobs:
           chmod +x tools/*.sh
 
       - name: Ensure Docker is running
-        run: ./tools/ensure-docker.sh
+        run: ./tools/ensure-docker.sh arm64
 
       - name: Build Linux ARM64 (Raspberry Pi)
         env:

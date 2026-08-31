@@ -29,6 +29,7 @@ if [[ "$INSTALL_DEPS" == "1" ]]; then
 fi
 
 NPROC="$(nproc 2>/dev/null || echo 4)"
+NPROC="${BUILD_JOBS:-${NPROC}}"
 GENERATOR=()
 if command -v ninja >/dev/null; then
   GENERATOR=(-G Ninja)
