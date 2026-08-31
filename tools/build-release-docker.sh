@@ -74,10 +74,8 @@ docker run --rm \
   bash -c "
     set -euo pipefail
     export DEBIAN_FRONTEND=noninteractive
-    git config --global --add safe.directory '*'
-    apt-get update -qq
-    apt-get install -y apt-utils
     apt-get install -y --no-install-recommends git ca-certificates ${APT_PACKAGES}
+    git config --global --add safe.directory '*'
     rm -rf /SeriousProton ${BUILD_DIR}
     git clone --depth 1 https://github.com/daid/SeriousProton.git /SeriousProton
     ln -sfn /SeriousProton ../SeriousProton
