@@ -46,6 +46,31 @@ if [[ -n "${CPACK_PACKAGE_VERSION_MAJOR:-}" ]]; then
   )
 fi
 
+rename_package() {
+  local expected_base="${CPACK_PACKAGE_FILE_NAME:-Shatterdome}"
+  local dest=""
+  if [[ "$DO_PACKAGE" != "1" ]]; then
+    return 0
+  fi
+  case "$expected_base" in
+    *Windows*) dest="${BUILD_DIR}/${expected_base}.zip" ;;
+    *) dest="${BUILD_DIR}/${expected_base}.tgz" ;;
+  esac
+  [[ -f "$dest" ]] && return 0
+  for candidate in \
+    "${BUILD_DIR}/${expected_base}.tar.gz" \
+    "${BUILD_DIR}/Shatterdome.tar.gz" \
+    "${BUILD_DIR}/Shatterdome.tgz" \
+    "${BUILD_DIR}/Shatterdome.zip"; do
+    if [[ -f "$candidate" ]]; then
+      mv "$candidate" "$dest"
+      echo "Renamed package to ${dest}"
+      return 0
+    fi
+  done
+  echo "Warning: could not find CPack output to rename to ${dest}"
+}
+
 ARCH="$(uname -m)"
 echo "Configuring Shatterdome for Linux (${ARCH})..."
 
@@ -64,6 +89,7 @@ cmake --install "$BUILD_DIR" --prefix "$INSTALL_PREFIX"
 if [[ "$DO_PACKAGE" == "1" ]]; then
   echo "Creating package..."
   cmake --build "$BUILD_DIR" --target package
+  rename_package
   echo "Package: ${BUILD_DIR}/${CPACK_PACKAGE_FILE_NAME:-Shatterdome}.tgz"
 fi
 

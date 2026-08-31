@@ -29,6 +29,30 @@ if [[ -n "${CPACK_PACKAGE_VERSION_MAJOR:-}" ]]; then
   )
 fi
 
+# LTO can crash MinGW under QEMU; keep a plain Release build for release packages.
+CMAKE_EXTRA+=(
+  -DCMAKE_CXX_FLAGS_RELEASE=-O3
+  -DCMAKE_C_FLAGS_RELEASE=-O3
+  -DCMAKE_EXE_LINKER_FLAGS_RELEASE=
+)
+
+rename_package() {
+  local expected_base="${CPACK_PACKAGE_FILE_NAME:-Shatterdome}"
+  local dest="${BUILD_DIR}/${expected_base}.zip"
+  [[ -f "$dest" ]] && return 0
+  for candidate in \
+    "${BUILD_DIR}/${expected_base}.tar.gz" \
+    "${BUILD_DIR}/Shatterdome.tar.gz" \
+    "${BUILD_DIR}/Shatterdome.zip"; do
+    if [[ -f "$candidate" ]]; then
+      mv "$candidate" "$dest"
+      echo "Renamed package to ${dest}"
+      return 0
+    fi
+  done
+  echo "Warning: could not find CPack output to rename to ${dest}"
+}
+
 echo "Configuring Shatterdome for Windows (MinGW x86_64)..."
 
 cmake -S . -B "$BUILD_DIR" -G Ninja \
@@ -47,6 +71,7 @@ cmake --install "$BUILD_DIR" --prefix "$INSTALL_PREFIX"
 if [[ "$DO_PACKAGE" == "1" ]]; then
   echo "Creating package..."
   cmake --build "$BUILD_DIR" --target package
+  rename_package
   echo "Package: ${BUILD_DIR}/${CPACK_PACKAGE_FILE_NAME:-Shatterdome}.zip"
 fi
 
