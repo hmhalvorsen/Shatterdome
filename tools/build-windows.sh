@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
+# Cross-compile Shatterdome for Windows (x86_64) from Linux using MinGW.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-BUILD_DIR="${BUILD_DIR:-build}"
-INSTALL_PREFIX="${INSTALL_PREFIX:-$ROOT/dist}"
-INSTALL_DEPS="${INSTALL_DEPS:-0}"
-BUILD_TYPE="${BUILD_TYPE:-Release}"
+BUILD_DIR="${BUILD_DIR:-build-win}"
+INSTALL_PREFIX="${INSTALL_PREFIX:-$ROOT/dist-win}"
 DO_PACKAGE="${DO_PACKAGE:-1}"
 
 if [[ ! -f ../SeriousProton/CMakeLists.txt ]]; then
@@ -16,25 +15,9 @@ if [[ ! -f ../SeriousProton/CMakeLists.txt ]]; then
   exit 1
 fi
 
-if [[ "$INSTALL_DEPS" == "1" ]]; then
-  if command -v apt-get >/dev/null; then
-    echo "Installing build dependencies (apt)..."
-    export DEBIAN_FRONTEND=noninteractive
-    sudo apt-get update
-    sudo apt-get install -y --no-install-recommends \
-      build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
-  else
-    echo "Warning: INSTALL_DEPS=1 but apt-get not found; install deps manually."
-  fi
-fi
-
 NPROC="$(nproc 2>/dev/null || echo 4)"
-GENERATOR=()
-if command -v ninja >/dev/null; then
-  GENERATOR=(-G Ninja)
-fi
-
 CMAKE_EXTRA=()
+
 if [[ -n "${CPACK_PACKAGE_FILE_NAME:-}" ]]; then
   CMAKE_EXTRA+=(-DCPACK_PACKAGE_FILE_NAME="${CPACK_PACKAGE_FILE_NAME}")
 fi
@@ -46,11 +29,11 @@ if [[ -n "${CPACK_PACKAGE_VERSION_MAJOR:-}" ]]; then
   )
 fi
 
-ARCH="$(uname -m)"
-echo "Configuring Shatterdome for Linux (${ARCH})..."
+echo "Configuring Shatterdome for Windows (MinGW x86_64)..."
 
-cmake -S . -B "$BUILD_DIR" "${GENERATOR[@]}" \
-  -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+cmake -S . -B "$BUILD_DIR" -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE="$ROOT/cmake/mingw.toolchain" \
   -DSERIOUS_PROTON_DIR=../SeriousProton \
   -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" \
   "${CMAKE_EXTRA[@]}"
@@ -64,9 +47,7 @@ cmake --install "$BUILD_DIR" --prefix "$INSTALL_PREFIX"
 if [[ "$DO_PACKAGE" == "1" ]]; then
   echo "Creating package..."
   cmake --build "$BUILD_DIR" --target package
-  echo "Package: ${BUILD_DIR}/${CPACK_PACKAGE_FILE_NAME:-Shatterdome}.tgz"
+  echo "Package: ${BUILD_DIR}/${CPACK_PACKAGE_FILE_NAME:-Shatterdome}.zip"
 fi
 
 echo "Done."
-echo "  Binary: ${INSTALL_PREFIX}/bin/Shatterdome"
-echo "  Data:   ${INSTALL_PREFIX}/share/shatterdome/"

@@ -1,0 +1,203 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'SD-*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to build (e.g. SD-2026.08.26)'
+        required: true
+        type: string
+        default: SD-2026.08.26
+
+permissions:
+  contents: write
+
+env:
+  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
+jobs:
+  build-linux-amd64:
+    name: Linux amd64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Clone SeriousProton
+        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
+
+      - name: Parse version from tag
+        id: version
+        run: |
+          TAG="${{ env.RELEASE_TAG }}"
+          VER="${TAG#SD-}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
+          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
+          echo "package=Shatterdome-${TAG}-Linux-amd64" >> "$GITHUB_OUTPUT"
+
+      - name: Build and package
+        env:
+          CPACK_PACKAGE_VERSION_MAJOR: ${{ steps.version.outputs.major }}
+          CPACK_PACKAGE_VERSION_MINOR: ${{ steps.version.outputs.minor }}
+          CPACK_PACKAGE_VERSION_PATCH: ${{ steps.version.outputs.patch }}
+          CPACK_PACKAGE_FILE_NAME: ${{ steps.version.outputs.package }}
+        run: ./tools/build-linux.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-amd64
+          path: build/${{ steps.version.outputs.package }}.tgz
+          if-no-files-found: error
+
+  build-linux-arm64:
+    name: Linux ARM64 (Raspberry Pi)
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Clone SeriousProton
+        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
+
+      - name: Parse version from tag
+        id: version
+        run: |
+          TAG="${{ env.RELEASE_TAG }}"
+          VER="${TAG#SD-}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
+          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
+          echo "package=Shatterdome-${TAG}-Linux-arm64" >> "$GITHUB_OUTPUT"
+
+      - name: Build and package
+        env:
+          CPACK_PACKAGE_VERSION_MAJOR: ${{ steps.version.outputs.major }}
+          CPACK_PACKAGE_VERSION_MINOR: ${{ steps.version.outputs.minor }}
+          CPACK_PACKAGE_VERSION_PATCH: ${{ steps.version.outputs.patch }}
+          CPACK_PACKAGE_FILE_NAME: ${{ steps.version.outputs.package }}
+        run: ./tools/build-raspberrypi.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-arm64
+          path: build/${{ steps.version.outputs.package }}.tgz
+          if-no-files-found: error
+
+  build-windows:
+    name: Windows amd64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Clone SeriousProton
+        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build mingw-w64 p7zip-full
+
+      - name: Parse version from tag
+        id: version
+        run: |
+          TAG="${{ env.RELEASE_TAG }}"
+          VER="${TAG#SD-}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
+          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
+          echo "package=Shatterdome-${TAG}-Windows-amd64" >> "$GITHUB_OUTPUT"
+
+      - name: Build and package
+        env:
+          CPACK_PACKAGE_VERSION_MAJOR: ${{ steps.version.outputs.major }}
+          CPACK_PACKAGE_VERSION_MINOR: ${{ steps.version.outputs.minor }}
+          CPACK_PACKAGE_VERSION_PATCH: ${{ steps.version.outputs.patch }}
+          CPACK_PACKAGE_FILE_NAME: ${{ steps.version.outputs.package }}
+        run: ./tools/build-windows.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-amd64
+          path: build-win/${{ steps.version.outputs.package }}.zip
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    needs: [build-linux-amd64, build-linux-arm64, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create checksums
+        run: |
+          cd artifacts
+          sha256sum Shatterdome-*.tgz Shatterdome-*.zip > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Shatterdome ${{ env.RELEASE_TAG }}
+          body: |
+            ## Downloads
+
+            | Platform | Package | Use case |
+            |----------|---------|----------|
+            | **Linux x86_64** | `Shatterdome-*-Linux-amd64.tgz` | Game server, dev PC, ShatterdomeOS |
+            | **Linux ARM64** | `Shatterdome-*-Linux-arm64.tgz` | Raspberry Pi 4/5 consoles |
+            | **Windows x86_64** | `Shatterdome-*-Windows-amd64.zip` | Windows 10/11 client or server |
+
+            Verify downloads with `SHA256SUMS.txt`.
+
+            ### Quick start
+
+            **Linux:** extract, then run `bin/Shatterdome`. Game data lives in `share/shatterdome/`.
+            Settings: `~/.shatterdome/options.ini`
+
+            **Windows:** extract and run `Shatterdome.exe`. Settings: `%USERPROFILE%\.shatterdome\options.ini`
+
+            **Raspberry Pi:** use the ARM64 TGZ with [ShatterdomeOS](https://github.com/hmhalvorsen/Shatterdome/tree/master/os/shatterdomeos).
+
+            Full deployment guide: [docs/INSTALL.md](https://github.com/hmhalvorsen/Shatterdome/blob/${{ env.RELEASE_TAG }}/docs/INSTALL.md)
+          files: |
+            artifacts/Shatterdome-*.tgz
+            artifacts/Shatterdome-*.zip
+            artifacts/SHA256SUMS.txt
+          generate_release_notes: false
+          fail_on_unmatched_files: true
