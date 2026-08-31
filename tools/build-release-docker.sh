@@ -70,6 +70,7 @@ docker run --rm \
   -e CPACK_PACKAGE_FILE_NAME="${PACKAGE}" \
   -e BUILD_DIR="${BUILD_DIR}" \
   -e BUILD_JOBS="${BUILD_JOBS}" \
+  -e INSTALL_PREFIX=/opt/shatterdome \
   ubuntu:24.04 \
   bash -c "
     set -euo pipefail

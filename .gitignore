@@ -46,5 +46,6 @@ logs
 *.log
 build*/
 _build*/
+.release-verify/
 cmake/_win32/
 os/shatterdomeos/out/

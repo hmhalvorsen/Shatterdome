@@ -43,7 +43,8 @@ jobs:
             tools/build-windows.sh \
             tools/build-release-docker.sh \
             tools/ensure-docker.sh \
-            tools/publish-release.sh
+            tools/publish-release.sh \
+            tools/verify-release-packages.sh
           chmod +x tools/*.sh
 
       - name: Ensure Docker is running
@@ -63,6 +64,11 @@ jobs:
         env:
           RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: ./tools/build-release-docker.sh windows-amd64
+
+      - name: Verify release packages
+        env:
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+        run: ./tools/verify-release-packages.sh all
 
       - name: Publish GitHub Release
         env:
