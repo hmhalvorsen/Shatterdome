@@ -28,7 +28,7 @@ case "$PROFILE" in
     ;;
 esac
 
-if colima status "${PROFILE_ARGS[@]}" >/dev/null 2>&1; then
+if colima status ${PROFILE_ARGS+"${PROFILE_ARGS[@]}"} >/dev/null 2>&1; then
   echo "Colima profile '${PROFILE}' is running."
 else
   echo "Starting Colima profile '${PROFILE}'..."
