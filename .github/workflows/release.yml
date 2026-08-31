@@ -1,5 +1,8 @@
 name: Release
 
+# Self-hosted only: no GitHub-hosted runner minutes, no Actions artifact storage.
+# Builds run on the local shatterdome runner via Colima/Docker; assets upload straight to the release.
+
 on:
   push:
     tags:
@@ -38,8 +41,14 @@ jobs:
             tools/build-linux.sh \
             tools/build-raspberrypi.sh \
             tools/build-windows.sh \
-            tools/build-release-docker.sh
+            tools/build-release-docker.sh \
+            tools/ensure-docker.sh \
+            tools/publish-release.sh \
+            tools/docker
           chmod +x tools/*.sh
+
+      - name: Ensure Docker is running
+        run: ./tools/ensure-docker.sh
 
       - name: Build Linux ARM64 (Raspberry Pi)
         env:
@@ -56,46 +65,8 @@ jobs:
           RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: ./tools/build-release-docker.sh windows-amd64
 
-      - name: Create checksums
-        run: |
-          TAG="${{ env.RELEASE_TAG }}"
-          mkdir -p release-assets
-          cp "build/Shatterdome-${TAG}-Linux-arm64.tgz" release-assets/
-          cp "build/Shatterdome-${TAG}-Linux-amd64.tgz" release-assets/
-          cp "build-win/Shatterdome-${TAG}-Windows-amd64.zip" release-assets/
-          cd release-assets
-          shasum -a 256 Shatterdome-* > SHA256SUMS.txt
-          cat SHA256SUMS.txt
-
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: Shatterdome ${{ env.RELEASE_TAG }}
-          body: |
-            ## Downloads
-
-            | Platform | Package | Use case |
-            |----------|---------|----------|
-            | **Linux x86_64** | `Shatterdome-*-Linux-amd64.tgz` | Game server, dev PC, ShatterdomeOS |
-            | **Linux ARM64** | `Shatterdome-*-Linux-arm64.tgz` | Raspberry Pi 4/5 consoles |
-            | **Windows x86_64** | `Shatterdome-*-Windows-amd64.zip` | Windows 10/11 client or server |
-
-            Verify downloads with `SHA256SUMS.txt`.
-
-            ### Quick start
-
-            **Linux:** extract, then run `bin/Shatterdome`. Game data lives in `share/shatterdome/`.
-            Settings: `~/.shatterdome/options.ini`
-
-            **Windows:** extract and run `Shatterdome.exe`. Settings: `%USERPROFILE%\.shatterdome\options.ini`
-
-            **Raspberry Pi:** use the ARM64 TGZ with [ShatterdomeOS](https://github.com/hmhalvorsen/Shatterdome/tree/master/os/shatterdomeos).
-
-            Full deployment guide: [docs/INSTALL.md](https://github.com/hmhalvorsen/Shatterdome/blob/${{ env.RELEASE_TAG }}/docs/INSTALL.md)
-          files: |
-            release-assets/Shatterdome-*.tgz
-            release-assets/Shatterdome-*.zip
-            release-assets/SHA256SUMS.txt
-          generate_release_notes: false
-          fail_on_unmatched_files: true
+        env:
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+          GH_TOKEN: ${{ github.token }}
+        run: ./tools/publish-release.sh

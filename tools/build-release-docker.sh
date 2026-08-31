@@ -15,7 +15,7 @@ if ! command -v docker >/dev/null; then
 fi
 
 if ! docker info >/dev/null 2>&1; then
-  echo "Error: Docker daemon is not running."
+  echo "Error: Docker daemon is not running. Run tools/ensure-docker.sh first."
   exit 1
 fi
 
@@ -24,17 +24,17 @@ case "$PLATFORM" in
     DOCKER_PLATFORM="linux/amd64"
     PACKAGE="Shatterdome-${TAG}-Linux-amd64"
     BUILD_SCRIPT="./tools/build-linux.sh"
-    BUILD_DIR="build"
+    BUILD_DIR="build-amd64"
     ARTIFACT_EXT="tgz"
-    APT_PACKAGES="build-essential cmake ninja-build libsdl2-dev libfreetype6-dev"
+    DOCKERFILE="tools/docker/Dockerfile.linux-amd64"
     ;;
   linux-arm64)
     DOCKER_PLATFORM="linux/arm64"
     PACKAGE="Shatterdome-${TAG}-Linux-arm64"
     BUILD_SCRIPT="./tools/build-raspberrypi.sh"
-    BUILD_DIR="build"
+    BUILD_DIR="build-arm64"
     ARTIFACT_EXT="tgz"
-    APT_PACKAGES="build-essential cmake ninja-build libsdl2-dev libfreetype6-dev"
+    DOCKERFILE="tools/docker/Dockerfile.linux-arm64"
     ;;
   windows-amd64)
     DOCKER_PLATFORM="linux/amd64"
@@ -42,13 +42,19 @@ case "$PLATFORM" in
     BUILD_SCRIPT="./tools/build-windows.sh"
     BUILD_DIR="build-win"
     ARTIFACT_EXT="zip"
-    APT_PACKAGES="build-essential cmake ninja-build mingw-w64 p7zip-full"
+    DOCKERFILE="tools/docker/Dockerfile.windows-amd64"
     ;;
   *)
     echo "Error: unknown platform '${PLATFORM}'"
     exit 1
     ;;
 esac
+
+IMAGE="shatterdome-builder-${PLATFORM}"
+if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
+  echo "==> Building cached builder image ${IMAGE} (${DOCKER_PLATFORM})"
+  docker build --platform "${DOCKER_PLATFORM}" -t "${IMAGE}" -f "${ROOT}/${DOCKERFILE}" "${ROOT}/tools/docker"
+fi
 
 echo "==> Building ${PACKAGE}.${ARTIFACT_EXT} (${DOCKER_PLATFORM})"
 
@@ -61,16 +67,15 @@ docker run --rm \
   -e CPACK_PACKAGE_VERSION_PATCH="${PATCH}" \
   -e CPACK_PACKAGE_FILE_NAME="${PACKAGE}" \
   -e BUILD_DIR="${BUILD_DIR}" \
-  ubuntu:24.04 \
+  "${IMAGE}" \
   bash -c "
     set -euo pipefail
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update -qq
-    apt-get install -y --no-install-recommends git ca-certificates ${APT_PACKAGES}
     rm -rf /SeriousProton
     git clone --depth 1 https://github.com/daid/SeriousProton.git /SeriousProton
     ln -sfn /SeriousProton ../SeriousProton
     chmod +x tools/*.sh
+    ARCH=\$(uname -m)
+    export SDL2_DIR=/usr/lib/\${ARCH}-linux-gnu/cmake/SDL2
     ${BUILD_SCRIPT}
   "
 
