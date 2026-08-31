@@ -21,39 +21,32 @@ env:
 jobs:
   build-linux-amd64:
     name: Linux amd64
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.RELEASE_TAG }}
 
-      - name: Clone SeriousProton
-        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
-
-      - name: Install dependencies
+      - name: Restore release build tools
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends \
-            build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
+          git fetch origin master
+          git checkout origin/master -- \
+            tools/build-linux.sh \
+            tools/build-raspberrypi.sh \
+            tools/build-windows.sh \
+            tools/build-release-docker.sh
+          chmod +x tools/*.sh
 
       - name: Parse version from tag
         id: version
         run: |
           TAG="${{ env.RELEASE_TAG }}"
-          VER="${TAG#SD-}"
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
-          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
-          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
-          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
           echo "package=Shatterdome-${TAG}-Linux-amd64" >> "$GITHUB_OUTPUT"
 
-      - name: Build and package
+      - name: Build and package (Docker)
         env:
-          CPACK_PACKAGE_VERSION_MAJOR: ${{ steps.version.outputs.major }}
-          CPACK_PACKAGE_VERSION_MINOR: ${{ steps.version.outputs.minor }}
-          CPACK_PACKAGE_VERSION_PATCH: ${{ steps.version.outputs.patch }}
-          CPACK_PACKAGE_FILE_NAME: ${{ steps.version.outputs.package }}
-        run: ./tools/build-linux.sh
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+        run: ./tools/build-release-docker.sh linux-amd64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -64,39 +57,32 @@ jobs:
 
   build-linux-arm64:
     name: Linux ARM64 (Raspberry Pi)
-    runs-on: ubuntu-24.04-arm
+    runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.RELEASE_TAG }}
 
-      - name: Clone SeriousProton
-        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
-
-      - name: Install dependencies
+      - name: Restore release build tools
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends \
-            build-essential cmake ninja-build libsdl2-dev libfreetype6-dev
+          git fetch origin master
+          git checkout origin/master -- \
+            tools/build-linux.sh \
+            tools/build-raspberrypi.sh \
+            tools/build-windows.sh \
+            tools/build-release-docker.sh
+          chmod +x tools/*.sh
 
       - name: Parse version from tag
         id: version
         run: |
           TAG="${{ env.RELEASE_TAG }}"
-          VER="${TAG#SD-}"
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
-          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
-          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
-          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
           echo "package=Shatterdome-${TAG}-Linux-arm64" >> "$GITHUB_OUTPUT"
 
-      - name: Build and package
+      - name: Build and package (Docker)
         env:
-          CPACK_PACKAGE_VERSION_MAJOR: ${{ steps.version.outputs.major }}
-          CPACK_PACKAGE_VERSION_MINOR: ${{ steps.version.outputs.minor }}
-          CPACK_PACKAGE_VERSION_PATCH: ${{ steps.version.outputs.patch }}
-          CPACK_PACKAGE_FILE_NAME: ${{ steps.version.outputs.package }}
-        run: ./tools/build-raspberrypi.sh
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+        run: ./tools/build-release-docker.sh linux-arm64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -107,39 +93,32 @@ jobs:
 
   build-windows:
     name: Windows amd64
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.RELEASE_TAG }}
 
-      - name: Clone SeriousProton
-        run: git clone --depth 1 https://github.com/daid/SeriousProton.git ../SeriousProton
-
-      - name: Install dependencies
+      - name: Restore release build tools
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends \
-            build-essential cmake ninja-build mingw-w64 p7zip-full
+          git fetch origin master
+          git checkout origin/master -- \
+            tools/build-linux.sh \
+            tools/build-raspberrypi.sh \
+            tools/build-windows.sh \
+            tools/build-release-docker.sh
+          chmod +x tools/*.sh
 
       - name: Parse version from tag
         id: version
         run: |
           TAG="${{ env.RELEASE_TAG }}"
-          VER="${TAG#SD-}"
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
-          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
-          echo "minor=$MINOR" >> "$GITHUB_OUTPUT"
-          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
           echo "package=Shatterdome-${TAG}-Windows-amd64" >> "$GITHUB_OUTPUT"
 
-      - name: Build and package
+      - name: Build and package (Docker)
         env:
-          CPACK_PACKAGE_VERSION_MAJOR: ${{ steps.version.outputs.major }}
-          CPACK_PACKAGE_VERSION_MINOR: ${{ steps.version.outputs.minor }}
-          CPACK_PACKAGE_VERSION_PATCH: ${{ steps.version.outputs.patch }}
-          CPACK_PACKAGE_FILE_NAME: ${{ steps.version.outputs.package }}
-        run: ./tools/build-windows.sh
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+        run: ./tools/build-release-docker.sh windows-amd64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -151,7 +130,7 @@ jobs:
   release:
     name: Publish GitHub Release
     needs: [build-linux-amd64, build-linux-arm64, build-windows]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -166,7 +145,7 @@ jobs:
       - name: Create checksums
         run: |
           cd artifacts
-          sha256sum Shatterdome-*.tgz Shatterdome-*.zip > SHA256SUMS.txt
+          shasum -a 256 Shatterdome-*.tgz Shatterdome-*.zip > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
       - name: Upload release assets
