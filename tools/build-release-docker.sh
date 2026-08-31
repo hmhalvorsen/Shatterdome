@@ -26,7 +26,7 @@ case "$PLATFORM" in
     BUILD_SCRIPT="./tools/build-linux.sh"
     BUILD_DIR="build-amd64"
     ARTIFACT_EXT="tgz"
-    DOCKERFILE="tools/docker/Dockerfile.linux-amd64"
+    APT_PACKAGES="build-essential cmake ninja-build libsdl2-dev libfreetype6-dev"
     ;;
   linux-arm64)
     DOCKER_PLATFORM="linux/arm64"
@@ -34,7 +34,7 @@ case "$PLATFORM" in
     BUILD_SCRIPT="./tools/build-raspberrypi.sh"
     BUILD_DIR="build-arm64"
     ARTIFACT_EXT="tgz"
-    DOCKERFILE="tools/docker/Dockerfile.linux-arm64"
+    APT_PACKAGES="build-essential cmake ninja-build libsdl2-dev libfreetype6-dev"
     ;;
   windows-amd64)
     DOCKER_PLATFORM="linux/amd64"
@@ -42,19 +42,13 @@ case "$PLATFORM" in
     BUILD_SCRIPT="./tools/build-windows.sh"
     BUILD_DIR="build-win"
     ARTIFACT_EXT="zip"
-    DOCKERFILE="tools/docker/Dockerfile.windows-amd64"
+    APT_PACKAGES="build-essential cmake ninja-build mingw-w64 p7zip-full"
     ;;
   *)
     echo "Error: unknown platform '${PLATFORM}'"
     exit 1
     ;;
 esac
-
-IMAGE="shatterdome-builder-${PLATFORM}"
-if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
-  echo "==> Building cached builder image ${IMAGE} (${DOCKER_PLATFORM})"
-  docker build --platform "${DOCKER_PLATFORM}" -t "${IMAGE}" -f "${ROOT}/${DOCKERFILE}" "${ROOT}/tools/docker"
-fi
 
 echo "==> Building ${PACKAGE}.${ARTIFACT_EXT} (${DOCKER_PLATFORM})"
 
@@ -67,9 +61,13 @@ docker run --rm \
   -e CPACK_PACKAGE_VERSION_PATCH="${PATCH}" \
   -e CPACK_PACKAGE_FILE_NAME="${PACKAGE}" \
   -e BUILD_DIR="${BUILD_DIR}" \
-  "${IMAGE}" \
+  ubuntu:24.04 \
   bash -c "
     set -euo pipefail
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -qq
+    apt-get install -y apt-utils
+    apt-get install -y --no-install-recommends git ca-certificates ${APT_PACKAGES}
     rm -rf /SeriousProton
     git clone --depth 1 https://github.com/daid/SeriousProton.git /SeriousProton
     ln -sfn /SeriousProton ../SeriousProton

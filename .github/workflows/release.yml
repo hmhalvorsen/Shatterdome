@@ -43,8 +43,7 @@ jobs:
             tools/build-windows.sh \
             tools/build-release-docker.sh \
             tools/ensure-docker.sh \
-            tools/publish-release.sh \
-            tools/docker
+            tools/publish-release.sh
           chmod +x tools/*.sh
 
       - name: Ensure Docker is running
