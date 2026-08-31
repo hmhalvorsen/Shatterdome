@@ -25,6 +25,7 @@ concurrency:
 jobs:
   build-linux-amd64:
     name: Linux amd64
+    needs: [build-linux-arm64]
     runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +62,6 @@ jobs:
 
   build-linux-arm64:
     name: Linux ARM64 (Raspberry Pi)
-    needs: [build-linux-amd64]
     runs-on: [self-hosted, shatterdome]
     steps:
       - uses: actions/checkout@v4
